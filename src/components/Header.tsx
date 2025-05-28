@@ -12,36 +12,36 @@ const Header = () => {
       case "/tasks": return "Tasks";
       case "/roadmap": return "Roadmap";
       case "/sprints": return "Sprints";
-      case "/team": return "Team";
+      case "/team": return "Team Members";
       case "/settings": return "Settings";
       default: return "Dashboard";
     }
   };
 
   return (
-    <header className="h-16 bg-white border-b border-gray-200 px-8 flex items-center justify-between">
-      <h1 className="text-2xl font-semibold text-gray-900">{getPageTitle()}</h1>
+    <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between">
+      <h1 className="text-xl font-semibold text-black">{getPageTitle()}</h1>
       
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-6">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-black w-5 h-5" />
           <input
             type="text"
-            placeholder="Search..."
-            className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors w-64"
+            placeholder="Search Simpo…"
+            className="pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors w-80 font-medium"
           />
         </div>
         
         {/* Notifications */}
-        <button className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+        <button className="p-3 text-black hover:text-blue-600 transition-colors rounded-xl hover:bg-gray-50">
           <Bell className="w-5 h-5" />
         </button>
         
         {/* User Avatar */}
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-            <User className="w-4 h-4 text-white" />
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+            <User className="w-5 h-5 text-white" />
           </div>
         </div>
       </div>

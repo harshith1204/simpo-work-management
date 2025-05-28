@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutDashboard, FolderOpen, CheckSquare, MapPin, Repeat, Users, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -9,13 +9,13 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: "📊" },
-  { name: "Projects", href: "/projects", icon: "📁" },
-  { name: "Tasks", href: "/tasks", icon: "✓" },
-  { name: "Roadmap", href: "/roadmap", icon: "🗺️" },
-  { name: "Sprints", href: "/sprints", icon: "🏃" },
-  { name: "Team", href: "/team", icon: "👥" },
-  { name: "Settings", href: "/settings", icon: "⚙️" },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Projects", href: "/projects", icon: FolderOpen },
+  { name: "Tasks", href: "/tasks", icon: CheckSquare },
+  { name: "Roadmap", href: "/roadmap", icon: MapPin },
+  { name: "Sprints", href: "/sprints", icon: Repeat },
+  { name: "Team", href: "/team", icon: Users },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
@@ -32,7 +32,7 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
           <div className="flex items-center">
             <img 
               src="/lovable-uploads/263ccb0a-7791-4ef5-b16a-e8843306ebe8.png" 
-              alt="Simpo.ai" 
+              alt="Simpo" 
               className={cn("transition-all duration-300", collapsed ? "w-8 h-8" : "w-32 h-8")}
             />
           </div>
@@ -43,18 +43,19 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
           <ul className="space-y-2">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
+              const Icon = item.icon;
               return (
                 <li key={item.name}>
                   <Link
                     to={item.href}
                     className={cn(
-                      "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors group",
+                      "flex items-center px-3 py-3 rounded-xl text-sm font-medium transition-all duration-200 group",
                       isActive 
-                        ? "bg-primary/10 text-primary" 
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                        ? "bg-blue-50 text-blue-600 font-semibold" 
+                        : "text-black hover:text-blue-600 hover:bg-gray-50"
                     )}
                   >
-                    <span className="text-lg mr-3">{item.icon}</span>
+                    <Icon className={cn("w-5 h-5 mr-3 transition-colors", isActive ? "text-blue-600" : "text-black group-hover:text-blue-600")} />
                     {!collapsed && <span>{item.name}</span>}
                   </Link>
                 </li>
@@ -67,7 +68,7 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
         <div className="p-4 border-t border-gray-100">
           <button
             onClick={onToggle}
-            className="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+            className="flex items-center w-full px-3 py-3 text-sm font-medium text-black hover:text-blue-600 hover:bg-gray-50 rounded-xl transition-all duration-200"
           >
             {collapsed ? (
               <ChevronRight className="w-4 h-4" />
