@@ -12,6 +12,7 @@ import Tasks from "./pages/Tasks";
 import Roadmap from "./pages/Roadmap";
 import Sprints from "./pages/Sprints";
 import Team from "./pages/Team";
+import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="roadmap" element={<Roadmap />} />
             <Route path="sprints" element={<Sprints />} />
             <Route path="team" element={<Team />} />
+            <Route path="analytics" element={<Analytics />} />
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound />} />

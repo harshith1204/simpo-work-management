@@ -7,14 +7,15 @@ const Header = () => {
   
   const getPageTitle = () => {
     switch (location.pathname) {
-      case "/": return "Dashboard";
+      case "/": return "Home";
       case "/projects": return "Projects";
       case "/tasks": return "Tasks";
       case "/roadmap": return "Roadmap";
       case "/sprints": return "Sprints";
       case "/team": return "Team Members";
+      case "/analytics": return "Analytics";
       case "/settings": return "Settings";
-      default: return "Dashboard";
+      default: return "Home";
     }
   };
 

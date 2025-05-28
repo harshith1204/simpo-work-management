@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { ChevronLeft, ChevronRight, LayoutDashboard, FolderOpen, CheckSquare, MapPin, Repeat, Users, Settings } from "lucide-react";
+import { ChevronLeft, ChevronRight, Home, FolderOpen, CheckSquare, MapPin, Repeat, Users, BarChart3, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -9,12 +9,13 @@ interface SidebarProps {
 }
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Home", href: "/", icon: Home },
   { name: "Projects", href: "/projects", icon: FolderOpen },
   { name: "Tasks", href: "/tasks", icon: CheckSquare },
   { name: "Roadmap", href: "/roadmap", icon: MapPin },
   { name: "Sprints", href: "/sprints", icon: Repeat },
   { name: "Team", href: "/team", icon: Users },
+  { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Settings", href: "/settings", icon: Settings },
 ];
 
