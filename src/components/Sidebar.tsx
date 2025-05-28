@@ -23,7 +23,7 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
 
   return (
     <div className={cn(
-      "fixed top-0 left-0 h-full bg-white border-r border-gray-200 transition-all duration-300 z-10",
+      "fixed top-0 left-0 h-full bg-white border-r border-gray-200 transition-all duration-300 z-10 font-sidebar",
       collapsed ? "w-16" : "w-64"
     )}>
       <div className="flex flex-col h-full">
@@ -31,7 +31,7 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center">
             <h1 className={cn(
-              "font-bold text-xl text-gray-900 transition-all duration-300",
+              "font-bold text-gray-900 transition-all duration-300",
               collapsed ? "text-sm" : "text-xl"
             )}>
               {collapsed ? "S" : "Simpo"}
