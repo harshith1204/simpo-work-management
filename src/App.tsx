@@ -10,9 +10,8 @@ import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Tasks from "./pages/Tasks";
 import Roadmap from "./pages/Roadmap";
-import Sprints from "./pages/Sprints";
-import Team from "./pages/Team";
-import Analytics from "./pages/Analytics";
+import Issues from "./pages/Issues";
+import Integrations from "./pages/Integrations";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -31,9 +30,8 @@ const App = () => (
             <Route path="projects/:id" element={<ProjectDetail />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="roadmap" element={<Roadmap />} />
-            <Route path="sprints" element={<Sprints />} />
-            <Route path="team" element={<Team />} />
-            <Route path="analytics" element={<Analytics />} />
+            <Route path="issues" element={<Issues />} />
+            <Route path="integrations" element={<Integrations />} />
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<NotFound />} />

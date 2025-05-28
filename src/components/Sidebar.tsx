@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Home, FolderOpen, CheckSquare, MapPin, Repeat, Users, BarChart3, Settings } from "lucide-react";
+import { ChevronLeft, ChevronRight, Home, FolderOpen, CheckSquare, MapPin, Bug, Settings, Plug } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -13,10 +13,9 @@ const navigation = [
   { name: "Projects", href: "/projects", icon: FolderOpen },
   { name: "Tasks", href: "/tasks", icon: CheckSquare },
   { name: "Roadmap", href: "/roadmap", icon: MapPin },
-  { name: "Sprints", href: "/sprints", icon: Repeat },
-  { name: "Team", href: "/team", icon: Users },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Issues", href: "/issues", icon: Bug },
   { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Integrations", href: "/integrations", icon: Plug },
 ];
 
 const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
@@ -31,11 +30,12 @@ const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
         {/* Logo */}
         <div className="p-6 border-b border-gray-100">
           <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/263ccb0a-7791-4ef5-b16a-e8843306ebe8.png" 
-              alt="Simpo" 
-              className={cn("transition-all duration-300", collapsed ? "w-8 h-8" : "w-32 h-8")}
-            />
+            <h1 className={cn(
+              "font-bold text-xl text-gray-900 transition-all duration-300",
+              collapsed ? "text-sm" : "text-xl"
+            )}>
+              {collapsed ? "S" : "Simpo"}
+            </h1>
           </div>
         </div>
 
