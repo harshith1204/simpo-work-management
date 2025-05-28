@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Bug, Plus, Eye, CheckCircle, RotateCcw, Trash2, Filter, Search, List, Calendar, Grid3X3, Table } from "lucide-react";
+import { Bug, Plus, Eye, CheckCircle, RotateCcw, Trash2, Filter, Search, List, Calendar, Grid3X3, Table, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,8 +19,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const Issues = () => {
   const navigate = useNavigate();
@@ -119,14 +126,14 @@ const Issues = () => {
   };
 
   const viewOptions = [
-    { id: "list", label: "List View", icon: List },
-    { id: "kanban", label: "Kanban View", icon: Grid3X3 },
-    { id: "calendar", label: "Calendar View", icon: Calendar },
-    { id: "spreadsheet", label: "Spreadsheet View", icon: Table },
+    { id: "list", label: "List", icon: List },
+    { id: "kanban", label: "Kanban", icon: Grid3X3 },
+    { id: "calendar", label: "Calendar", icon: Calendar },
+    { id: "spreadsheet", label: "Spreadsheet", icon: Table },
   ];
 
   const renderListView = () => (
-    <Card>
+    <Card className="animate-fade-in">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <Bug className="w-5 h-5 text-red-600" />
@@ -150,7 +157,7 @@ const Issues = () => {
           </TableHeader>
           <TableBody>
             {filteredIssues.map((issue) => (
-              <TableRow key={issue.id} className="hover:bg-gray-50">
+              <TableRow key={issue.id} className="hover:bg-gray-50 transition-colors duration-200">
                 <TableCell className="font-medium text-blue-600">
                   {issue.id}
                 </TableCell>
@@ -188,7 +195,7 @@ const Issues = () => {
                       size="sm"
                       variant="ghost"
                       onClick={() => handleAction("view", issue.id)}
-                      className="p-1 hover:bg-blue-50 hover:text-blue-600"
+                      className="p-1 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
@@ -197,7 +204,7 @@ const Issues = () => {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleAction("resolve", issue.id)}
-                        className="p-1 hover:bg-green-50 hover:text-green-600"
+                        className="p-1 hover:bg-green-50 hover:text-green-600 transition-colors duration-200"
                       >
                         <CheckCircle className="w-4 h-4" />
                       </Button>
@@ -206,7 +213,7 @@ const Issues = () => {
                         size="sm"
                         variant="ghost"
                         onClick={() => handleAction("reopen", issue.id)}
-                        className="p-1 hover:bg-yellow-50 hover:text-yellow-600"
+                        className="p-1 hover:bg-yellow-50 hover:text-yellow-600 transition-colors duration-200"
                       >
                         <RotateCcw className="w-4 h-4" />
                       </Button>
@@ -215,7 +222,7 @@ const Issues = () => {
                       size="sm"
                       variant="ghost"
                       onClick={() => handleAction("delete", issue.id)}
-                      className="p-1 hover:bg-red-50 hover:text-red-600"
+                      className="p-1 hover:bg-red-50 hover:text-red-600 transition-colors duration-200"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -230,9 +237,9 @@ const Issues = () => {
   );
 
   const renderKanbanView = () => (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in">
       {["Open", "In Progress", "Resolved"].map((status) => (
-        <Card key={status}>
+        <Card key={status} className="hover-scale transition-transform duration-200">
           <CardHeader>
             <CardTitle className="text-sm font-medium">
               {status} ({filteredIssues.filter(issue => issue.status === status).length})
@@ -242,7 +249,7 @@ const Issues = () => {
             {filteredIssues
               .filter(issue => issue.status === status)
               .map((issue) => (
-                <Card key={issue.id} className="p-3 hover:shadow-md cursor-pointer" onClick={() => handleAction("view", issue.id)}>
+                <Card key={issue.id} className="p-3 hover:shadow-md cursor-pointer transition-all duration-200 hover-scale" onClick={() => handleAction("view", issue.id)}>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium text-blue-600">{issue.id}</span>
@@ -271,7 +278,7 @@ const Issues = () => {
   );
 
   const renderCalendarView = () => (
-    <Card>
+    <Card className="animate-fade-in">
       <CardHeader>
         <CardTitle>Calendar View</CardTitle>
       </CardHeader>
@@ -283,17 +290,17 @@ const Issues = () => {
         </div>
         <div className="grid grid-cols-7 gap-2">
           {Array.from({ length: 35 }, (_, i) => {
-            const day = i - 6; // Start from a Sunday
+            const day = i - 6;
             const issuesForDay = day > 0 && day <= 31 ? 
               filteredIssues.filter(issue => new Date(issue.created).getDate() === day) : [];
             
             return (
-              <div key={i} className="min-h-[100px] p-2 border rounded">
+              <div key={i} className="min-h-[100px] p-2 border rounded transition-colors duration-200 hover:bg-gray-50">
                 {day > 0 && day <= 31 && (
                   <>
                     <div className="text-sm font-medium mb-1">{day}</div>
                     {issuesForDay.map(issue => (
-                      <div key={issue.id} className="text-xs p-1 bg-blue-100 rounded mb-1 cursor-pointer hover:bg-blue-200"
+                      <div key={issue.id} className="text-xs p-1 bg-blue-100 rounded mb-1 cursor-pointer hover:bg-blue-200 transition-colors duration-200"
                            onClick={() => handleAction("view", issue.id)}>
                         {issue.id}
                       </div>
@@ -309,7 +316,7 @@ const Issues = () => {
   );
 
   const renderSpreadsheetView = () => (
-    <Card>
+    <Card className="animate-fade-in">
       <CardHeader>
         <CardTitle>Spreadsheet View</CardTitle>
       </CardHeader>
@@ -330,7 +337,7 @@ const Issues = () => {
             </thead>
             <tbody>
               {filteredIssues.map((issue) => (
-                <tr key={issue.id} className="border-b hover:bg-gray-50 cursor-pointer"
+                <tr key={issue.id} className="border-b hover:bg-gray-50 cursor-pointer transition-colors duration-200"
                     onClick={() => handleAction("view", issue.id)}>
                   <td className="p-2 text-blue-600 font-medium">{issue.id}</td>
                   <td className="p-2">{issue.title}</td>
@@ -368,18 +375,17 @@ const Issues = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Issues</h2>
-          <p className="text-gray-600 mt-1">Track bugs and issues in your projects</p>
         </div>
         <Button 
           onClick={handleCreateIssue}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-colors duration-200"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Issue
         </Button>
       </div>
 
-      {/* Filters and View Options */}
+      {/* Controls */}
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
         {/* Search and Filters */}
         <div className="flex flex-wrap gap-3 items-center">
@@ -389,74 +395,102 @@ const Issues = () => {
               placeholder="Search issues..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-64"
+              className="pl-10 w-64 transition-all duration-200 focus:ring-2 focus:ring-blue-500"
             />
           </div>
           
-          <Select value={filters.priority} onValueChange={(value) => setFilters({...filters, priority: value})}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Priorities</SelectItem>
-              <SelectItem value="Critical">Critical</SelectItem>
-              <SelectItem value="High">High</SelectItem>
-              <SelectItem value="Medium">Medium</SelectItem>
-              <SelectItem value="Low">Low</SelectItem>
-            </SelectContent>
-          </Select>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="transition-colors duration-200 hover:bg-gray-50">
+                <Filter className="w-4 h-4 mr-2" />
+                Filters
+                <ChevronDown className="w-4 h-4 ml-2" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80 p-4 animate-scale-in">
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Priority</label>
+                  <Select value={filters.priority} onValueChange={(value) => setFilters({...filters, priority: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All Priorities" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Priorities</SelectItem>
+                      <SelectItem value="Critical">Critical</SelectItem>
+                      <SelectItem value="High">High</SelectItem>
+                      <SelectItem value="Medium">Medium</SelectItem>
+                      <SelectItem value="Low">Low</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-          <Select value={filters.state} onValueChange={(value) => setFilters({...filters, state: value})}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="State" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All States</SelectItem>
-              <SelectItem value="Open">Open</SelectItem>
-              <SelectItem value="In Progress">In Progress</SelectItem>
-              <SelectItem value="Resolved">Resolved</SelectItem>
-            </SelectContent>
-          </Select>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">State</label>
+                  <Select value={filters.state} onValueChange={(value) => setFilters({...filters, state: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All States" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All States</SelectItem>
+                      <SelectItem value="Open">Open</SelectItem>
+                      <SelectItem value="In Progress">In Progress</SelectItem>
+                      <SelectItem value="Resolved">Resolved</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-          <Select value={filters.assignee} onValueChange={(value) => setFilters({...filters, assignee: value})}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Assignee" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Assignees</SelectItem>
-              <SelectItem value="Jane Smith">Jane Smith</SelectItem>
-              <SelectItem value="John Doe">John Doe</SelectItem>
-              <SelectItem value="Mike Johnson">Mike Johnson</SelectItem>
-              <SelectItem value="Sarah Wilson">Sarah Wilson</SelectItem>
-            </SelectContent>
-          </Select>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Assignee</label>
+                  <Select value={filters.assignee} onValueChange={(value) => setFilters({...filters, assignee: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All Assignees" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Assignees</SelectItem>
+                      <SelectItem value="Jane Smith">Jane Smith</SelectItem>
+                      <SelectItem value="John Doe">John Doe</SelectItem>
+                      <SelectItem value="Mike Johnson">Mike Johnson</SelectItem>
+                      <SelectItem value="Sarah Wilson">Sarah Wilson</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-          <Select value={filters.label} onValueChange={(value) => setFilters({...filters, label: value})}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Labels" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Labels</SelectItem>
-              <SelectItem value="UI">UI</SelectItem>
-              <SelectItem value="Backend">Backend</SelectItem>
-              <SelectItem value="Frontend">Frontend</SelectItem>
-              <SelectItem value="Performance">Performance</SelectItem>
-            </SelectContent>
-          </Select>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Labels</label>
+                  <Select value={filters.label} onValueChange={(value) => setFilters({...filters, label: value})}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All Labels" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Labels</SelectItem>
+                      <SelectItem value="UI">UI</SelectItem>
+                      <SelectItem value="Backend">Backend</SelectItem>
+                      <SelectItem value="Frontend">Frontend</SelectItem>
+                      <SelectItem value="Performance">Performance</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
 
-        {/* View Options */}
-        <div className="flex items-center space-x-2">
-          <span className="text-sm font-medium text-gray-600">View:</span>
+        {/* View Segment Control */}
+        <div className="flex items-center bg-gray-100 rounded-lg p-1">
           {viewOptions.map((option) => {
             const IconComponent = option.icon;
             return (
               <Button
                 key={option.id}
-                variant={currentView === option.id ? "default" : "outline"}
+                variant={currentView === option.id ? "default" : "ghost"}
                 size="sm"
                 onClick={() => setCurrentView(option.id)}
-                className="flex items-center space-x-1"
+                className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-all duration-200 ${
+                  currentView === option.id 
+                    ? "bg-white shadow-sm text-blue-600" 
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
               >
                 <IconComponent className="w-4 h-4" />
                 <span className="hidden md:inline">{option.label}</span>
