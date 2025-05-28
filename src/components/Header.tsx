@@ -15,7 +15,18 @@ const Header = () => {
       case "/issues": return "Issues";
       case "/settings": return "Settings";
       case "/integrations": return "Integrations";
-      default: return "Home";
+      default: 
+        if (location.pathname.startsWith("/issues/")) return "Issue Details";
+        return "Home";
+    }
+  };
+
+  const getCreateButtonText = () => {
+    switch (location.pathname) {
+      case "/issues": return "Add Issue";
+      case "/projects": return "New Project";
+      case "/tasks": return "New Task";
+      default: return "Create";
     }
   };
 
@@ -30,7 +41,7 @@ const Header = () => {
       <div className="flex items-center space-x-6">
         <Button onClick={handleCreateClick} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-colors">
           <Plus className="w-4 h-4 mr-2" />
-          Create
+          {getCreateButtonText()}
         </Button>
         
         {/* User Avatar */}

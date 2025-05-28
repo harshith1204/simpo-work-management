@@ -11,6 +11,7 @@ import ProjectDetail from "./pages/ProjectDetail";
 import Tasks from "./pages/Tasks";
 import Roadmap from "./pages/Roadmap";
 import Issues from "./pages/Issues";
+import IssueDetail from "./pages/IssueDetail";
 import Integrations from "./pages/Integrations";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="tasks" element={<Tasks />} />
             <Route path="roadmap" element={<Roadmap />} />
             <Route path="issues" element={<Issues />} />
+            <Route path="issues/:id" element={<IssueDetail />} />
             <Route path="integrations" element={<Integrations />} />
             <Route path="settings" element={<Settings />} />
           </Route>
