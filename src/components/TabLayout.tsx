@@ -29,21 +29,26 @@ const TabLayout = ({ tabs, defaultTab }: TabLayoutProps) => {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "py-4 px-2 text-sm font-medium border-b-2 transition-colors duration-200",
+                "py-4 px-2 text-sm font-medium border-b-2 transition-all duration-200 relative",
                 activeTab === tab.id
-                  ? "border-blue-600 text-blue-600"
+                  ? "border-[#270E2B] text-[#270E2B]"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
               )}
             >
               {tab.name}
+              {activeTab === tab.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#270E2B] rounded-t-full" />
+              )}
             </button>
           ))}
         </div>
       </div>
 
       {/* Tab Content */}
-      <div className="flex-1 overflow-auto">
-        {ActiveComponent && <ActiveComponent />}
+      <div className="flex-1 overflow-auto bg-[#F9F9FB]">
+        <div className="p-6">
+          {ActiveComponent && <ActiveComponent />}
+        </div>
       </div>
     </div>
   );

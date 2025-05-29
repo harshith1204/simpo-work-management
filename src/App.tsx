@@ -30,17 +30,11 @@ function App() {
             <Route path="/inbox/*" element={<InboxLayout />} />
             <Route path="/cycles/*" element={<CyclesLayout />} />
             <Route path="/tasks" element={<Tasks />} />
-            <Route path="/tasks/:view" element={<Tasks />} />
             <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:view" element={<Projects />} />
             <Route path="/issues" element={<Issues />} />
-            <Route path="/issues/:view" element={<Issues />} />
             <Route path="/analytics" element={<Analytics />} />
-            <Route path="/analytics/:view" element={<Analytics />} />
             <Route path="/roadmap" element={<Roadmap />} />
-            <Route path="/roadmap/:view" element={<Roadmap />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/settings/:view" element={<Settings />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

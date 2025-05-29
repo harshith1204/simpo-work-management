@@ -7,7 +7,7 @@ const Header = () => {
   
   const getPageTitle = () => {
     const path = location.pathname;
-    if (path === "/") return "Dashboard";
+    if (path === "/") return "Work Management Dashboard";
     if (path.startsWith("/projects")) return "Projects";
     if (path.startsWith("/tasks")) return "Tasks";
     if (path.startsWith("/roadmap")) return "Roadmap";
@@ -34,7 +34,7 @@ const Header = () => {
       return "Your Work";
     }
     if (path.startsWith("/recent-activity")) return "Recent Activity";
-    return "Dashboard";
+    return "Work Management";
   };
 
   return (
@@ -50,7 +50,7 @@ const Header = () => {
         </button>
         
         {/* User Avatar */}
-        <button className="w-8 h-8 bg-[#3A0044] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#3A0044]/90 transition-colors">
+        <button className="w-8 h-8 bg-[#270E2B] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#270E2B]/90 transition-colors">
           <User className="w-4 h-4 text-white" />
         </button>
       </div>
