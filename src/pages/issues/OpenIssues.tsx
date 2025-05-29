@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Bug, Clock, ArrowUpDown } from "lucide-react";
+import { Bug, Clock, ArrowUpDown, Eye } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,9 +14,11 @@ import {
 } from "@/components/ui/table";
 import CreateIssueModal from "@/components/CreateIssueModal";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const OpenIssues = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const navigate = useNavigate();
   const [issues, setIssues] = useState([
     {
       id: "ISS-001",
@@ -78,6 +80,10 @@ const OpenIssues = () => {
       title: "Issue created successfully",
       description: `Issue ${newIssue.id} has been created and added to the list.`,
     });
+  };
+
+  const handleViewDetails = (issueId: string) => {
+    navigate(`/issues/${issueId}`);
   };
 
   const getPriorityColor = (priority: string) => {
@@ -163,11 +169,12 @@ const OpenIssues = () => {
                 <TableHead>Priority</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Created</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {issues.map((issue) => (
-                <TableRow key={issue.id} className="hover:bg-gray-50 cursor-pointer">
+                <TableRow key={issue.id} className="hover:bg-gray-50">
                   <TableCell className="font-medium text-[#270E2B]">{issue.id}</TableCell>
                   <TableCell>
                     <div>
@@ -204,6 +211,16 @@ const OpenIssues = () => {
                       <Clock className="w-3 h-3" />
                       <span>{issue.created}</span>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleViewDetails(issue.id)}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Details
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
