@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,11 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import DatePicker from "@/components/DatePicker";
 import CreateMilestoneModal from "@/components/CreateMilestoneModal";
 import RoadmapProgressCharts from "@/components/RoadmapProgressCharts";
 import RoadmapComments from "@/components/RoadmapComments";
 import { useToast } from "@/hooks/use-toast";
+import DatePicker from "@/components/DatePicker";
 
 const RoadmapDetail = () => {
   const { id } = useParams();
@@ -25,10 +24,15 @@ const RoadmapDetail = () => {
   const [isCreateMilestoneOpen, setIsCreateMilestoneOpen] = useState(false);
   const [milestoneFilter, setMilestoneFilter] = useState("all");
 
+  // Log the ID to debug routing
+  console.log("Roadmap ID from params:", id);
+
   const [roadmapData, setRoadmapData] = useState({
-    id: 1,
-    title: "Q3 Growth Plan",
-    description: "Strategic initiatives to drive user acquisition and product expansion during Q3 2024",
+    id: parseInt(id || "1"),
+    title: id === "1" ? "Q3 Growth Plan" : "Product Roadmap 2024",
+    description: id === "1" 
+      ? "Strategic initiatives to drive user acquisition and product expansion during Q3 2024"
+      : "Major product features and improvements for the year",
     owner: "Sarah Wilson",
     team: "Growth Team",
     startDate: new Date("2024-07-01"),
@@ -152,6 +156,21 @@ const RoadmapDetail = () => {
     upcoming: milestones.filter(m => m.status === "Upcoming").length,
     total: milestones.length
   };
+
+  // If no ID is provided, show error
+  if (!id) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900">Roadmap not found</h2>
+          <p className="text-gray-600 mt-2">The roadmap you're looking for doesn't exist.</p>
+          <Button onClick={() => navigate("/roadmap")} className="mt-4">
+            Back to Roadmap
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto p-6">
