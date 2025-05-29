@@ -1,11 +1,11 @@
 
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Textarea } from "./ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
-import DatePicker from "./DatePicker";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import DatePicker from "@/components/DatePicker";
 
 interface CreateMilestoneModalProps {
   isOpen: boolean;
@@ -17,91 +17,65 @@ const CreateMilestoneModal = ({ isOpen, onClose, onSubmit }: CreateMilestoneModa
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    date: new Date()
+    date: ""
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim()) return;
-    
-    onSubmit({
-      ...formData,
-      date: formData.date.toISOString().split('T')[0]
-    });
-    
-    onClose();
-    setFormData({
-      name: "",
-      description: "",
-      date: new Date()
-    });
+    if (formData.name && formData.description && formData.date) {
+      onSubmit(formData);
+      setFormData({ name: "", description: "", date: "" });
+      onClose();
+    }
+  };
+
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      setFormData({ ...formData, date: date.toISOString().split('T')[0] });
+    }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md font-dm-sans">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-gray-900">
-            Add New Milestone
-          </DialogTitle>
+          <DialogTitle>Create New Milestone</DialogTitle>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
-          {/* Name */}
-          <div className="space-y-3">
-            <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Milestone Name *
-            </Label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="name">Milestone Name</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="Enter milestone name"
               required
-              className="font-dm-sans"
             />
           </div>
-
-          {/* Description */}
-          <div className="space-y-3">
-            <Label htmlFor="description" className="text-sm font-medium text-gray-700">
-              Description
-            </Label>
+          <div>
+            <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Enter milestone description"
-              className="font-dm-sans"
               rows={3}
+              required
             />
           </div>
-
-          {/* Date */}
-          <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">
-              Target Date
-            </Label>
-            <DatePicker onDateChange={(date) => setFormData({ ...formData, date: date || new Date() })} />
+          <div>
+            <Label htmlFor="date">Due Date</Label>
+            <div className="mt-1">
+              <DatePicker onDateChange={handleDateChange} placeholder="Select due date" />
+            </div>
+          </div>
+          <div className="flex justify-end space-x-2">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Create Milestone</Button>
           </div>
         </form>
-
-        <DialogFooter className="flex space-x-3 pt-6 border-t">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={onClose}
-            className="flex-1 font-dm-sans"
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleSubmit}
-            className="flex-1 font-dm-sans"
-          >
-            Add Milestone
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

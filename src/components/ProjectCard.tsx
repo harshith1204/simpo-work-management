@@ -1,9 +1,11 @@
 
-import { Calendar, Users, TrendingUp } from "lucide-react";
+import { Calendar, Users } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface ProjectCardProps {
+  id: number;
   name: string;
   description: string;
   status: 'active' | 'completed' | 'paused';
@@ -13,7 +15,9 @@ interface ProjectCardProps {
   onClick?: () => void;
 }
 
-const ProjectCard = ({ name, description, status, progress, dueDate, teamSize, onClick }: ProjectCardProps) => {
+const ProjectCard = ({ id, name, description, status, progress, dueDate, teamSize, onClick }: ProjectCardProps) => {
+  const navigate = useNavigate();
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
@@ -25,6 +29,14 @@ const ProjectCard = ({ name, description, status, progress, dueDate, teamSize, o
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const handleViewDetails = () => {
+    navigate(`/projects/${id}`);
+  };
+
+  const handleOpenProject = () => {
+    navigate(`/projects/${id}`);
   };
 
   return (
@@ -65,10 +77,10 @@ const ProjectCard = ({ name, description, status, progress, dueDate, teamSize, o
         </div>
 
         <div className="mt-4 flex space-x-2">
-          <Button variant="outline" size="sm" className="flex-1">
+          <Button variant="outline" size="sm" className="flex-1" onClick={handleViewDetails}>
             View Details
           </Button>
-          <Button size="sm" className="flex-1">
+          <Button size="sm" className="flex-1" onClick={handleOpenProject}>
             Open Project
           </Button>
         </div>

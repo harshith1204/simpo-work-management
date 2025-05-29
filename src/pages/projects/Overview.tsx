@@ -4,11 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Plus, User, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import CreateProjectModal from "@/components/CreateProjectModal";
 import { useToast } from "@/hooks/use-toast";
 
 const Overview = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const navigate = useNavigate();
   const [projects, setProjects] = useState([
     {
       id: 1,
@@ -51,7 +53,11 @@ const Overview = () => {
   const { toast } = useToast();
 
   const handleCreateProject = (newProject: any) => {
-    setProjects([newProject, ...projects]);
+    const projectWithId = {
+      ...newProject,
+      id: projects.length + 1,
+    };
+    setProjects([projectWithId, ...projects]);
     toast({
       title: "Project created successfully",
       description: `Project "${newProject.name}" has been created.`,
@@ -62,6 +68,10 @@ const Overview = () => {
     if (progress >= 90) return "text-green-600 bg-green-100";
     if (progress >= 50) return "text-blue-600 bg-blue-100";
     return "text-yellow-600 bg-yellow-100";
+  };
+
+  const handleViewDetails = (projectId: number) => {
+    navigate(`/projects/${projectId}`);
   };
 
   return (
@@ -140,7 +150,7 @@ const Overview = () => {
                       <div className="text-xs text-gray-600 mt-1">{project.progress}% complete</div>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" onClick={() => handleViewDetails(project.id)}>
                     View Details
                   </Button>
                 </div>
