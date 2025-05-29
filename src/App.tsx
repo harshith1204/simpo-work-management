@@ -10,16 +10,9 @@ import Settings from "./pages/Settings";
 import Roadmap from "./pages/Roadmap";
 import NotFound from "./pages/NotFound";
 import RecentActivity from "./pages/RecentActivity";
-import Summary from "./pages/work/Summary";
-import AssignedToMe from "./pages/work/AssignedToMe";
-import CreatedByMe from "./pages/work/CreatedByMe";
-import Subscribed from "./pages/work/Subscribed";
-import Activity from "./pages/work/Activity";
-import AllMail from "./pages/inbox/AllMail";
-import Mentions from "./pages/inbox/Mentions";
-import Active from "./pages/cycles/Active";
-import Completed from "./pages/cycles/Completed";
-import Upcoming from "./pages/cycles/Upcoming";
+import YourWorkLayout from "./pages/work/YourWorkLayout";
+import InboxLayout from "./pages/inbox/InboxLayout";
+import CyclesLayout from "./pages/cycles/CyclesLayout";
 import CreateIssueModal from "./components/CreateIssueModal";
 import { useState } from "react";
 
@@ -33,16 +26,9 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Index />} />
             <Route path="/recent-activity" element={<RecentActivity />} />
-            <Route path="/work/summary" element={<Summary />} />
-            <Route path="/work/assigned" element={<AssignedToMe />} />
-            <Route path="/work/created" element={<CreatedByMe />} />
-            <Route path="/work/subscribed" element={<Subscribed />} />
-            <Route path="/work/activity" element={<Activity />} />
-            <Route path="/inbox/all" element={<AllMail />} />
-            <Route path="/inbox/mentions" element={<Mentions />} />
-            <Route path="/cycles/active" element={<Active />} />
-            <Route path="/cycles/completed" element={<Completed />} />
-            <Route path="/cycles/upcoming" element={<Upcoming />} />
+            <Route path="/work/*" element={<YourWorkLayout />} />
+            <Route path="/inbox/*" element={<InboxLayout />} />
+            <Route path="/cycles/*" element={<CyclesLayout />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/tasks/:view" element={<Tasks />} />
             <Route path="/projects" element={<Projects />} />
