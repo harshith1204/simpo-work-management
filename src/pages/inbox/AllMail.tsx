@@ -1,3 +1,4 @@
+
 import { FileText, MessageCircle, Wrench, Clock, Filter } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,27 +11,30 @@ const AllMail = () => {
       id: 1,
       type: "task",
       icon: FileText,
-      subject: "Design review rescheduled",
-      snippet: "The due date for Header Design has been changed.",
+      subject: "Weekly Sync-up",
+      snippet: "Let's go over the sprint and discuss upcoming deliverables for next week.",
       timestamp: "Today at 2:30 PM",
+      from: "Sarah",
       isRead: false,
     },
     {
       id: 2,
-      type: "comment",
-      icon: MessageCircle,
-      subject: "New comment on Mobile App Performance",
-      snippet: "Alex added: 'We need to optimize the loading time for better UX.'",
+      type: "issue",
+      icon: Wrench,
+      subject: "New Bug Reported",
+      snippet: "Found issue in login flow - users unable to authenticate with Google SSO.",
       timestamp: "Today at 1:15 PM",
+      from: "QA Team",
       isRead: true,
     },
     {
       id: 3,
-      type: "issue",
-      icon: Wrench,
-      subject: "Issue assigned: API Rate Limiting",
-      snippet: "This issue has been assigned to you for immediate attention.",
+      type: "comment",
+      icon: MessageCircle,
+      subject: "New comment on Mobile App Performance",
+      snippet: "Alex added: 'We need to optimize the loading time for better UX.'",
       timestamp: "Yesterday at 4:30 PM",
+      from: "Alex Chen",
       isRead: false,
     },
     {
@@ -40,6 +44,7 @@ const AllMail = () => {
       subject: "Task status changed",
       snippet: "User Authentication Flow moved to In Progress",
       timestamp: "Yesterday at 2:00 PM",
+      from: "System",
       isRead: true,
     },
     {
@@ -49,6 +54,7 @@ const AllMail = () => {
       subject: "Reply to your comment",
       snippet: "Maya replied to your comment on User Onboarding Flow",
       timestamp: "2 days ago",
+      from: "Maya Patel",
       isRead: true,
     },
   ];
@@ -124,8 +130,12 @@ const AllMail = () => {
                       </div>
                     </div>
                     
-                    <p className="text-sm text-gray-600 line-clamp-2">
+                    <p className="text-sm text-gray-600 line-clamp-2 mb-1">
                       {item.snippet}
+                    </p>
+                    
+                    <p className="text-xs text-gray-500">
+                      From: {item.from}
                     </p>
                   </div>
                 </div>

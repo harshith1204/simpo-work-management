@@ -1,59 +1,51 @@
 
-import { AtSign, CheckCheck, MessageCircle, FileText } from "lucide-react";
+import { AtSign, CheckCheck, MessageCircle, FileText, Reply } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerFooter } from "@/components/ui/drawer";
+import { Textarea } from "@/components/ui/textarea";
 
 const Mentions = () => {
+  const [isReplyDrawerOpen, setIsReplyDrawerOpen] = useState(false);
+  const [selectedMention, setSelectedMention] = useState("");
+  const [replyText, setReplyText] = useState("");
+
   const mentions = [
     {
       id: 1,
-      source: "Header Redesign Task",
-      snippet: "@john can you review the latest wireframes? I think we need your input on the navigation structure.",
-      author: "Alex Chen",
+      source: "Task #142 - Fix payment error",
+      snippet: "You were tagged in task #142 - 'Fix payment error'",
+      author: "System",
       timestamp: "2 hours ago",
       isRead: false,
       type: "task"
     },
     {
       id: 2,
-      source: "Mobile App Performance Issue",
-      snippet: "Thanks @john for the feedback. I've implemented the caching solution you suggested.",
-      author: "Maya Patel",
+      source: "Marketing Plan Q3",
+      snippet: "Ritika mentioned you in 'Marketing Plan Q3'",
+      author: "Ritika",
       timestamp: "4 hours ago",
       isRead: true,
       type: "comment"
     },
-    {
-      id: 3,
-      source: "Q3 Marketing Campaign",
-      snippet: "@john @sarah we need to discuss the launch timeline in tomorrow's meeting.",
-      author: "Riya Sharma",
-      timestamp: "1 day ago",
-      isRead: false,
-      type: "task"
-    },
-    {
-      id: 4,
-      source: "User Authentication Bug",
-      snippet: "@john this is blocking the release. Can you take a look at the login flow?",
-      author: "Karan Singh",
-      timestamp: "2 days ago",
-      isRead: true,
-      type: "issue"
-    },
-    {
-      id: 5,
-      source: "API Documentation Update",
-      snippet: "@john please review the new endpoint documentation when you have time.",
-      author: "Aditi Gupta",
-      timestamp: "3 days ago",
-      isRead: true,
-      type: "task"
-    },
   ];
 
   const unreadCount = mentions.filter(m => !m.isRead).length;
+
+  const handleReply = (mentionSource: string) => {
+    setSelectedMention(mentionSource);
+    setIsReplyDrawerOpen(true);
+  };
+
+  const handleSendReply = () => {
+    console.log("Reply sent:", replyText);
+    setIsReplyDrawerOpen(false);
+    setReplyText("");
+    setSelectedMention("");
+  };
 
   return (
     <div className="space-y-6 font-dm-sans">
@@ -129,13 +121,25 @@ const Mentions = () => {
                     </div>
                   </div>
                   
-                  <p className="text-sm text-gray-700 mb-2 leading-relaxed">
+                  <p className="text-sm text-gray-700 mb-3 leading-relaxed">
                     {mention.snippet}
                   </p>
                   
-                  <div className="flex items-center space-x-2 text-xs text-gray-500">
-                    <MessageCircle className="w-3 h-3" />
-                    <span>by {mention.author}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 text-xs text-gray-500">
+                      <MessageCircle className="w-3 h-3" />
+                      <span>by {mention.author}</span>
+                    </div>
+                    
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleReply(mention.source)}
+                      className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
+                    >
+                      <Reply className="w-3 h-3 mr-1" />
+                      Reply
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -150,6 +154,43 @@ const Mentions = () => {
           Load More Mentions
         </Button>
       </div>
+
+      {/* Reply Drawer */}
+      <Drawer open={isReplyDrawerOpen} onOpenChange={setIsReplyDrawerOpen}>
+        <DrawerContent className="font-dm-sans">
+          <DrawerHeader>
+            <DrawerTitle>Reply to Mention</DrawerTitle>
+            <p className="text-sm text-gray-600">{selectedMention}</p>
+          </DrawerHeader>
+          
+          <div className="p-4 space-y-4">
+            <Textarea
+              placeholder="Type your reply..."
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              className="min-h-[100px] font-dm-sans"
+            />
+          </div>
+          
+          <DrawerFooter>
+            <div className="flex space-x-3">
+              <Button 
+                variant="outline" 
+                onClick={() => setIsReplyDrawerOpen(false)}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleSendReply}
+                className="flex-1"
+              >
+                Send
+              </Button>
+            </div>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };

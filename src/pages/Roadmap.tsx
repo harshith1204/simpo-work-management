@@ -1,19 +1,151 @@
 
-import TabLayout from "@/components/TabLayout";
-import Q1Plan from "./roadmap/Q1Plan";
-import Q2Plan from "./roadmap/Q2Plan";
-import Goals from "./roadmap/Goals";
-import Timeline from "./roadmap/Timeline";
+import { Calendar, Target, Users, Plus, Eye } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import CreateMilestoneModal from "@/components/CreateMilestoneModal";
+import { useToast } from "@/hooks/use-toast";
 
 const Roadmap = () => {
-  const tabs = [
-    { id: "q1-plan", name: "Q1 Plan", component: Q1Plan },
-    { id: "q2-plan", name: "Q2 Plan", component: Q2Plan },
-    { id: "goals", name: "Goals", component: Goals },
-    { id: "timeline", name: "Timeline", component: Timeline },
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const { toast } = useToast();
+
+  const milestones = [
+    {
+      id: 1,
+      name: "Website Revamp",
+      targetDate: "July 15, 2024",
+      status: "In Progress",
+      owner: "Product Team",
+      description: "Complete redesign of the main website with new UI/UX",
+      progress: 65,
+    },
+    {
+      id: 2,
+      name: "Mobile App Alpha",
+      targetDate: "Aug 1, 2024",
+      status: "Planned",
+      owner: "Mobile Team",
+      description: "First alpha version of the mobile application",
+      progress: 20,
+    },
+    {
+      id: 3,
+      name: "API v2.0 Release",
+      targetDate: "Sep 15, 2024",
+      status: "Planned",
+      owner: "Backend Team",
+      description: "New version of API with enhanced features",
+      progress: 10,
+    },
+    {
+      id: 4,
+      name: "Customer Dashboard",
+      targetDate: "Oct 1, 2024",
+      status: "Planned",
+      owner: "Frontend Team",
+      description: "New customer-facing dashboard with analytics",
+      progress: 5,
+    },
   ];
 
-  return <TabLayout tabs={tabs} defaultTab="q1-plan" />;
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "In Progress": return "bg-blue-100 text-blue-800";
+      case "Planned": return "bg-gray-100 text-gray-800";
+      case "Completed": return "bg-green-100 text-green-800";
+      case "On Hold": return "bg-yellow-100 text-yellow-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const handleCreateMilestone = (milestoneData: any) => {
+    console.log("Creating milestone:", milestoneData);
+    toast({
+      title: "Milestone created successfully",
+      description: `${milestoneData.name} has been added to the roadmap.`,
+    });
+  };
+
+  return (
+    <div className="space-y-6 font-dm-sans">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Roadmap</h2>
+          <p className="text-gray-600 mt-1">Project milestones and strategic initiatives</p>
+        </div>
+        <Button onClick={() => setIsCreateModalOpen(true)} className="font-dm-sans">
+          <Plus className="w-4 h-4 mr-2" />
+          Add Milestone
+        </Button>
+      </div>
+
+      {/* Timeline View */}
+      <div className="space-y-4">
+        {milestones.map((milestone, index) => (
+          <Card key={milestone.id} className="hover:shadow-lg transition-shadow duration-200">
+            <CardContent className="p-6">
+              <div className="flex items-start space-x-6">
+                {/* Timeline Indicator */}
+                <div className="flex flex-col items-center">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-100">
+                    <Target className="w-5 h-5 text-purple-600" />
+                  </div>
+                  {index !== milestones.length - 1 && (
+                    <div className="w-0.5 h-12 bg-gray-200 mt-2"></div>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{milestone.name}</h3>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Badge className={getStatusColor(milestone.status)}>
+                          {milestone.status}
+                        </Badge>
+                        <div className="flex items-center space-x-1 text-sm text-gray-600">
+                          <Calendar className="w-4 h-4" />
+                          <span>Target: {milestone.targetDate}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
+                    >
+                      <Eye className="w-4 h-4 mr-1" />
+                      View Details
+                    </Button>
+                  </div>
+
+                  <p className="text-sm text-gray-600 mb-3">{milestone.description}</p>
+
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="text-gray-600">
+                      <span className="font-medium">Owner:</span> {milestone.owner}
+                    </div>
+                    <div className="font-medium text-blue-600">{milestone.progress}% Complete</div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Create Milestone Modal */}
+      <CreateMilestoneModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateMilestone}
+      />
+    </div>
+  );
 };
 
 export default Roadmap;
