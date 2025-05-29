@@ -14,6 +14,7 @@ import Analytics from "./pages/Analytics";
 import Roadmap from "./pages/Roadmap";
 import ProjectDetail from "./pages/ProjectDetail";
 import IssueDetail from "./pages/IssueDetail";
+import RoadmapDetail from "./pages/RoadmapDetail";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             <Route path="cycles/*" element={<CyclesLayout />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="roadmap" element={<Roadmap />} />
+            <Route path="roadmap/:id" element={<RoadmapDetail />} />
           </Route>
         </Routes>
         <Toaster />

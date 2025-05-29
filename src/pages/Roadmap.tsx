@@ -4,11 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CreateMilestoneModal from "@/components/CreateMilestoneModal";
 import { useToast } from "@/hooks/use-toast";
 
 const Roadmap = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   const milestones = [
@@ -50,12 +52,32 @@ const Roadmap = () => {
     },
   ];
 
+  const roadmaps = [
+    {
+      id: 1,
+      title: "Q3 Growth Plan",
+      description: "Strategic initiatives to drive user acquisition and product expansion",
+      status: "Active",
+      progress: 65,
+      milestones: 4
+    },
+    {
+      id: 2,
+      title: "Product Roadmap 2024",
+      description: "Major product features and improvements for the year",
+      status: "Active",
+      progress: 40,
+      milestones: 6
+    }
+  ];
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case "In Progress": return "bg-blue-100 text-blue-800";
       case "Planned": return "bg-gray-100 text-gray-800";
       case "Completed": return "bg-green-100 text-green-800";
       case "On Hold": return "bg-yellow-100 text-yellow-800";
+      case "Active": return "bg-green-100 text-green-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
@@ -66,6 +88,10 @@ const Roadmap = () => {
       title: "Milestone created successfully",
       description: `${milestoneData.name} has been added to the roadmap.`,
     });
+  };
+
+  const handleViewRoadmap = (roadmapId: number) => {
+    navigate(`/roadmap/${roadmapId}`);
   };
 
   return (
@@ -82,8 +108,52 @@ const Roadmap = () => {
         </Button>
       </div>
 
+      {/* Roadmaps Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {roadmaps.map((roadmap) => (
+          <Card key={roadmap.id} className="hover:shadow-lg transition-shadow duration-200">
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">{roadmap.title}</h3>
+                  <p className="text-sm text-gray-600 mt-1">{roadmap.description}</p>
+                </div>
+                <Badge className={getStatusColor(roadmap.status)}>
+                  {roadmap.status}
+                </Badge>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">{roadmap.milestones} milestones</span>
+                  <span className="font-medium">{roadmap.progress}% complete</span>
+                </div>
+                
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
+                    style={{ width: `${roadmap.progress}%` }}
+                  ></div>
+                </div>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full mt-3"
+                  onClick={() => handleViewRoadmap(roadmap.id)}
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  View Details
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
       {/* Timeline View */}
       <div className="space-y-4">
+        <h3 className="text-lg font-semibold text-gray-900">Recent Milestones</h3>
         {milestones.map((milestone, index) => (
           <Card key={milestone.id} className="hover:shadow-lg transition-shadow duration-200">
             <CardContent className="p-6">
