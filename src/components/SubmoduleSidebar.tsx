@@ -11,6 +11,7 @@ interface SubmoduleSidebarProps {
 const submoduleConfig = {
   "home": [
     { id: "dashboard", name: "Dashboard", route: "/" },
+    { id: "recent-activity", name: "Recent Activity", route: "/recent-activity" },
   ],
   "your-work": [
     { id: "summary", name: "Summary", route: "/work/summary" },
