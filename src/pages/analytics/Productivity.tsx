@@ -1,245 +1,156 @@
 
-import { TrendingUp, TrendingDown, BarChart3, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Clock, CheckCircle, AlertCircle, Users } from "lucide-react";
 
 const Productivity = () => {
-  const productivityData = {
-    thisWeek: {
-      tasksCompleted: 28,
-      hoursWorked: 162,
-      avgTasksPerDay: 5.6,
-      efficiency: 94,
-    },
-    lastWeek: {
-      tasksCompleted: 24,
-      hoursWorked: 158,
-      avgTasksPerDay: 4.8,
-      efficiency: 89,
-    },
-    teamMembers: [
-      { name: "Alex Rodriguez", tasksCompleted: 12, efficiency: 96, trend: "up" },
-      { name: "Sarah Chen", tasksCompleted: 10, efficiency: 94, trend: "up" },
-      { name: "Emily Davis", tasksCompleted: 8, efficiency: 91, trend: "stable" },
-      { name: "David Park", tasksCompleted: 7, efficiency: 88, trend: "down" },
-      { name: "Mike Johnson", tasksCompleted: 6, efficiency: 85, trend: "up" },
-    ],
-    weeklyTrend: [
-      { day: "Mon", tasks: 6, hours: 8.2 },
-      { day: "Tue", tasks: 5, hours: 7.8 },
-      { day: "Wed", tasks: 7, hours: 8.5 },
-      { day: "Thu", tasks: 4, hours: 7.2 },
-      { day: "Fri", tasks: 6, hours: 8.1 },
-    ],
-  };
+  const weeklyData = [
+    { day: "Mon", completed: 8, inProgress: 3 },
+    { day: "Tue", completed: 12, inProgress: 5 },
+    { day: "Wed", completed: 10, inProgress: 4 },
+    { day: "Thu", completed: 15, inProgress: 2 },
+    { day: "Fri", completed: 9, inProgress: 6 },
+    { day: "Sat", completed: 5, inProgress: 1 },
+    { day: "Sun", completed: 3, inProgress: 0 },
+  ];
 
-  const getChangeIndicator = (current: number, previous: number) => {
-    const change = ((current - previous) / previous) * 100;
-    const isPositive = change > 0;
-    return {
-      value: Math.abs(change).toFixed(1),
-      isPositive,
-      Icon: isPositive ? TrendingUp : TrendingDown,
-    };
-  };
-
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case "up": return <TrendingUp className="w-4 h-4 text-green-600" />;
-      case "down": return <TrendingDown className="w-4 h-4 text-red-600" />;
-      default: return <BarChart3 className="w-4 h-4 text-gray-600" />;
-    }
-  };
+  const taskDistribution = [
+    { name: "Completed", value: 65, color: "#10B981" },
+    { name: "In Progress", value: 25, color: "#3B82F6" },
+    { name: "Blocked", value: 10, color: "#EF4444" },
+  ];
 
   return (
     <div className="space-y-6 font-dm-sans">
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Productivity Analytics</h2>
-          <p className="text-gray-600 mt-1">Team performance insights and trends</p>
-        </div>
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900">Productivity</h2>
+        <p className="text-gray-600 mt-1">Team productivity metrics and performance insights</p>
       </div>
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Tasks Completed</p>
-                <p className="text-2xl font-bold text-gray-900">{productivityData.thisWeek.tasksCompleted}</p>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <CheckCircle className="w-5 h-5 text-green-600" />
               </div>
-              <div className="flex items-center space-x-1 text-sm">
-                {(() => {
-                  const change = getChangeIndicator(productivityData.thisWeek.tasksCompleted, productivityData.lastWeek.tasksCompleted);
-                  return (
-                    <>
-                      <change.Icon className={`w-4 h-4 ${change.isPositive ? 'text-green-600' : 'text-red-600'}`} />
-                      <span className={change.isPositive ? 'text-green-600' : 'text-red-600'}>
-                        {change.value}%
-                      </span>
-                    </>
-                  );
-                })()}
+              <div>
+                <div className="text-lg font-bold text-gray-900">62</div>
+                <div className="text-xs text-gray-600">Tasks Completed</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Hours Worked</p>
-                <p className="text-2xl font-bold text-gray-900">{productivityData.thisWeek.hoursWorked}</p>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Clock className="w-5 h-5 text-blue-600" />
               </div>
-              <div className="flex items-center space-x-1 text-sm">
-                {(() => {
-                  const change = getChangeIndicator(productivityData.thisWeek.hoursWorked, productivityData.lastWeek.hoursWorked);
-                  return (
-                    <>
-                      <change.Icon className={`w-4 h-4 ${change.isPositive ? 'text-green-600' : 'text-red-600'}`} />
-                      <span className={change.isPositive ? 'text-green-600' : 'text-red-600'}>
-                        {change.value}%
-                      </span>
-                    </>
-                  );
-                })()}
+              <div>
+                <div className="text-lg font-bold text-gray-900">21</div>
+                <div className="text-xs text-gray-600">In Progress</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Avg Tasks/Day</p>
-                <p className="text-2xl font-bold text-gray-900">{productivityData.thisWeek.avgTasksPerDay}</p>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-red-100 rounded-lg">
+                <AlertCircle className="w-5 h-5 text-red-600" />
               </div>
-              <div className="flex items-center space-x-1 text-sm">
-                {(() => {
-                  const change = getChangeIndicator(productivityData.thisWeek.avgTasksPerDay, productivityData.lastWeek.avgTasksPerDay);
-                  return (
-                    <>
-                      <change.Icon className={`w-4 h-4 ${change.isPositive ? 'text-green-600' : 'text-red-600'}`} />
-                      <span className={change.isPositive ? 'text-green-600' : 'text-red-600'}>
-                        {change.value}%
-                      </span>
-                    </>
-                  );
-                })()}
+              <div>
+                <div className="text-lg font-bold text-gray-900">8</div>
+                <div className="text-xs text-gray-600">Blocked</div>
               </div>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Efficiency</p>
-                <p className="text-2xl font-bold text-gray-900">{productivityData.thisWeek.efficiency}%</p>
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Users className="w-5 h-5 text-purple-600" />
               </div>
-              <div className="flex items-center space-x-1 text-sm">
-                {(() => {
-                  const change = getChangeIndicator(productivityData.thisWeek.efficiency, productivityData.lastWeek.efficiency);
-                  return (
-                    <>
-                      <change.Icon className={`w-4 h-4 ${change.isPositive ? 'text-green-600' : 'text-red-600'}`} />
-                      <span className={change.isPositive ? 'text-green-600' : 'text-red-600'}>
-                        {change.value}%
-                      </span>
-                    </>
-                  );
-                })()}
+              <div>
+                <div className="text-lg font-bold text-gray-900">5.2</div>
+                <div className="text-xs text-gray-600">Avg Daily Tasks</div>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Weekly Trend Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <BarChart3 className="w-5 h-5" />
-            <span>Daily Productivity Trend</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {productivityData.weeklyTrend.map((day, index) => (
-              <div key={day.day} className="flex items-center space-x-4">
-                <div className="w-12 text-sm font-medium text-gray-600">{day.day}</div>
-                <div className="flex-1 flex items-center space-x-4">
-                  <div className="flex items-center space-x-2 w-32">
-                    <span className="text-sm text-gray-600">Tasks:</span>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-blue-600 transition-all duration-300"
-                          style={{ width: `${(day.tasks / 10) * 100}%` }}
-                        />
-                      </div>
-                      <span className="text-sm font-medium">{day.tasks}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2 w-32">
-                    <span className="text-sm text-gray-600">Hours:</span>
-                    <div className="flex items-center space-x-1">
-                      <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-green-600 transition-all duration-300"
-                          style={{ width: `${(day.hours / 10) * 100}%` }}
-                        />
-                      </div>
-                      <span className="text-sm font-medium">{day.hours}h</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Weekly Performance */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Weekly Performance</CardTitle>
+            <p className="text-sm text-gray-600">Daily task completion over the week</p>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[250px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={weeklyData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="completed" fill="#10B981" name="Completed" />
+                  <Bar dataKey="inProgress" fill="#3B82F6" name="In Progress" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Team Performance */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Users className="w-5 h-5" />
-            <span>Team Performance</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {productivityData.teamMembers.map((member, index) => (
-              <div key={member.name} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center justify-center w-8 h-8 bg-[#270E2B] rounded-full text-white text-sm font-semibold">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <div className="font-medium text-gray-900">{member.name}</div>
-                    <div className="text-sm text-gray-600">{member.tasksCompleted} tasks completed</div>
-                  </div>
+        {/* Task Distribution */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Task Distribution</CardTitle>
+            <p className="text-sm text-gray-600">Current status breakdown of all tasks</p>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[250px] flex items-center justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={taskDistribution}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={100}
+                    dataKey="value"
+                  >
+                    {taskDistribution.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex justify-center space-x-4 mt-4">
+              {taskDistribution.map((item, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <div 
+                    className="w-3 h-3 rounded-full" 
+                    style={{ backgroundColor: item.color }}
+                  ></div>
+                  <span className="text-sm text-gray-600">{item.name}: {item.value}%</span>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <div className="text-right">
-                    <div className="text-sm text-gray-600">Efficiency</div>
-                    <div className="font-semibold text-gray-900">{member.efficiency}%</div>
-                  </div>
-                  <div className="flex items-center">
-                    {getTrendIcon(member.trend)}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
