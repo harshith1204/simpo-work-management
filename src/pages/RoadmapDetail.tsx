@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,15 +8,11 @@ import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Calendar, Users, Target, Plus, Filter, MessageSquare, CheckCircle2, Clock, AlertCircle } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import CreateMilestoneModal from "@/components/CreateMilestoneModal";
 import RoadmapProgressCharts from "@/components/RoadmapProgressCharts";
 import RoadmapComments from "@/components/RoadmapComments";
 import { useToast } from "@/hooks/use-toast";
-import DatePicker from "@/components/DatePicker";
 
 const RoadmapDetail = () => {
   const { id } = useParams();
@@ -26,6 +23,21 @@ const RoadmapDetail = () => {
 
   // Log the ID to debug routing
   console.log("Roadmap ID from params:", id);
+
+  // If no ID is provided, show error
+  if (!id) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900">Roadmap not found</h2>
+          <p className="text-gray-600 mt-2">The roadmap you're looking for doesn't exist.</p>
+          <Button onClick={() => navigate("/roadmap")} className="mt-4">
+            Back to Roadmap
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const [roadmapData, setRoadmapData] = useState({
     id: parseInt(id || "1"),
@@ -148,6 +160,10 @@ const RoadmapDetail = () => {
       assignees: []
     };
     setMilestones([...milestones, milestone]);
+    toast({
+      title: "Milestone created",
+      description: "New milestone has been added to the roadmap.",
+    });
   };
 
   const progressStats = {
@@ -156,21 +172,6 @@ const RoadmapDetail = () => {
     upcoming: milestones.filter(m => m.status === "Upcoming").length,
     total: milestones.length
   };
-
-  // If no ID is provided, show error
-  if (!id) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900">Roadmap not found</h2>
-          <p className="text-gray-600 mt-2">The roadmap you're looking for doesn't exist.</p>
-          <Button onClick={() => navigate("/roadmap")} className="mt-4">
-            Back to Roadmap
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto p-6">
@@ -209,20 +210,20 @@ const RoadmapDetail = () => {
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <Label className="text-sm font-medium text-gray-600">Owner / Team</Label>
+            <div className="text-sm font-medium text-gray-600">Owner / Team</div>
             <div className="mt-1">
               <div className="text-sm font-medium">{roadmapData.owner}</div>
               <div className="text-sm text-gray-600">{roadmapData.team}</div>
             </div>
           </div>
           <div>
-            <Label className="text-sm font-medium text-gray-600">Date Range</Label>
+            <div className="text-sm font-medium text-gray-600">Date Range</div>
             <div className="mt-1 text-sm">
               {roadmapData.startDate.toLocaleDateString()} - {roadmapData.endDate.toLocaleDateString()}
             </div>
           </div>
           <div>
-            <Label className="text-sm font-medium text-gray-600">Status</Label>
+            <div className="text-sm font-medium text-gray-600">Status</div>
             <div className="mt-1">
               <Badge className={getStatusColor(roadmapData.status)}>
                 {roadmapData.status}
@@ -230,7 +231,7 @@ const RoadmapDetail = () => {
             </div>
           </div>
           <div>
-            <Label className="text-sm font-medium text-gray-600">Progress</Label>
+            <div className="text-sm font-medium text-gray-600">Progress</div>
             <div className="mt-1">
               <div className="text-sm font-medium">
                 {progressStats.completed}/{progressStats.total} completed
@@ -349,7 +350,7 @@ const RoadmapDetail = () => {
         </TabsContent>
 
         <TabsContent value="comments">
-          <RoadmapComments roadmapId={parseInt(id || "1")} />
+          <RoadmapComments roadmapId={parseInt(id)} />
         </TabsContent>
       </Tabs>
 
