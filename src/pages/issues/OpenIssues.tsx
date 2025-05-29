@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Bug, Clock, User, ArrowUpDown } from "lucide-react";
+import { Bug, Clock, ArrowUpDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -105,10 +106,7 @@ const OpenIssues = () => {
           <h2 className="text-2xl font-bold text-gray-900">Open Issues</h2>
           <p className="text-gray-600 mt-1">{issues.length} active issues need attention</p>
         </div>
-        <Button 
-          className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium active:scale-95 transition-all duration-150"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
+        <Button onClick={() => setIsCreateModalOpen(true)}>
           <Bug className="w-4 h-4 mr-2" />
           Create Issue
         </Button>
@@ -186,20 +184,10 @@ const OpenIssues = () => {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-[#270E2B] rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-600">{issue.reporter}</span>
-                    </div>
+                    <span className="text-gray-600">{issue.reporter}</span>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-600">{issue.assignee}</span>
-                    </div>
+                    <span className="text-gray-600">{issue.assignee}</span>
                   </TableCell>
                   <TableCell>
                     <Badge className={getPriorityColor(issue.priority)}>

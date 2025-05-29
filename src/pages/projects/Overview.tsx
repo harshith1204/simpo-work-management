@@ -1,11 +1,15 @@
 
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Plus, User, Calendar } from "lucide-react";
+import CreateProjectModal from "@/components/CreateProjectModal";
+import { useToast } from "@/hooks/use-toast";
 
 const Overview = () => {
-  const projects = [
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [projects, setProjects] = useState([
     {
       id: 1,
       name: "Website Redesign",
@@ -42,7 +46,17 @@ const Overview = () => {
       dueDate: "2024-04-15",
       team: 4,
     },
-  ];
+  ]);
+
+  const { toast } = useToast();
+
+  const handleCreateProject = (newProject: any) => {
+    setProjects([newProject, ...projects]);
+    toast({
+      title: "Project created successfully",
+      description: `Project "${newProject.name}" has been created.`,
+    });
+  };
 
   const getStatusColor = (progress: number) => {
     if (progress >= 90) return "text-green-600 bg-green-100";
@@ -58,7 +72,7 @@ const Overview = () => {
           <h2 className="text-2xl font-bold text-gray-900">Project Overview</h2>
           <p className="text-gray-600 mt-1">Manage and track all your projects</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button onClick={() => setIsCreateModalOpen(true)}>
           <Plus className="w-4 h-4 mr-2" />
           New Project
         </Button>
@@ -135,6 +149,12 @@ const Overview = () => {
           </Card>
         ))}
       </div>
+
+      <CreateProjectModal 
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateProject}
+      />
     </div>
   );
 };

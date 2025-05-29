@@ -1,10 +1,15 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import AddTaskDrawer from "@/components/AddTaskDrawer";
+import { useToast } from "@/hooks/use-toast";
 
 const Boards = () => {
-  const columns = [
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const [columns, setColumns] = useState([
     {
       id: "backlog",
       title: "Backlog",
@@ -41,7 +46,32 @@ const Boards = () => {
         { id: 8, title: "Environment Configuration", assignee: "Sarah", priority: "Low", points: 3 },
       ]
     }
-  ];
+  ]);
+
+  const { toast } = useToast();
+
+  const handleAddTask = (taskData: any) => {
+    const newTask = {
+      id: Date.now(),
+      title: taskData.title,
+      assignee: taskData.assignee || "Unassigned",
+      priority: taskData.priority || "Medium",
+      points: Math.floor(Math.random() * 10) + 1
+    };
+
+    setColumns(prevColumns => 
+      prevColumns.map(column => 
+        column.id === "backlog" 
+          ? { ...column, tasks: [...column.tasks, newTask] }
+          : column
+      )
+    );
+
+    toast({
+      title: "Task created and added to board",
+      description: `Task "${newTask.title}" has been added to the Backlog.`,
+    });
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -59,6 +89,10 @@ const Boards = () => {
           <h2 className="text-2xl font-bold text-gray-900">Project Board</h2>
           <p className="text-gray-600 mt-1">Kanban board for task management</p>
         </div>
+        <Button onClick={() => setIsAddTaskOpen(true)}>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Task
+        </Button>
       </div>
 
       <div className="flex space-x-6 overflow-x-auto pb-4">
@@ -91,17 +125,17 @@ const Boards = () => {
                     </div>
                   </Card>
                 ))}
-                
-                {/* Add Task Button */}
-                <button className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Task
-                </button>
               </CardContent>
             </Card>
           </div>
         ))}
       </div>
+
+      <AddTaskDrawer 
+        isOpen={isAddTaskOpen}
+        onClose={() => setIsAddTaskOpen(false)}
+        onSubmit={handleAddTask}
+      />
     </div>
   );
 };

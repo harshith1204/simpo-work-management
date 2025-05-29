@@ -59,7 +59,6 @@ const SubmoduleSidebar = ({ activeModule, activeSubmodule, onSubmoduleSelect }: 
       {/* Header */}
       <div className="p-4 border-b border-gray-100">
         <h2 className="text-sm font-semibold text-gray-900">Work Management</h2>
-        <p className="text-xs text-gray-500 mt-1">Team collaboration & project tracking</p>
       </div>
 
       {/* Navigation */}

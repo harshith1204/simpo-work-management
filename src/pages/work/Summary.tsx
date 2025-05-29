@@ -1,14 +1,6 @@
 
-import { CheckSquare, Clock, AlertTriangle, Plus, FolderOpen, Calendar } from "lucide-react";
+import { CheckSquare, Clock, AlertTriangle, Calendar, FolderOpen } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState } from "react";
 
 const Summary = () => {
@@ -21,11 +13,11 @@ const Summary = () => {
     { title: "Overdue Tasks", value: 1, icon: AlertTriangle, color: "red" },
   ];
 
-  const recentUpdates = [
-    { action: "You commented on 'Header Redesign' task", time: "2h ago" },
-    { action: "You updated priority in 'User Feedback Flow'", time: "4h ago" },
-    { action: "You marked 'Mobile Navigation' as complete", time: "1d ago" },
-    { action: "You created task 'API Documentation'", time: "2d ago" },
+  const tasks = [
+    { title: "Review API Documentation", type: "Task", dueDate: "2024-02-20", status: "In Progress" },
+    { title: "Fix login bug", type: "Issue", dueDate: "2024-02-18", status: "Open" },
+    { title: "Update user interface", type: "Task", dueDate: "2024-02-22", status: "To Do" },
+    { title: "Performance optimization", type: "Issue", dueDate: "2024-02-25", status: "In Progress" },
   ];
 
   const getCardColor = (color: string) => {
@@ -50,24 +42,6 @@ const Summary = () => {
 
   return (
     <div className="space-y-6 font-dm-sans">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">Summary</h2>
-          <p className="text-gray-600 mt-1">Overview of your work and progress</p>
-        </div>
-        <Select value={timeFilter} onValueChange={setTimeFilter}>
-          <SelectTrigger className="w-40">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent className="bg-white border shadow-lg">
-            <SelectItem value="week">This week</SelectItem>
-            <SelectItem value="month">This month</SelectItem>
-            <SelectItem value="all">All time</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
       {/* Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {statusCards.map((card, index) => {
@@ -90,35 +64,37 @@ const Summary = () => {
         })}
       </div>
 
-      {/* Quick Actions */}
+      {/* Tasks and Issues */}
       <Card>
         <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-          <div className="flex space-x-4">
-            <Button className="bg-[#3A0044] hover:bg-[#3A0044]/90 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-              <Plus className="w-4 h-4 mr-2" />
-              Create New Task
-            </Button>
-            <Button variant="outline" className="px-6 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors">
-              <FolderOpen className="w-4 h-4 mr-2" />
-              View My Projects
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Recent Updates */}
-      <Card>
-        <CardContent className="p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Updates</h3>
-          <div className="space-y-4">
-            {recentUpdates.map((update, index) => (
-              <div key={index} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-700">{update.action}</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Work Items</h3>
+          <div className="space-y-3">
+            {tasks.map((task, index) => (
+              <div key={index} className="flex items-center justify-between p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2">
+                    {task.type === "Task" ? (
+                      <CheckSquare className="w-4 h-4 text-blue-600" />
+                    ) : (
+                      <AlertTriangle className="w-4 h-4 text-red-600" />
+                    )}
+                    <span className="text-xs font-medium text-gray-500 uppercase">{task.type}</span>
+                  </div>
+                  <span className="font-medium text-gray-900">{task.title}</span>
                 </div>
-                <span className="text-xs text-gray-500">{update.time}</span>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-1 text-sm text-gray-600">
+                    <Calendar className="w-4 h-4" />
+                    <span>{task.dueDate}</span>
+                  </div>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    task.status === "In Progress" ? "bg-blue-100 text-blue-800" :
+                    task.status === "Open" ? "bg-red-100 text-red-800" :
+                    "bg-gray-100 text-gray-800"
+                  }`}>
+                    {task.status}
+                  </span>
+                </div>
               </div>
             ))}
           </div>

@@ -1,5 +1,5 @@
 
-import { CheckSquare, Clock, User, ArrowUpDown } from "lucide-react";
+import { CheckSquare, Clock, ArrowUpDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -156,20 +156,10 @@ const ClosedIssues = () => {
                     <div className="font-medium text-gray-900">{issue.title}</div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-[#270E2B] rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-600">{issue.reporter}</span>
-                    </div>
+                    <span className="text-gray-600">{issue.reporter}</span>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-600">{issue.resolvedBy}</span>
-                    </div>
+                    <span className="text-gray-600">{issue.resolvedBy}</span>
                   </TableCell>
                   <TableCell>
                     <Badge className={getPriorityColor(issue.priority)}>
@@ -182,12 +172,7 @@ const ClosedIssues = () => {
                       {issue.resolution}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-gray-600">
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-3 h-3" />
-                      <span>{issue.closedDate}</span>
-                    </div>
-                  </TableCell>
+                  <TableCell className="text-gray-600">{issue.closedDate}</TableCell>
                   <TableCell className="text-gray-600">{issue.timeToResolve}</TableCell>
                 </TableRow>
               ))}
