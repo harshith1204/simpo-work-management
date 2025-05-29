@@ -10,8 +10,12 @@ import Settings from "./pages/Settings";
 import Roadmap from "./pages/Roadmap";
 import NotFound from "./pages/NotFound";
 import RecentActivity from "./pages/RecentActivity";
+import CreateIssueModal from "./components/CreateIssueModal";
+import { useState } from "react";
 
 function App() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   return (
     <Router>
       <div className="App">
@@ -34,6 +38,13 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
+        
+        {/* Global create issue modal - can be triggered from anywhere */}
+        <CreateIssueModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSubmit={(data) => console.log('New issue created:', data)}
+        />
       </div>
     </Router>
   );

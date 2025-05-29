@@ -1,4 +1,3 @@
-
 import { CheckSquare, Plus, Filter, MoreHorizontal, User, Calendar, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,9 +10,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import CreateIssueModal from "@/components/CreateIssueModal";
 
 const Tasks = () => {
   const [selectedView, setSelectedView] = useState("list");
+  const [isCreateIssueModalOpen, setIsCreateIssueModalOpen] = useState(false);
 
   const tasks = [
     {
@@ -88,7 +89,12 @@ const Tasks = () => {
   };
 
   const handleCreateTask = () => {
-    console.log("Creating new task...");
+    setIsCreateIssueModalOpen(true);
+  };
+  
+  const handleCreateIssue = (issueData: any) => {
+    console.log("New issue created:", issueData);
+    // Here we would typically add the new issue to our task list
   };
 
   return (
@@ -104,7 +110,7 @@ const Tasks = () => {
           className="bg-[#3A0044] hover:bg-[#3A0044]/90 text-white px-6 py-2 rounded-lg font-medium transition-colors"
         >
           <Plus className="w-4 h-4 mr-2" />
-          New Task
+          Add Issue
         </Button>
       </div>
 
@@ -256,6 +262,13 @@ const Tasks = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Create Issue Modal */}
+      <CreateIssueModal 
+        isOpen={isCreateIssueModalOpen}
+        onClose={() => setIsCreateIssueModalOpen(false)}
+        onSubmit={handleCreateIssue}
+      />
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Bug, Plus, Eye, CheckCircle, RotateCcw, Trash2, Filter, Search, List, Calendar, Grid3X3, Table, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -39,6 +38,7 @@ const Issues = () => {
     assignee: "all",
     label: "all",
   });
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const issues = [
     {
@@ -123,6 +123,7 @@ const Issues = () => {
 
   const handleCreateIssue = () => {
     console.log("Create new issue");
+    setIsCreateModalOpen(true);
   };
 
   const viewOptions = [
@@ -378,7 +379,7 @@ const Issues = () => {
         </div>
         <Button 
           onClick={handleCreateIssue}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-colors duration-200"
+          className="bg-[#3A0044] hover:bg-[#3A0044]/90 text-white px-6 py-2 rounded-xl font-medium transition-colors duration-200"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Issue

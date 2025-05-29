@@ -343,7 +343,7 @@ const CreateIssueModal = ({ isOpen, onClose, onSubmit }: CreateIssueModalProps) 
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+            <Button type="submit" className="bg-[#3A0044] hover:bg-[#3A0044]/90 text-white">
               Create Issue
             </Button>
           </div>
