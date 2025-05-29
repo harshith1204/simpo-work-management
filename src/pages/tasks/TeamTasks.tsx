@@ -1,4 +1,3 @@
-
 import { Users, User, ArrowUpDown, Filter } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -129,7 +128,7 @@ const TeamTasks = () => {
             <Filter className="w-4 h-4 mr-2" />
             Filter by Team
           </Button>
-          <Button className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium">
+          <Button className="bg-[#3D5AFE] hover:bg-[#3D5AFE]/90 text-white px-6 py-2 rounded-lg font-medium">
             <Users className="w-4 h-4 mr-2" />
             Assign Task
           </Button>
@@ -184,19 +183,14 @@ const TeamTasks = () => {
                 <TableRow key={task.id} className="hover:bg-gray-50">
                   <TableCell>
                     <div>
-                      <div className="font-medium text-gray-900 hover:text-[#270E2B] cursor-pointer">
+                      <div className="font-medium text-gray-900 hover:text-[#3D5AFE] cursor-pointer">
                         {task.title}
                       </div>
                       <div className="text-sm text-gray-500">{task.project}</div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-[#270E2B] rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-600">{task.assignee}</span>
-                    </div>
+                    <span className="text-gray-600">{task.assignee}</span>
                   </TableCell>
                   <TableCell>
                     <Badge className={getTeamColor(task.team)} variant="outline">
@@ -217,7 +211,7 @@ const TeamTasks = () => {
                     <div className="flex items-center space-x-2">
                       <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
                         <div 
-                          className="h-full bg-[#270E2B] transition-all duration-300"
+                          className="h-full bg-[#3D5AFE] transition-all duration-300"
                           style={{ width: `${task.progress}%` }}
                         />
                       </div>

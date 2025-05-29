@@ -1,9 +1,28 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, User } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 const Boards = () => {
+  const [isTaskDrawerOpen, setIsTaskDrawerOpen] = useState(false);
+  const [taskData, setTaskData] = useState({
+    title: "",
+    description: "",
+    assignee: "",
+    priority: "",
+    dueDate: ""
+  });
+
+  const { toast } = useToast();
+
   const columns = [
     {
       id: "backlog",
@@ -43,6 +62,26 @@ const Boards = () => {
     }
   ];
 
+  const teamMembers = ["Alex", "Sarah", "Mike", "Emily", "David", "Lisa"];
+
+  const handleAddTask = () => {
+    if (!taskData.title.trim()) return;
+    
+    toast({
+      title: "Task created and added to board",
+      description: `Task "${taskData.title}" has been added to the Backlog column.`,
+    });
+    
+    setIsTaskDrawerOpen(false);
+    setTaskData({
+      title: "",
+      description: "",
+      assignee: "",
+      priority: "",
+      dueDate: ""
+    });
+  };
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "High": return "bg-red-100 text-red-800";
@@ -59,6 +98,13 @@ const Boards = () => {
           <h2 className="text-2xl font-bold text-gray-900">Project Board</h2>
           <p className="text-gray-600 mt-1">Kanban board for task management</p>
         </div>
+        <Button 
+          className="bg-[#3D5AFE] hover:bg-[#3D5AFE]/90 text-white"
+          onClick={() => setIsTaskDrawerOpen(true)}
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add Task
+        </Button>
       </div>
 
       <div className="flex space-x-6 overflow-x-auto pb-4">
@@ -91,17 +137,116 @@ const Boards = () => {
                     </div>
                   </Card>
                 ))}
-                
-                {/* Add Task Button */}
-                <button className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors flex items-center justify-center">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Task
-                </button>
               </CardContent>
             </Card>
           </div>
         ))}
       </div>
+
+      {/* Add Task Modal */}
+      <Dialog open={isTaskDrawerOpen} onOpenChange={setIsTaskDrawerOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-gray-900 font-dm-sans">
+              Add New Task
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="taskTitle" className="text-sm font-medium text-gray-700">
+                Task Title *
+              </Label>
+              <Input
+                id="taskTitle"
+                value={taskData.title}
+                onChange={(e) => setTaskData({ ...taskData, title: e.target.value })}
+                placeholder="Enter task title"
+                required
+                className="font-dm-sans"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="taskDescription" className="text-sm font-medium text-gray-700">
+                Description
+              </Label>
+              <Textarea
+                id="taskDescription"
+                value={taskData.description}
+                onChange={(e) => setTaskData({ ...taskData, description: e.target.value })}
+                placeholder="Enter task description"
+                rows={3}
+                className="font-dm-sans"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-gray-700">
+                Assignee
+              </Label>
+              <Select value={taskData.assignee} onValueChange={(value) => setTaskData({ ...taskData, assignee: value })}>
+                <SelectTrigger className="font-dm-sans">
+                  <SelectValue placeholder="Select assignee" />
+                </SelectTrigger>
+                <SelectContent>
+                  {teamMembers.map((member) => (
+                    <SelectItem key={member} value={member}>
+                      {member}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-gray-700">
+                Priority
+              </Label>
+              <Select value={taskData.priority} onValueChange={(value) => setTaskData({ ...taskData, priority: value })}>
+                <SelectTrigger className="font-dm-sans">
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Low">Low</SelectItem>
+                  <SelectItem value="Medium">Medium</SelectItem>
+                  <SelectItem value="High">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="taskDueDate" className="text-sm font-medium text-gray-700">
+                Due Date
+              </Label>
+              <Input
+                id="taskDueDate"
+                type="date"
+                value={taskData.dueDate}
+                onChange={(e) => setTaskData({ ...taskData, dueDate: e.target.value })}
+                className="font-dm-sans"
+              />
+            </div>
+          </div>
+
+          <DialogFooter className="flex space-x-3">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => setIsTaskDrawerOpen(false)}
+              className="font-dm-sans"
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleAddTask}
+              className="font-dm-sans"
+            >
+              Add Task
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

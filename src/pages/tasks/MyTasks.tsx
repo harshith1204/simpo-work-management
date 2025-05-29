@@ -109,7 +109,7 @@ const MyTasks = () => {
           <p className="text-gray-600 mt-1">{activeTasks.length} active tasks, {completedTasks.length} completed</p>
         </div>
         <Button 
-          className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium active:scale-95 transition-all duration-150"
+          className="bg-[#3D5AFE] hover:bg-[#3D5AFE]/90 text-white px-6 py-2 rounded-lg font-medium active:scale-95 transition-all duration-150"
           onClick={() => setIsDrawerOpen(true)}
         >
           <Plus className="w-4 h-4 mr-2" />

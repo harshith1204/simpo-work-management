@@ -106,7 +106,7 @@ const OpenIssues = () => {
           <p className="text-gray-600 mt-1">{issues.length} active issues need attention</p>
         </div>
         <Button 
-          className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium active:scale-95 transition-all duration-150"
+          className="bg-[#3D5AFE] hover:bg-[#3D5AFE]/90 text-white px-6 py-2 rounded-lg font-medium active:scale-95 transition-all duration-150"
           onClick={() => setIsCreateModalOpen(true)}
         >
           <Bug className="w-4 h-4 mr-2" />
@@ -170,10 +170,10 @@ const OpenIssues = () => {
             <TableBody>
               {issues.map((issue) => (
                 <TableRow key={issue.id} className="hover:bg-gray-50 cursor-pointer">
-                  <TableCell className="font-medium text-[#270E2B]">{issue.id}</TableCell>
+                  <TableCell className="font-medium text-[#3D5AFE]">{issue.id}</TableCell>
                   <TableCell>
                     <div>
-                      <div className="font-medium text-gray-900 hover:text-[#270E2B] cursor-pointer">
+                      <div className="font-medium text-gray-900 hover:text-[#3D5AFE] cursor-pointer">
                         {issue.title}
                       </div>
                       <div className="flex items-center space-x-1 mt-1">
@@ -186,20 +186,10 @@ const OpenIssues = () => {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-[#270E2B] rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-600">{issue.reporter}</span>
-                    </div>
+                    <span className="text-gray-600">{issue.reporter}</span>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
-                        <User className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-600">{issue.assignee}</span>
-                    </div>
+                    <span className="text-gray-600">{issue.assignee}</span>
                   </TableCell>
                   <TableCell>
                     <Badge className={getPriorityColor(issue.priority)}>
