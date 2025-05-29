@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
@@ -11,8 +12,8 @@ import InboxLayout from "./pages/inbox/InboxLayout";
 import CyclesLayout from "./pages/cycles/CyclesLayout";
 import Analytics from "./pages/Analytics";
 import Roadmap from "./pages/Roadmap";
-import ProjectDetail from "./pages/Projects/ProjectDetail";
-import IssueDetail from "./pages/Issues/IssueDetail";
+import ProjectDetail from "./pages/ProjectDetail";
+import IssueDetail from "./pages/IssueDetail";
 
 function App() {
   return (
