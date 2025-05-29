@@ -1,10 +1,10 @@
 
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface AddMemberModalProps {
   isOpen: boolean;
@@ -19,59 +19,34 @@ const AddMemberModal = ({ isOpen, onClose, onSubmit }: AddMemberModalProps) => {
     role: ""
   });
 
-  const roles = [
-    { value: "admin", label: "Admin" },
-    { value: "editor", label: "Editor" },
-    { value: "viewer", label: "Viewer" }
-  ];
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim()) return;
-    
-    onSubmit({
-      ...formData,
-      role: formData.role || "Viewer"
-    });
-    
-    onClose();
-    setFormData({
-      name: "",
-      email: "",
-      role: ""
-    });
+    if (formData.name && formData.email && formData.role) {
+      onSubmit(formData);
+      setFormData({ name: "", email: "", role: "" });
+      onClose();
+    }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md font-dm-sans">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-gray-900">
-            Add Team Member
-          </DialogTitle>
+          <DialogTitle>Add Team Member</DialogTitle>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit} className="space-y-6 py-4">
-          {/* Name */}
-          <div className="space-y-3">
-            <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-              Full Name *
-            </Label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="name">Name</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder="Enter full name"
+              placeholder="Enter member name"
               required
-              className="font-dm-sans"
             />
           </div>
-
-          {/* Email */}
-          <div className="space-y-3">
-            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Email Address *
-            </Label>
+          <div>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
@@ -79,46 +54,30 @@ const AddMemberModal = ({ isOpen, onClose, onSubmit }: AddMemberModalProps) => {
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="Enter email address"
               required
-              className="font-dm-sans"
             />
           </div>
-
-          {/* Role */}
-          <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">
-              Role
-            </Label>
+          <div>
+            <Label htmlFor="role">Role</Label>
             <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
-              <SelectTrigger className="font-dm-sans">
-                <SelectValue placeholder="Select role" />
+              <SelectTrigger>
+                <SelectValue placeholder="Select a role" />
               </SelectTrigger>
               <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.value} value={role.value}>
-                    {role.label}
-                  </SelectItem>
-                ))}
+                <SelectItem value="Project Manager">Project Manager</SelectItem>
+                <SelectItem value="Designer">Designer</SelectItem>
+                <SelectItem value="Frontend Developer">Frontend Developer</SelectItem>
+                <SelectItem value="Backend Developer">Backend Developer</SelectItem>
+                <SelectItem value="QA Engineer">QA Engineer</SelectItem>
               </SelectContent>
             </Select>
           </div>
+          <div className="flex justify-end space-x-2">
+            <Button type="button" variant="outline" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit">Add Member</Button>
+          </div>
         </form>
-
-        <DialogFooter className="flex space-x-3 pt-6 border-t">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={onClose}
-            className="flex-1 font-dm-sans"
-          >
-            Cancel
-          </Button>
-          <Button 
-            onClick={handleSubmit}
-            className="flex-1 font-dm-sans"
-          >
-            Send Invite
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

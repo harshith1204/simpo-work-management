@@ -5,21 +5,19 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface DatePickerProps {
   onDateChange: (date: Date | undefined) => void;
+  placeholder?: string;
+  defaultDate?: Date;
 }
 
-const DatePicker = ({ onDateChange }: DatePickerProps) => {
-  const [date, setDate] = useState<Date>(new Date());
+const DatePicker = ({ onDateChange, placeholder = "Pick a date", defaultDate }: DatePickerProps) => {
+  const [date, setDate] = useState<Date | undefined>(defaultDate);
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
-    setDate(selectedDate || new Date());
+    setDate(selectedDate);
     onDateChange(selectedDate);
   };
 
@@ -29,21 +27,20 @@ const DatePicker = ({ onDateChange }: DatePickerProps) => {
         <Button
           variant="outline"
           className={cn(
-            "w-[200px] justify-start text-left font-normal font-dm-sans",
+            "w-full justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {date ? format(date, "PPP") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
           selected={date}
           onSelect={handleDateSelect}
           initialFocus
-          className="p-3 pointer-events-auto"
         />
       </PopoverContent>
     </Popover>
