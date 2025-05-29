@@ -10,59 +10,63 @@ const Header = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
   const getPageTitle = () => {
-    switch (location.pathname) {
-      case "/": return "Home";
-      case "/projects": return "Projects";
-      case "/tasks": return "Tasks";
-      case "/roadmap": return "Roadmap";
-      case "/issues": return "Issues";
-      case "/settings": return "Settings";
-      case "/integrations": return "Integrations";
-      default: 
-        if (location.pathname.startsWith("/issues/")) return "Issue Details";
-        return "Home";
-    }
-  };
-
-  const getCreateButtonText = () => {
-    switch (location.pathname) {
-      case "/issues": return "Create New Issue";
-      case "/projects": return "New Project";
-      case "/tasks": return "New Task";
-      default: return "Create";
-    }
+    const path = location.pathname;
+    if (path === "/") return "Dashboard";
+    if (path.startsWith("/projects")) return "Projects";
+    if (path.startsWith("/tasks")) return "Tasks";
+    if (path.startsWith("/roadmap")) return "Roadmap";
+    if (path.startsWith("/issues")) return "Issues";
+    if (path.startsWith("/settings")) return "Settings";
+    if (path.startsWith("/analytics")) return "Analytics";
+    if (path.startsWith("/cycles")) return "Cycles";
+    if (path.startsWith("/work")) return "Your Work";
+    if (path.startsWith("/inbox")) return "Inbox";
+    return "Dashboard";
   };
 
   const handleCreateClick = () => {
-    console.log("Create button clicked for:", getPageTitle());
-    if (location.pathname === "/issues") {
-      setIsCreateModalOpen(true);
-    }
+    setIsCreateModalOpen(true);
   };
 
   const handleCreateIssue = (issueData: any) => {
     console.log("New issue created:", issueData);
-    // Here you would typically send the data to your backend
   };
 
   return (
     <>
-      <header className="h-20 bg-white border-b border-gray-200 px-8 flex items-center justify-between shadow-sm">
-        <h1 className="text-xl font-semibold text-gray-900">{getPageTitle()}</h1>
+      <header className="h-16 bg-white border-b border-gray-200 px-6 flex items-center justify-between shadow-sm">
+        <div className="flex items-center space-x-4">
+          <h1 className="text-lg font-semibold text-gray-900">{getPageTitle()}</h1>
+        </div>
         
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
+            />
+          </div>
+
           <Button 
             onClick={handleCreateClick} 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl font-medium transition-all duration-200 transform hover:scale-105"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200"
           >
             <Plus className="w-4 h-4 mr-2" />
-            {getCreateButtonText()}
+            Create
           </Button>
           
+          {/* Notifications */}
+          <button className="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+            <Bell className="w-5 h-5" />
+          </button>
+          
           {/* User Avatar */}
-          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
-            <User className="w-5 h-5 text-white" />
-          </div>
+          <button className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
+            <User className="w-4 h-4 text-white" />
+          </button>
         </div>
       </header>
 
