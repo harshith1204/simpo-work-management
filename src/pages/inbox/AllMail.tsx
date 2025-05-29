@@ -1,5 +1,4 @@
-
-import { FileText, MessageCircle, Tool, Clock, Filter } from "lucide-react";
+import { FileText, MessageCircle, Wrench, Clock, Filter } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +27,7 @@ const AllMail = () => {
     {
       id: 3,
       type: "issue",
-      icon: Tool,
+      icon: Wrench,
       subject: "Issue assigned: API Rate Limiting",
       snippet: "This issue has been assigned to you for immediate attention.",
       timestamp: "Yesterday at 4:30 PM",
