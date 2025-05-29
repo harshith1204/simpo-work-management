@@ -20,13 +20,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Index />} />
-            <Route path="work/summary" element={<YourWorkLayout />} />
+            <Route path="work/*" element={<YourWorkLayout />} />
             <Route path="projects" element={<Projects />} />
             <Route path="issues" element={<Issues />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="inbox" element={<InboxLayout />} />
-            <Route path="cycles" element={<CyclesLayout />} />
+            <Route path="inbox/*" element={<InboxLayout />} />
+            <Route path="cycles/*" element={<CyclesLayout />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="roadmap" element={<Roadmap />} />
           </Route>
