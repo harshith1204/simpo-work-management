@@ -1,4 +1,3 @@
-
 import { 
   Home, 
   Users, 
@@ -31,7 +30,6 @@ const MainSidebar = ({ activeModule, onModuleSelect }: MainSidebarProps) => {
       {/* Logo */}
       <div className="p-6 border-b border-white/10">
         <h1 className="text-xl font-bold text-white">Simpo</h1>
-        <p className="text-white/60 text-sm mt-1">All-in-One Platform</p>
       </div>
 
       {/* Apps Navigation */}

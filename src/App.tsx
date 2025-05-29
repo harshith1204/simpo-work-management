@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
@@ -12,6 +11,8 @@ import InboxLayout from "./pages/inbox/InboxLayout";
 import CyclesLayout from "./pages/cycles/CyclesLayout";
 import Analytics from "./pages/Analytics";
 import Roadmap from "./pages/Roadmap";
+import ProjectDetail from "./pages/Projects/ProjectDetail";
+import IssueDetail from "./pages/Issues/IssueDetail";
 
 function App() {
   return (
@@ -22,7 +23,9 @@ function App() {
             <Route index element={<Index />} />
             <Route path="work/*" element={<YourWorkLayout />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="projects/:id" element={<ProjectDetail />} />
             <Route path="issues" element={<Issues />} />
+            <Route path="issues/:id" element={<IssueDetail />} />
             <Route path="tasks" element={<Tasks />} />
             <Route path="settings" element={<Settings />} />
             <Route path="inbox/*" element={<InboxLayout />} />
