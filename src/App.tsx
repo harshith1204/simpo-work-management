@@ -8,6 +8,10 @@ import Projects from "./pages/Projects";
 import Issues from "./pages/Issues";
 import Tasks from "./pages/Tasks";
 import Settings from "./pages/Settings";
+import InboxLayout from "./pages/inbox/InboxLayout";
+import CyclesLayout from "./pages/cycles/CyclesLayout";
+import Analytics from "./pages/Analytics";
+import Roadmap from "./pages/Roadmap";
 
 function App() {
   return (
@@ -20,6 +24,10 @@ function App() {
             <Route path="projects" element={<Projects />} />
             <Route path="issues" element={<Issues />} />
             <Route path="tasks" element={<Tasks />} />
+            <Route path="inbox" element={<InboxLayout />} />
+            <Route path="cycles" element={<CyclesLayout />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="roadmap" element={<Roadmap />} />
             <Route path="settings" element={<Settings />} />
           </Route>
         </Routes>

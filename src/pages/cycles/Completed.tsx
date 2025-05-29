@@ -8,55 +8,16 @@ const Completed = () => {
   const completedCycles = [
     {
       id: 1,
-      name: "Q3 Feature Development",
-      completionDate: "Oct 30, 2024",
-      startDate: "Oct 1, 2024",
-      endDate: "Oct 30, 2024",
-      successRate: 95,
-      totalIssues: 42,
-      completedIssues: 40,
+      name: "April Sprint",
+      completionDate: "April 30, 2024",
+      startDate: "April 1, 2024",
+      endDate: "April 30, 2024",
+      successRate: 92,
+      totalIssues: 25,
+      completedIssues: 23,
       missedIssues: 2,
       completedEarly: true,
-      team: "Frontend Team",
-    },
-    {
-      id: 2,
-      name: "Security Audit Sprint",
-      completionDate: "Oct 25, 2024",
-      startDate: "Oct 15, 2024",
-      endDate: "Oct 28, 2024",
-      successRate: 100,
-      totalIssues: 15,
-      completedIssues: 15,
-      missedIssues: 0,
-      completedEarly: true,
-      team: "Security Team",
-    },
-    {
-      id: 3,
-      name: "Mobile App Beta Testing",
-      completionDate: "Oct 20, 2024",
-      startDate: "Oct 5, 2024",
-      endDate: "Oct 18, 2024",
-      successRate: 78,
-      totalIssues: 28,
-      completedIssues: 22,
-      missedIssues: 6,
-      completedEarly: false,
-      team: "Mobile Team",
-    },
-    {
-      id: 4,
-      name: "Database Migration",
-      completionDate: "Oct 12, 2024",
-      startDate: "Oct 1, 2024",
-      endDate: "Oct 10, 2024",
-      successRate: 90,
-      totalIssues: 20,
-      completedIssues: 18,
-      missedIssues: 2,
-      completedEarly: false,
-      team: "Backend Team",
+      team: "Development Team",
     },
   ];
 
@@ -133,6 +94,9 @@ const Completed = () => {
                           <Calendar className="w-4 h-4" />
                           <span>Completed: {cycle.completionDate}</span>
                         </div>
+                        <Badge className="bg-green-100 text-green-800">
+                          Status: Completed
+                        </Badge>
                         {cycle.completedEarly && (
                           <Badge className="bg-green-100 text-green-800">
                             Completed Early
@@ -146,7 +110,7 @@ const Completed = () => {
                         <div className={`text-2xl font-bold ${getSuccessRateColor(cycle.successRate)}`}>
                           {cycle.successRate}%
                         </div>
-                        <div className="text-xs text-gray-600">Success Rate</div>
+                        <div className="text-xs text-gray-600">Completion Rate</div>
                       </div>
                       
                       <Button size="sm" variant="outline" className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300">

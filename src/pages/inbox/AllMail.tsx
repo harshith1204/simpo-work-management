@@ -1,3 +1,4 @@
+
 import { FileText, MessageCircle, Wrench, Clock, Filter } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,8 +11,9 @@ const AllMail = () => {
       id: 1,
       type: "task",
       icon: FileText,
-      subject: "Design review rescheduled",
-      snippet: "The due date for Header Design has been changed.",
+      subject: "Design Review Meeting",
+      snippet: "Can you please review the new UI mockups for the dashboard redesign? I've uploaded the latest versions to the project folder.",
+      from: "Sarah",
       timestamp: "Today at 2:30 PM",
       isRead: false,
     },
@@ -19,36 +21,10 @@ const AllMail = () => {
       id: 2,
       type: "comment",
       icon: MessageCircle,
-      subject: "New comment on Mobile App Performance",
-      snippet: "Alex added: 'We need to optimize the loading time for better UX.'",
-      timestamp: "Today at 1:15 PM",
-      isRead: true,
-    },
-    {
-      id: 3,
-      type: "issue",
-      icon: Wrench,
-      subject: "Issue assigned: API Rate Limiting",
-      snippet: "This issue has been assigned to you for immediate attention.",
-      timestamp: "Yesterday at 4:30 PM",
-      isRead: false,
-    },
-    {
-      id: 4,
-      type: "task",
-      icon: FileText,
-      subject: "Task status changed",
-      snippet: "User Authentication Flow moved to In Progress",
-      timestamp: "Yesterday at 2:00 PM",
-      isRead: true,
-    },
-    {
-      id: 5,
-      type: "comment",
-      icon: MessageCircle,
-      subject: "Reply to your comment",
-      snippet: "Maya replied to your comment on User Onboarding Flow",
-      timestamp: "2 days ago",
+      subject: "Sprint Planning", 
+      snippet: "We are planning next week's sprint and need your input on the task priorities. Please join the meeting tomorrow at 10 AM.",
+      from: "Dev Team",
+      timestamp: "Yesterday at 4:15 PM",
       isRead: true,
     },
   ];
@@ -122,6 +98,10 @@ const AllMail = () => {
                         <Clock className="w-3 h-3 text-gray-400" />
                         <span className="text-xs text-gray-500">{item.timestamp}</span>
                       </div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-gray-600">From: {item.from}</span>
                     </div>
                     
                     <p className="text-sm text-gray-600 line-clamp-2">
