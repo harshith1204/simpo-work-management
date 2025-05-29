@@ -1,18 +1,6 @@
 
-import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { 
-  Home, 
-  User, 
-  Inbox, 
-  FolderOpen, 
-  Bug, 
-  RotateCcw, 
-  BarChart3, 
-  CheckSquare, 
-  MapPin,
-  Settings
-} from "lucide-react";
 
 interface SubmoduleSidebarProps {
   activeModule: string;
@@ -20,111 +8,160 @@ interface SubmoduleSidebarProps {
   onSubmoduleSelect: (submodule: string) => void;
 }
 
+const workManagementModules = [
+  { id: "home", name: "Home", route: "/" },
+  { id: "your-work", name: "Your Work", route: "/work/summary" },
+  { id: "inbox", name: "Inbox", route: "/inbox/all" },
+];
+
+const workspaceGroup = [
+  { id: "projects", name: "Projects", route: "/projects" },
+  { id: "issues", name: "Issues", route: "/issues" },
+  { id: "cycles", name: "Cycles", route: "/cycles/active" },
+  { id: "analytics", name: "Analytics", route: "/analytics" },
+];
+
+const plannerGroup = [
+  { id: "tasks", name: "Tasks", route: "/tasks" },
+  { id: "roadmap", name: "Roadmap", route: "/roadmap" },
+];
+
+const settingsModule = [
+  { id: "settings", name: "Settings", route: "/settings" },
+];
+
 const SubmoduleSidebar = ({ activeModule, activeSubmodule, onSubmoduleSelect }: SubmoduleSidebarProps) => {
   const navigate = useNavigate();
 
-  const workManagementModules = [
-    { id: "home", name: "Home", icon: Home, path: "/" },
-    { id: "your-work", name: "Your Work", icon: User, path: "/work" },
-    { id: "inbox", name: "Inbox", icon: Inbox, path: "/inbox" },
-    { 
-      id: "workspace", 
-      name: "Workspace", 
-      type: "group",
-      items: [
-        { id: "projects", name: "Projects", icon: FolderOpen, path: "/projects" },
-        { id: "issues", name: "Issues", icon: Bug, path: "/issues" },
-        { id: "cycles", name: "Cycles", icon: RotateCcw, path: "/cycles" },
-        { id: "analytics", name: "Analytics", icon: BarChart3, path: "/analytics" },
-      ]
-    },
-    {
-      id: "planner",
-      name: "Planner",
-      type: "group",
-      items: [
-        { id: "tasks", name: "Tasks", icon: CheckSquare, path: "/tasks" },
-        { id: "roadmap", name: "Roadmap", icon: MapPin, path: "/roadmap" },
-      ]
-    },
-    { id: "settings", name: "Settings", icon: Settings, path: "/settings" },
-  ];
+  const handleSubmoduleClick = (submodule: { id: string; name: string; route: string }) => {
+    onSubmoduleSelect(submodule.id);
+    navigate(submodule.route);
+  };
 
   if (activeModule !== "work-management") {
-    return null;
+    return (
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col font-dm-sans">
+        <div className="p-4 border-b border-gray-100">
+          <h2 className="text-sm font-semibold text-gray-900 capitalize">
+            {activeModule.replace("-", " ")}
+          </h2>
+          <p className="text-xs text-gray-500 mt-1">Coming Soon</p>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-gray-500 text-sm">This module is under development</p>
+        </div>
+      </div>
+    );
   }
-
-  const handleModuleClick = (module: any) => {
-    onSubmoduleSelect(module.id);
-    if (module.path) {
-      navigate(module.path);
-    }
-  };
 
   return (
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col font-dm-sans">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900">Work Management</h2>
+      <div className="p-4 border-b border-gray-100">
+        <h2 className="text-sm font-semibold text-gray-900">Work Management</h2>
+        <p className="text-xs text-gray-500 mt-1">Team collaboration & project tracking</p>
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <nav className="space-y-2">
+      <nav className="flex-1 p-2">
+        {/* Main Modules */}
+        <ul className="space-y-1 mb-6">
           {workManagementModules.map((module) => {
-            if (module.type === "group") {
-              return (
-                <div key={module.id} className="space-y-2">
-                  <div className="text-xs font-medium text-gray-500 uppercase tracking-wider px-3 py-2">
-                    {module.name}
-                  </div>
-                  {module.items?.map((item) => {
-                    const Icon = item.icon;
-                    const isActive = activeSubmodule === item.id;
-                    
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => handleModuleClick(item)}
-                        className={`
-                          w-full flex items-center px-3 py-2 text-sm rounded-lg transition-colors
-                          ${isActive 
-                            ? 'bg-[#3D5AFE] text-white' 
-                            : 'text-gray-700 hover:bg-gray-100 hover:text-[#3D5AFE]'
-                          }
-                        `}
-                      >
-                        <Icon className="w-4 h-4 mr-3" />
-                        {item.name}
-                      </button>
-                    );
-                  })}
-                </div>
-              );
-            }
-
-            const Icon = module.icon;
             const isActive = activeSubmodule === module.id;
-            
             return (
-              <button
-                key={module.id}
-                onClick={() => handleModuleClick(module)}
-                className={`
-                  w-full flex items-center px-3 py-2 text-sm rounded-lg transition-colors
-                  ${isActive 
-                    ? 'bg-[#3D5AFE] text-white' 
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-[#3D5AFE]'
-                  }
-                `}
-              >
-                <Icon className="w-4 h-4 mr-3" />
-                {module.name}
-              </button>
+              <li key={module.id}>
+                <button
+                  onClick={() => handleSubmoduleClick(module)}
+                  className={cn(
+                    "w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 text-left",
+                    isActive
+                      ? "bg-gray-100 text-gray-900 font-semibold"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  )}
+                >
+                  <span>{module.name}</span>
+                </button>
+              </li>
             );
           })}
-        </nav>
-      </div>
+        </ul>
+
+        {/* Workspace Group */}
+        <div className="mb-6">
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 px-3">
+            Workspace
+          </div>
+          <ul className="space-y-1">
+            {workspaceGroup.map((module) => {
+              const isActive = activeSubmodule === module.id;
+              return (
+                <li key={module.id}>
+                  <button
+                    onClick={() => handleSubmoduleClick(module)}
+                    className={cn(
+                      "w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 text-left",
+                      isActive
+                        ? "bg-gray-100 text-gray-900 font-semibold"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    )}
+                  >
+                    <span>{module.name}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* Planner Group */}
+        <div className="mb-6">
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-2 px-3">
+            Planner
+          </div>
+          <ul className="space-y-1">
+            {plannerGroup.map((module) => {
+              const isActive = activeSubmodule === module.id;
+              return (
+                <li key={module.id}>
+                  <button
+                    onClick={() => handleSubmoduleClick(module)}
+                    className={cn(
+                      "w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 text-left",
+                      isActive
+                        ? "bg-gray-100 text-gray-900 font-semibold"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    )}
+                  >
+                    <span>{module.name}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+
+        {/* Settings */}
+        <ul className="space-y-1">
+          {settingsModule.map((module) => {
+            const isActive = activeSubmodule === module.id;
+            return (
+              <li key={module.id}>
+                <button
+                  onClick={() => handleSubmoduleClick(module)}
+                  className={cn(
+                    "w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 text-left",
+                    isActive
+                      ? "bg-gray-100 text-gray-900 font-semibold"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  )}
+                >
+                  <span>{module.name}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
     </div>
   );
 };

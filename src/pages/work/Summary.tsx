@@ -1,6 +1,7 @@
 
-import { CheckSquare, Clock, AlertTriangle, Calendar } from "lucide-react";
+import { CheckSquare, Clock, AlertTriangle, Plus, FolderOpen, Calendar } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -88,6 +89,23 @@ const Summary = () => {
           );
         })}
       </div>
+
+      {/* Quick Actions */}
+      <Card>
+        <CardContent className="p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+          <div className="flex space-x-4">
+            <Button className="bg-[#3A0044] hover:bg-[#3A0044]/90 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+              <Plus className="w-4 h-4 mr-2" />
+              Create New Task
+            </Button>
+            <Button variant="outline" className="px-6 py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+              <FolderOpen className="w-4 h-4 mr-2" />
+              View My Projects
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Recent Updates */}
       <Card>

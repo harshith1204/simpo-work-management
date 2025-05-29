@@ -190,7 +190,7 @@ const AddTaskDrawer = ({ isOpen, onClose, onSubmit }: AddTaskDrawerProps) => {
           </Button>
           <Button 
             onClick={handleSubmit}
-            className="flex-1 bg-[#3D5AFE] hover:bg-[#3D5AFE]/90 text-white font-dm-sans active:scale-95 transition-all duration-150"
+            className="flex-1 bg-[#270E2B] hover:bg-[#270E2B]/90 text-white font-dm-sans active:scale-95 transition-all duration-150"
           >
             Add Task
           </Button>
