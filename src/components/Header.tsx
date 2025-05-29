@@ -14,7 +14,17 @@ const Header = () => {
     if (path.startsWith("/issues")) return "Issues";
     if (path.startsWith("/settings")) return "Settings";
     if (path.startsWith("/analytics")) return "Analytics";
-    if (path.startsWith("/cycles")) return "Cycles";
+    if (path.startsWith("/cycles")) {
+      if (path.includes("/active")) return "Active Cycles";
+      if (path.includes("/completed")) return "Completed Cycles";
+      if (path.includes("/upcoming")) return "Upcoming Cycles";
+      return "Cycles";
+    }
+    if (path.startsWith("/inbox")) {
+      if (path.includes("/all")) return "All Mail";
+      if (path.includes("/mentions")) return "Mentions";
+      return "Inbox";
+    }
     if (path.startsWith("/work")) {
       if (path.includes("/summary")) return "Work Summary";
       if (path.includes("/assigned")) return "Assigned to Me";
@@ -23,7 +33,6 @@ const Header = () => {
       if (path.includes("/activity")) return "My Activity";
       return "Your Work";
     }
-    if (path.startsWith("/inbox")) return "Inbox";
     if (path.startsWith("/recent-activity")) return "Recent Activity";
     return "Dashboard";
   };

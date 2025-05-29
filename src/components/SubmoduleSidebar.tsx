@@ -21,7 +21,7 @@ const submoduleConfig = {
     { id: "activity", name: "Activity", route: "/work/activity" },
   ],
   "inbox": [
-    { id: "all-messages", name: "All Messages", route: "/inbox/all" },
+    { id: "all-mail", name: "All Mail", route: "/inbox/all" },
     { id: "mentions", name: "Mentions", route: "/inbox/mentions" },
   ],
   "projects": [
@@ -34,8 +34,9 @@ const submoduleConfig = {
     { id: "closed", name: "Closed", route: "/issues/closed" },
   ],
   "cycles": [
-    { id: "current", name: "Current Cycle", route: "/cycles/current" },
-    { id: "past", name: "Past Cycles", route: "/cycles/past" },
+    { id: "active", name: "Active", route: "/cycles/active" },
+    { id: "completed", name: "Completed", route: "/cycles/completed" },
+    { id: "upcoming", name: "Upcoming", route: "/cycles/upcoming" },
   ],
   "analytics": [
     { id: "productivity", name: "Productivity", route: "/analytics" },

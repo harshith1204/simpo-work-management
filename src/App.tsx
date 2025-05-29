@@ -15,6 +15,11 @@ import AssignedToMe from "./pages/work/AssignedToMe";
 import CreatedByMe from "./pages/work/CreatedByMe";
 import Subscribed from "./pages/work/Subscribed";
 import Activity from "./pages/work/Activity";
+import AllMail from "./pages/inbox/AllMail";
+import Mentions from "./pages/inbox/Mentions";
+import Active from "./pages/cycles/Active";
+import Completed from "./pages/cycles/Completed";
+import Upcoming from "./pages/cycles/Upcoming";
 import CreateIssueModal from "./components/CreateIssueModal";
 import { useState } from "react";
 
@@ -33,6 +38,11 @@ function App() {
             <Route path="/work/created" element={<CreatedByMe />} />
             <Route path="/work/subscribed" element={<Subscribed />} />
             <Route path="/work/activity" element={<Activity />} />
+            <Route path="/inbox/all" element={<AllMail />} />
+            <Route path="/inbox/mentions" element={<Mentions />} />
+            <Route path="/cycles/active" element={<Active />} />
+            <Route path="/cycles/completed" element={<Completed />} />
+            <Route path="/cycles/upcoming" element={<Upcoming />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/tasks/:view" element={<Tasks />} />
             <Route path="/projects" element={<Projects />} />
