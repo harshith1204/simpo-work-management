@@ -36,7 +36,7 @@ const Header = () => {
     <>
       <header className="h-16 bg-white border-b border-gray-200 px-6 flex items-center justify-between shadow-sm">
         <div className="flex items-center space-x-4">
-          <h1 className="text-lg font-semibold text-gray-900">{getPageTitle()}</h1>
+          <h1 className="text-lg font-semibold text-gray-900 font-dm-sans">{getPageTitle()}</h1>
         </div>
         
         <div className="flex items-center space-x-4">
@@ -46,13 +46,13 @@ const Header = () => {
             <input
               type="text"
               placeholder="Search..."
-              className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
+              className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3A0044]/20 focus:border-[#3A0044] transition-colors w-64 font-dm-sans"
             />
           </div>
 
           <Button 
             onClick={handleCreateClick} 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200"
+            className="bg-[#3A0044] hover:bg-[#3A0044]/90 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 font-dm-sans"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create
@@ -64,7 +64,7 @@ const Header = () => {
           </button>
           
           {/* User Avatar */}
-          <button className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-700 transition-colors">
+          <button className="w-8 h-8 bg-[#3A0044] rounded-full flex items-center justify-center cursor-pointer hover:bg-[#3A0044]/90 transition-colors">
             <User className="w-4 h-4 text-white" />
           </button>
         </div>

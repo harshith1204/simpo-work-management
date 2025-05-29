@@ -39,7 +39,7 @@ const navigation = [
   },
   {
     type: "group", 
-    label: "Planning",
+    label: "Planner",
     items: [
       { id: "tasks", name: "Tasks", icon: CheckSquare },
       { id: "roadmap", name: "Roadmap", icon: MapPin },
@@ -58,7 +58,7 @@ const MainSidebar = ({ activeModule, onModuleSelect }: MainSidebarProps) => {
     <div className="w-64 bg-[#270E2B] text-white flex flex-col font-dm-sans">
       {/* Logo */}
       <div className="p-6 border-b border-white/10">
-        <h1 className="text-xl font-bold text-white">Simpo</h1>
+        <h1 className="text-xl font-bold text-white">WorkFlow</h1>
       </div>
 
       {/* Navigation */}

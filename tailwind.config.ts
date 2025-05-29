@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -22,7 +21,6 @@ export default {
 			fontFamily: {
 				sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
 				'dm-sans': ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-				sidebar: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -31,7 +29,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
+					DEFAULT: '#3A0044',
 					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
