@@ -15,8 +15,16 @@ const Header = () => {
     if (path.startsWith("/settings")) return "Settings";
     if (path.startsWith("/analytics")) return "Analytics";
     if (path.startsWith("/cycles")) return "Cycles";
-    if (path.startsWith("/work")) return "Your Work";
+    if (path.startsWith("/work")) {
+      if (path.includes("/summary")) return "Work Summary";
+      if (path.includes("/assigned")) return "Assigned to Me";
+      if (path.includes("/created")) return "Created by Me";
+      if (path.includes("/subscribed")) return "Subscribed";
+      if (path.includes("/activity")) return "My Activity";
+      return "Your Work";
+    }
     if (path.startsWith("/inbox")) return "Inbox";
+    if (path.startsWith("/recent-activity")) return "Recent Activity";
     return "Dashboard";
   };
 
