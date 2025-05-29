@@ -21,11 +21,11 @@ const RoadmapDetail = () => {
   const [isCreateMilestoneOpen, setIsCreateMilestoneOpen] = useState(false);
   const [milestoneFilter, setMilestoneFilter] = useState("all");
 
-  // Log the ID to debug routing
-  console.log("Roadmap ID from params:", id);
+  console.log("RoadmapDetail component loaded with ID:", id);
 
   // If no ID is provided, show error
   if (!id) {
+    console.log("No ID provided in URL params");
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
@@ -39,8 +39,8 @@ const RoadmapDetail = () => {
     );
   }
 
-  const [roadmapData, setRoadmapData] = useState({
-    id: parseInt(id || "1"),
+  const [roadmapData] = useState({
+    id: parseInt(id),
     title: id === "1" ? "Q3 Growth Plan" : "Product Roadmap 2024",
     description: id === "1" 
       ? "Strategic initiatives to drive user acquisition and product expansion during Q3 2024"
@@ -173,6 +173,8 @@ const RoadmapDetail = () => {
     total: milestones.length
   };
 
+  console.log("Rendering roadmap detail page for:", roadmapData.title);
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto p-6">
       {/* Header */}
@@ -253,7 +255,6 @@ const RoadmapDetail = () => {
         </TabsList>
 
         <TabsContent value="milestones" className="space-y-4">
-          {/* Milestones Header */}
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <h3 className="text-lg font-semibold">Milestones</h3>
@@ -275,7 +276,6 @@ const RoadmapDetail = () => {
             </Button>
           </div>
 
-          {/* Milestones List */}
           <div className="space-y-4">
             {filteredMilestones.map((milestone) => (
               <Card key={milestone.id} className="hover:shadow-md transition-shadow">

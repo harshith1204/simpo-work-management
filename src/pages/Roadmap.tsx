@@ -1,4 +1,3 @@
-
 import { Calendar, Target, Users, Plus, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,8 @@ const Roadmap = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  console.log("Roadmap page loaded");
 
   const milestones = [
     {
@@ -91,6 +92,7 @@ const Roadmap = () => {
   };
 
   const handleViewRoadmap = (roadmapId: number) => {
+    console.log("Navigating to roadmap:", roadmapId);
     navigate(`/roadmap/${roadmapId}`);
   };
 
