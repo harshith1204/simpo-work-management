@@ -3,13 +3,9 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Textarea } from "./ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "./ui/dialog";
-import { Calendar } from "./ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import DatePicker from "./DatePicker";
 
 interface CreateMilestoneModalProps {
   isOpen: boolean;
@@ -20,31 +16,24 @@ interface CreateMilestoneModalProps {
 const CreateMilestoneModal = ({ isOpen, onClose, onSubmit }: CreateMilestoneModalProps) => {
   const [formData, setFormData] = useState({
     name: "",
-    targetDate: undefined as Date | undefined,
-    status: "",
+    description: "",
+    date: new Date()
   });
-
-  const statuses = [
-    { value: "planned", label: "Planned" },
-    { value: "in-progress", label: "In Progress" },
-    { value: "completed", label: "Completed" },
-    { value: "on-hold", label: "On Hold" }
-  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.targetDate) return;
+    if (!formData.name.trim()) return;
     
     onSubmit({
       ...formData,
-      status: formData.status || "Planned"
+      date: formData.date.toISOString().split('T')[0]
     });
     
     onClose();
     setFormData({
       name: "",
-      targetDate: undefined,
-      status: "",
+      description: "",
+      date: new Date()
     });
   };
 
@@ -53,7 +42,7 @@ const CreateMilestoneModal = ({ isOpen, onClose, onSubmit }: CreateMilestoneModa
       <DialogContent className="sm:max-w-md font-dm-sans">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-gray-900">
-            Add Milestone
+            Add New Milestone
           </DialogTitle>
         </DialogHeader>
 
@@ -73,53 +62,27 @@ const CreateMilestoneModal = ({ isOpen, onClose, onSubmit }: CreateMilestoneModa
             />
           </div>
 
-          {/* Target Date */}
+          {/* Description */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-gray-700">
-              Target Date *
+            <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+              Description
             </Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !formData.targetDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.targetDate ? format(formData.targetDate, "PPP") : "Pick target date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={formData.targetDate}
-                  onSelect={(date) => setFormData({ ...formData, targetDate: date })}
-                  initialFocus
-                  className="p-3 pointer-events-auto"
-                />
-              </PopoverContent>
-            </Popover>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              placeholder="Enter milestone description"
+              className="font-dm-sans"
+              rows={3}
+            />
           </div>
 
-          {/* Status */}
+          {/* Date */}
           <div className="space-y-3">
             <Label className="text-sm font-medium text-gray-700">
-              Status
+              Target Date
             </Label>
-            <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-              <SelectTrigger className="font-dm-sans">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                {statuses.map((status) => (
-                  <SelectItem key={status.value} value={status.value}>
-                    {status.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <DatePicker onDateChange={(date) => setFormData({ ...formData, date: date || new Date() })} />
           </div>
         </form>
 
@@ -136,7 +99,7 @@ const CreateMilestoneModal = ({ isOpen, onClose, onSubmit }: CreateMilestoneModa
             onClick={handleSubmit}
             className="flex-1 font-dm-sans"
           >
-            Create Milestone
+            Add Milestone
           </Button>
         </DialogFooter>
       </DialogContent>
