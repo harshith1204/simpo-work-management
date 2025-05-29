@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { Bug, Clock, User, ArrowUpDown } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,9 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import CreateIssueModal from "@/components/CreateIssueModal";
+import { useToast } from "@/hooks/use-toast";
 
 const OpenIssues = () => {
-  const issues = [
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [issues, setIssues] = useState([
     {
       id: "ISS-001",
       title: "Login page not responsive on mobile devices",
@@ -64,7 +67,17 @@ const OpenIssues = () => {
       created: "2024-02-11",
       labels: ["bug", "email"],
     },
-  ];
+  ]);
+
+  const { toast } = useToast();
+
+  const handleCreateIssue = (newIssue: any) => {
+    setIssues([newIssue, ...issues]);
+    toast({
+      title: "Issue created successfully",
+      description: `Issue ${newIssue.id} has been created and added to the list.`,
+    });
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -92,7 +105,10 @@ const OpenIssues = () => {
           <h2 className="text-2xl font-bold text-gray-900">Open Issues</h2>
           <p className="text-gray-600 mt-1">{issues.length} active issues need attention</p>
         </div>
-        <Button className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium">
+        <Button 
+          className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium active:scale-95 transition-all duration-150"
+          onClick={() => setIsCreateModalOpen(true)}
+        >
           <Bug className="w-4 h-4 mr-2" />
           Create Issue
         </Button>
@@ -207,6 +223,12 @@ const OpenIssues = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <CreateIssueModal 
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreateIssue}
+      />
     </div>
   );
 };

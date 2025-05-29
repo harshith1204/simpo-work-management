@@ -1,12 +1,15 @@
-
+import { useState } from "react";
 import { CheckSquare, Plus, Calendar, Clock, Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import AddTaskDrawer from "@/components/AddTaskDrawer";
+import { useToast } from "@/hooks/use-toast";
 
 const MyTasks = () => {
-  const tasks = [
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [tasks, setTasks] = useState([
     {
       id: 1,
       title: "Review pull request for authentication module",
@@ -67,7 +70,23 @@ const MyTasks = () => {
       tags: ["devops", "automation"],
       timeEstimate: "8 hours",
     },
-  ];
+  ]);
+
+  const { toast } = useToast();
+
+  const handleAddTask = (newTask: any) => {
+    const taskWithId = {
+      ...newTask,
+      id: Math.max(...tasks.map(t => t.id)) + 1,
+      completed: false,
+      timeEstimate: "2 hours" // Default estimate
+    };
+    setTasks([taskWithId, ...tasks]);
+    toast({
+      title: "Task added to your list",
+      description: `"${newTask.title}" has been added to your tasks.`,
+    });
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -89,7 +108,10 @@ const MyTasks = () => {
           <h2 className="text-2xl font-bold text-gray-900">My Tasks</h2>
           <p className="text-gray-600 mt-1">{activeTasks.length} active tasks, {completedTasks.length} completed</p>
         </div>
-        <Button className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium">
+        <Button 
+          className="bg-[#270E2B] hover:bg-[#270E2B]/90 text-white px-6 py-2 rounded-lg font-medium active:scale-95 transition-all duration-150"
+          onClick={() => setIsDrawerOpen(true)}
+        >
           <Plus className="w-4 h-4 mr-2" />
           Add Task
         </Button>
@@ -214,6 +236,12 @@ const MyTasks = () => {
           ))}
         </div>
       </div>
+
+      <AddTaskDrawer 
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        onSubmit={handleAddTask}
+      />
     </div>
   );
 };
