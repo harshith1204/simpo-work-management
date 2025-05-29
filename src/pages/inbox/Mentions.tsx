@@ -8,21 +8,48 @@ const Mentions = () => {
   const mentions = [
     {
       id: 1,
-      source: "Fix login bug",
-      snippet: "John mentioned you in task: 'Fix login bug' - Can you help review the authentication flow?",
-      author: "John",
+      source: "Header Redesign Task",
+      snippet: "@john can you review the latest wireframes? I think we need your input on the navigation structure.",
+      author: "Alex Chen",
       timestamp: "2 hours ago",
       isRead: false,
       type: "task"
     },
     {
       id: 2,
-      source: "Issue #324",
-      snippet: "Anjali tagged you in comment on issue #324 - Need your expertise on the database optimization.",
-      author: "Anjali",
+      source: "Mobile App Performance Issue",
+      snippet: "Thanks @john for the feedback. I've implemented the caching solution you suggested.",
+      author: "Maya Patel",
       timestamp: "4 hours ago",
       isRead: true,
       type: "comment"
+    },
+    {
+      id: 3,
+      source: "Q3 Marketing Campaign",
+      snippet: "@john @sarah we need to discuss the launch timeline in tomorrow's meeting.",
+      author: "Riya Sharma",
+      timestamp: "1 day ago",
+      isRead: false,
+      type: "task"
+    },
+    {
+      id: 4,
+      source: "User Authentication Bug",
+      snippet: "@john this is blocking the release. Can you take a look at the login flow?",
+      author: "Karan Singh",
+      timestamp: "2 days ago",
+      isRead: true,
+      type: "issue"
+    },
+    {
+      id: 5,
+      source: "API Documentation Update",
+      snippet: "@john please review the new endpoint documentation when you have time.",
+      author: "Aditi Gupta",
+      timestamp: "3 days ago",
+      isRead: true,
+      type: "task"
     },
   ];
 
@@ -113,7 +140,7 @@ const Mentions = () => {
                 </div>
               </div>
             </CardContent>
-          </div>
+          </Card>
         ))}
       </div>
 
