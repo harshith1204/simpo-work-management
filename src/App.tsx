@@ -1,46 +1,52 @@
 
 import { Toaster } from "@/components/ui/toaster";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Index from "./pages/Index";
-import YourWorkLayout from "./pages/work/YourWorkLayout";
 import Projects from "./pages/Projects";
-import Issues from "./pages/Issues";
 import Tasks from "./pages/Tasks";
-import Settings from "./pages/Settings";
-import InboxLayout from "./pages/inbox/InboxLayout";
-import CyclesLayout from "./pages/cycles/CyclesLayout";
-import Analytics from "./pages/Analytics";
+import Issues from "./pages/Issues";
 import Roadmap from "./pages/Roadmap";
+import Analytics from "./pages/Analytics";
+import Team from "./pages/Team";
+import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
 import ProjectDetail from "./pages/ProjectDetail";
 import IssueDetail from "./pages/IssueDetail";
 import RoadmapDetail from "./pages/RoadmapDetail";
+import MilestoneDetail from "./pages/MilestoneDetail";
 
-function App() {
-  return (
-    <Router>
-      <div className="min-h-screen bg-background font-sans antialiased">
+const queryClient = new QueryClient();
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Index />} />
-            <Route path="work/*" element={<YourWorkLayout />} />
             <Route path="projects" element={<Projects />} />
             <Route path="projects/:id" element={<ProjectDetail />} />
+            <Route path="tasks" element={<Tasks />} />
             <Route path="issues" element={<Issues />} />
             <Route path="issues/:id" element={<IssueDetail />} />
-            <Route path="tasks" element={<Tasks />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="inbox/*" element={<InboxLayout />} />
-            <Route path="cycles/*" element={<CyclesLayout />} />
-            <Route path="analytics" element={<Analytics />} />
             <Route path="roadmap" element={<Roadmap />} />
             <Route path="roadmap/:id" element={<RoadmapDetail />} />
+            <Route path="milestone/:id" element={<MilestoneDetail />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="team" element={<Team />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
-        <Toaster />
-      </div>
-    </Router>
-  );
-}
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
