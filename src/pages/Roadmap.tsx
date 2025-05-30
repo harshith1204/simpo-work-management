@@ -1,11 +1,12 @@
-import { Calendar, Target, Users, Plus, Eye } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CreateMilestoneModal from "@/components/CreateMilestoneModal";
 import { useToast } from "@/hooks/use-toast";
+import RoadmapOverview from "@/components/roadmap/RoadmapOverview";
+import MilestoneTimeline from "@/components/roadmap/MilestoneTimeline";
 
 const Roadmap = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -116,105 +117,18 @@ const Roadmap = () => {
       </div>
 
       {/* Roadmaps Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        {roadmaps.map((roadmap) => (
-          <Card key={roadmap.id} className="hover:shadow-lg transition-shadow duration-200">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{roadmap.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{roadmap.description}</p>
-                </div>
-                <Badge className={getStatusColor(roadmap.status)}>
-                  {roadmap.status}
-                </Badge>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">{roadmap.milestones} milestones</span>
-                  <span className="font-medium">{roadmap.progress}% complete</span>
-                </div>
-                
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div 
-                    className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                    style={{ width: `${roadmap.progress}%` }}
-                  ></div>
-                </div>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full mt-3"
-                  onClick={() => handleViewRoadmap(roadmap.id)}
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  View Details
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <RoadmapOverview 
+        roadmaps={roadmaps}
+        onViewRoadmap={handleViewRoadmap}
+        getStatusColor={getStatusColor}
+      />
 
       {/* Timeline View */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Recent Milestones</h3>
-        {milestones.map((milestone, index) => (
-          <Card key={milestone.id} className="hover:shadow-lg transition-shadow duration-200">
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-6">
-                {/* Timeline Indicator */}
-                <div className="flex flex-col items-center">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-purple-100">
-                    <Target className="w-5 h-5 text-purple-600" />
-                  </div>
-                  {index !== milestones.length - 1 && (
-                    <div className="w-0.5 h-12 bg-gray-200 mt-2"></div>
-                  )}
-                </div>
-
-                {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900">{milestone.name}</h3>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <Badge className={getStatusColor(milestone.status)}>
-                          {milestone.status}
-                        </Badge>
-                        <div className="flex items-center space-x-1 text-sm text-gray-600">
-                          <Calendar className="w-4 h-4" />
-                          <span>Target: {milestone.targetDate}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
-                      onClick={() => handleViewMilestone(milestone.id)}
-                    >
-                      <Eye className="w-4 h-4 mr-1" />
-                      View Details
-                    </Button>
-                  </div>
-
-                  <p className="text-sm text-gray-600 mb-3">{milestone.description}</p>
-
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="text-gray-600">
-                      <span className="font-medium">Owner:</span> {milestone.owner}
-                    </div>
-                    <div className="font-medium text-blue-600">{milestone.progress}% Complete</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <MilestoneTimeline 
+        milestones={milestones}
+        onViewMilestone={handleViewMilestone}
+        getStatusColor={getStatusColor}
+      />
 
       {/* Create Milestone Modal */}
       <CreateMilestoneModal

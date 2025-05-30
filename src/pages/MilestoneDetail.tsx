@@ -1,16 +1,15 @@
 
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Calendar, User, FileText, Download, CheckCircle2, Clock, AlertCircle, Plus, Edit, Target } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import MilestoneHeader from "@/components/milestone/MilestoneHeader";
+import LinkedItems from "@/components/milestone/LinkedItems";
+import AttachedFiles from "@/components/milestone/AttachedFiles";
+import ActivityLog from "@/components/milestone/ActivityLog";
 
 const MilestoneDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   // Mock milestone data
   const milestone = {
@@ -139,49 +138,7 @@ const MilestoneDetail = () => {
   return (
     <div className="space-y-6 max-w-6xl mx-auto p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate("/roadmap")}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Roadmap
-          </Button>
-          <div>
-            <div className="flex items-center space-x-3 mb-2">
-              <h1 className="text-3xl font-bold text-gray-900">{milestone.name}</h1>
-              <Badge className={getStatusColor(milestone.status)}>
-                {milestone.status}
-              </Badge>
-            </div>
-            <div className="flex items-center space-x-6 text-sm text-gray-600">
-              <div className="flex items-center space-x-1">
-                <Calendar className="w-4 h-4" />
-                <span>Due: {milestone.dueDate}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <User className="w-4 h-4" />
-                <span>Created by {milestone.createdBy} on {milestone.createdOn}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex space-x-2">
-          <Button variant="outline">
-            <Edit className="w-4 h-4 mr-2" />
-            Edit Milestone
-          </Button>
-          <Button variant="outline">
-            Change Status
-          </Button>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add Task/Issue
-          </Button>
-        </div>
-      </div>
+      <MilestoneHeader milestone={milestone} getStatusColor={getStatusColor} />
 
       {/* Description */}
       <Card>
@@ -202,126 +159,27 @@ const MilestoneDetail = () => {
         </TabsList>
 
         <TabsContent value="tasks" className="space-y-4">
-          <div className="space-y-3">
-            {linkedTasks.map((task) => (
-              <Card key={task.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      {getStatusIcon(task.status)}
-                      <div>
-                        <h3 className="font-medium text-gray-900">{task.title}</h3>
-                        <div className="flex items-center space-x-4 mt-1 text-sm text-gray-600">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="w-3 h-3" />
-                            <span>Due: {task.dueDate}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Avatar className="w-4 h-4">
-                              <AvatarFallback className="text-xs">{task.avatar}</AvatarFallback>
-                            </Avatar>
-                            <span>{task.assignee}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <Badge className={getStatusColor(task.status)}>
-                      {task.status}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <LinkedItems 
+            items={linkedTasks} 
+            getStatusColor={getStatusColor} 
+            getStatusIcon={getStatusIcon} 
+          />
         </TabsContent>
 
         <TabsContent value="issues" className="space-y-4">
-          <div className="space-y-3">
-            {linkedIssues.map((issue) => (
-              <Card key={issue.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      {getStatusIcon(issue.status)}
-                      <div>
-                        <h3 className="font-medium text-gray-900">{issue.title}</h3>
-                        <div className="flex items-center space-x-4 mt-1 text-sm text-gray-600">
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="w-3 h-3" />
-                            <span>Due: {issue.dueDate}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Avatar className="w-4 h-4">
-                              <AvatarFallback className="text-xs">{issue.avatar}</AvatarFallback>
-                            </Avatar>
-                            <span>{issue.assignee}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <Badge className={getStatusColor(issue.status)}>
-                      {issue.status}
-                    </Badge>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <LinkedItems 
+            items={linkedIssues} 
+            getStatusColor={getStatusColor} 
+            getStatusIcon={getStatusIcon} 
+          />
         </TabsContent>
 
         <TabsContent value="files" className="space-y-4">
-          <div className="space-y-3">
-            {attachedFiles.map((file) => (
-              <Card key={file.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <FileText className="w-8 h-8 text-blue-600" />
-                      <div>
-                        <h3 className="font-medium text-gray-900">{file.name}</h3>
-                        <div className="flex items-center space-x-4 mt-1 text-sm text-gray-600">
-                          <span>{file.size}</span>
-                          <span>Uploaded by {file.uploadedBy}</span>
-                          <span>{file.uploadedOn}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
-                        <Download className="w-4 h-4 mr-1" />
-                        Download
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        View
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <AttachedFiles files={attachedFiles} />
         </TabsContent>
 
         <TabsContent value="activity" className="space-y-4">
-          <div className="space-y-3">
-            {activityLog.map((activity) => (
-              <Card key={activity.id}>
-                <CardContent className="p-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2"></div>
-                    <div>
-                      <p className="text-gray-900">{activity.action}</p>
-                      <div className="flex items-center space-x-2 mt-1 text-sm text-gray-600">
-                        <span>{activity.user}</span>
-                        <span>•</span>
-                        <span>{activity.timestamp}</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <ActivityLog activities={activityLog} />
         </TabsContent>
       </Tabs>
     </div>
