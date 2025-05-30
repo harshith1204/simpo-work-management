@@ -2,8 +2,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Upload, Folder, Image, File } from "lucide-react";
+import { useState } from "react";
+import UploadFileModal from "@/components/UploadFileModal";
 
 const Files = () => {
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
   const files = [
     {
       id: 1,
@@ -71,7 +75,7 @@ const Files = () => {
           <h2 className="text-2xl font-bold text-gray-900">Project Files</h2>
           <p className="text-gray-600 mt-1">Manage documents, assets, and project files</p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button onClick={() => setIsUploadModalOpen(true)}>
           <Upload className="w-4 h-4 mr-2" />
           Upload Files
         </Button>
@@ -151,6 +155,11 @@ const Files = () => {
           })}
         </CardContent>
       </Card>
+
+      <UploadFileModal 
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+      />
     </div>
   );
 };

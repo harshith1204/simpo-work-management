@@ -28,7 +28,13 @@ const Index = () => {
           <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
           <p className="text-gray-600 mt-1">Welcome back! Here's your overview</p>
         </div>
-        <DatePicker onDateChange={setSelectedDate} />
+        <div className="w-48">
+          <DatePicker 
+            onDateChange={setSelectedDate} 
+            defaultDate={new Date()}
+            placeholder="Select date"
+          />
+        </div>
       </div>
 
       {/* Metrics Cards */}

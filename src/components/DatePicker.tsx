@@ -26,13 +26,14 @@ const DatePicker = ({ onDateChange, placeholder = "Pick a date", defaultDate }: 
       <PopoverTrigger asChild>
         <Button
           variant="outline"
+          size="sm"
           className={cn(
-            "w-full justify-start text-left font-normal",
+            "w-full justify-start text-left font-normal text-sm",
             !date && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>{placeholder}</span>}
+          {date ? format(date, "MMM dd, yyyy") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
@@ -41,6 +42,7 @@ const DatePicker = ({ onDateChange, placeholder = "Pick a date", defaultDate }: 
           selected={date}
           onSelect={handleDateSelect}
           initialFocus
+          className="p-3 pointer-events-auto"
         />
       </PopoverContent>
     </Popover>

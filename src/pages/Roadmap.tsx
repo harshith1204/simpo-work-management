@@ -96,6 +96,11 @@ const Roadmap = () => {
     navigate(`/roadmap/${roadmapId}`);
   };
 
+  const handleViewMilestone = (milestoneId: number) => {
+    console.log("Navigating to milestone:", milestoneId);
+    navigate(`/milestone/${milestoneId}`);
+  };
+
   return (
     <div className="space-y-6 font-dm-sans">
       {/* Header */}
@@ -189,6 +194,7 @@ const Roadmap = () => {
                       size="sm" 
                       variant="outline"
                       className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
+                      onClick={() => handleViewMilestone(milestone.id)}
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       View Details
