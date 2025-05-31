@@ -1,7 +1,6 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AlertTriangle, Clock } from "lucide-react";
 
 interface Issue {
   id: string;
@@ -65,23 +64,15 @@ const IssueTable = ({ issues }: IssueTableProps) => {
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-2">
-                    {isOverdue(issue.dueDate) && (
-                      <AlertTriangle className="w-4 h-4 text-red-500" />
-                    )}
-                    <span className={isOverdue(issue.dueDate) ? "text-red-600" : "text-gray-600"}>
-                      {issue.dueDate}
-                    </span>
-                  </div>
+                  <span className={isOverdue(issue.dueDate) ? "text-red-600" : "text-gray-600"}>
+                    {issue.dueDate}
+                  </span>
                 </TableCell>
                 <TableCell>
                   {issue.blockedBy ? (
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-4 h-4 text-yellow-500" />
-                      <span className="text-yellow-600 font-mono text-sm">
-                        {issue.blockedBy}
-                      </span>
-                    </div>
+                    <span className="text-yellow-600 font-mono text-sm">
+                      {issue.blockedBy}
+                    </span>
                   ) : (
                     <span className="text-gray-400">-</span>
                   )}

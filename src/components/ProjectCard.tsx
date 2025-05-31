@@ -1,8 +1,6 @@
 
 import { Calendar, Users } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
-import { useNavigate } from "react-router-dom";
 
 interface ProjectCardProps {
   id: number;
@@ -16,8 +14,6 @@ interface ProjectCardProps {
 }
 
 const ProjectCard = ({ id, name, description, status, progress, dueDate, teamSize, onClick }: ProjectCardProps) => {
-  const navigate = useNavigate();
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
@@ -29,14 +25,6 @@ const ProjectCard = ({ id, name, description, status, progress, dueDate, teamSiz
       default:
         return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const handleViewDetails = () => {
-    navigate(`/projects/${id}`);
-  };
-
-  const handleOpenProject = () => {
-    navigate(`/projects/${id}`);
   };
 
   return (
@@ -74,15 +62,6 @@ const ProjectCard = ({ id, name, description, status, progress, dueDate, teamSiz
             <Users className="w-4 h-4" />
             <span>{teamSize} members</span>
           </div>
-        </div>
-
-        <div className="mt-4 flex space-x-2">
-          <Button variant="outline" size="sm" className="flex-1" onClick={handleViewDetails}>
-            View Details
-          </Button>
-          <Button size="sm" className="flex-1" onClick={handleOpenProject}>
-            Open Project
-          </Button>
         </div>
       </CardContent>
     </Card>

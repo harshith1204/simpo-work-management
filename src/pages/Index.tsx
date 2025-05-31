@@ -1,10 +1,8 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import StatCard from "@/components/StatCard";
 import DonutChart from "@/components/DonutChart";
 import BarChart from "@/components/BarChart";
@@ -17,12 +15,12 @@ import { AlertTriangle, CheckSquare, Clock, FileText } from "lucide-react";
 const Index = () => {
   const [searchCollaborators, setSearchCollaborators] = useState("");
 
-  // Summary data
+  // Summary data - removed trend percentages
   const summaryStats = [
-    { title: "Issues Assigned", value: 12, icon: AlertTriangle, trend: { value: 8, isPositive: true } },
-    { title: "Issues Overdue", value: 3, icon: Clock, trend: { value: 15, isPositive: false } },
-    { title: "Issues Created", value: 28, icon: FileText, trend: { value: 12, isPositive: true } },
-    { title: "Issues Completed", value: 45, icon: CheckSquare, trend: { value: 22, isPositive: true } },
+    { title: "Issues Assigned", value: 12, icon: AlertTriangle },
+    { title: "Issues Overdue", value: 3, icon: Clock },
+    { title: "Issues Created", value: 28, icon: FileText },
+    { title: "Issues Completed", value: 45, icon: CheckSquare },
   ];
 
   // Issue status chart data
@@ -132,15 +130,15 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Charts Row */}
+          {/* Charts Row - Added padding and auto layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
-              <CardContent className="p-6">
+              <CardContent className="p-8">
                 <DonutChart data={issueStatusData} title="Issue Status" />
               </CardContent>
             </Card>
             <Card>
-              <CardContent className="p-6">
+              <CardContent className="p-8">
                 <BarChart data={priorityData} title="Issues by Priority" color="#F59E0B" />
               </CardContent>
             </Card>
@@ -180,16 +178,10 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Recent Projects */}
+      {/* Recent Projects - Removed New Project button */}
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-lg font-semibold">Recent Projects</CardTitle>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              New Project
-            </Button>
-          </div>
+          <CardTitle className="text-lg font-semibold">Recent Projects</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
