@@ -82,12 +82,12 @@ const IssueDetail = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/issues")}
-            className="p-2"
+            variant="outline"
+            onClick={() => navigate(-1)}
+            className="flex items-center space-x-2"
           >
             <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
           </Button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{issue.title}</h1>

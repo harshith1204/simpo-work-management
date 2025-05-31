@@ -1,8 +1,8 @@
-
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { CheckCircle2, Clock, AlertCircle, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import MilestoneHeader from "@/components/milestone/MilestoneHeader";
 import LinkedItems from "@/components/milestone/LinkedItems";
 import AttachedFiles from "@/components/milestone/AttachedFiles";
@@ -10,6 +10,7 @@ import ActivityLog from "@/components/milestone/ActivityLog";
 
 const MilestoneDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   // Mock milestone data
   const milestone = {
@@ -138,6 +139,23 @@ const MilestoneDetail = () => {
   return (
     <div className="space-y-6 max-w-6xl mx-auto p-6">
       {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate(-1)}
+            className="flex items-center space-x-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">{milestone.name}</h1>
+          </div>
+        </div>
+      </div>
+
+      {/* MilestoneHeader */}
       <MilestoneHeader milestone={milestone} getStatusColor={getStatusColor} />
 
       {/* Description */}
