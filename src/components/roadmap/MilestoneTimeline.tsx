@@ -1,8 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Target, Eye } from "lucide-react";
+import { Calendar, Target } from "lucide-react";
 
 interface Milestone {
   id: number;
@@ -53,15 +52,6 @@ const MilestoneTimeline = ({ milestones, onViewMilestone, getStatusColor }: Mile
                       </div>
                     </div>
                   </div>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    className="hover:bg-blue-50 hover:text-blue-600 hover:border-blue-300"
-                    onClick={() => onViewMilestone(milestone.id)}
-                  >
-                    <Eye className="w-4 h-4 mr-1" />
-                    View Details
-                  </Button>
                 </div>
 
                 <p className="text-sm text-gray-600 mb-3">{milestone.description}</p>

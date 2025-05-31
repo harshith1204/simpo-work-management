@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, Users, FileText, MessageSquare, Plus, Upload, Eye, Download, Filter } from "lucide-react";
+import { Calendar, Users, FileText, MessageSquare, Plus, Upload, Eye, Download, Filter, ArrowLeft } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,8 +13,10 @@ import AddMemberModal from "@/components/AddMemberModal";
 import CreateMilestoneModal from "@/components/CreateMilestoneModal";
 import DonutChart from "@/components/DonutChart";
 import BarChart from "@/components/BarChart";
+import { useNavigate } from "react-router-dom";
 
 const ProjectDetail = () => {
+  const navigate = useNavigate();
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false);
   const [isMilestoneModalOpen, setIsMilestoneModalOpen] = useState(false);
   const [projectData, setProjectData] = useState({
@@ -108,12 +110,22 @@ const ProjectDetail = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto p-6">
       {/* Header */}
-      <div className="flex justify-between items-start">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{projectData.title}</h1>
-          <div className="flex items-center space-x-4">
-            <Badge className={getStatusColor(projectData.status)}>{projectData.status}</Badge>
-            <span className="text-gray-600">PRJ-001</span>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate(-1)}
+            className="flex items-center space-x-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back</span>
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{projectData.title}</h1>
+            <div className="flex items-center space-x-4">
+              <Badge className={getStatusColor(projectData.status)}>{projectData.status}</Badge>
+              <span className="text-gray-600">PRJ-001</span>
+            </div>
           </div>
         </div>
         <div className="flex space-x-2">

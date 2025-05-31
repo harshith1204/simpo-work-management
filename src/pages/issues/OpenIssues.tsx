@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Bug, Clock, ArrowUpDown, Eye } from "lucide-react";
+import { Bug, ArrowUpDown, Eye, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -113,7 +112,7 @@ const OpenIssues = () => {
           <p className="text-gray-600 mt-1">{issues.length} active issues need attention</p>
         </div>
         <Button onClick={() => setIsCreateModalOpen(true)}>
-          <Bug className="w-4 h-4 mr-2" />
+          <AlertCircle className="w-4 h-4 mr-2" />
           Create Issue
         </Button>
       </div>
@@ -207,10 +206,7 @@ const OpenIssues = () => {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-gray-600">
-                    <div className="flex items-center space-x-1">
-                      <Clock className="w-3 h-3" />
-                      <span>{issue.created}</span>
-                    </div>
+                    <span>{issue.created}</span>
                   </TableCell>
                   <TableCell>
                     <Button
