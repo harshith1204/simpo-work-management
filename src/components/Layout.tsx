@@ -13,25 +13,52 @@ const Layout = () => {
   useEffect(() => {
     const path = location.pathname;
     
-    // Update active submodule based on current path
-    if (path === "/" || path.startsWith("/work")) {
-      setActiveSubmodule("your-work");
-    } else if (path.startsWith("/inbox")) {
-      setActiveSubmodule("inbox");
-    } else if (path.startsWith("/projects")) {
-      setActiveSubmodule("projects");
-    } else if (path.startsWith("/issues")) {
-      setActiveSubmodule("issues");
-    } else if (path.startsWith("/cycles")) {
-      setActiveSubmodule("cycles");
-    } else if (path.startsWith("/analytics")) {
-      setActiveSubmodule("analytics");
-    } else if (path.startsWith("/tasks")) {
-      setActiveSubmodule("tasks");
-    } else if (path.startsWith("/roadmap")) {
-      setActiveSubmodule("roadmap");
-    } else if (path.startsWith("/settings")) {
-      setActiveSubmodule("settings");
+    // Update active module and submodule based on current path
+    if (path.startsWith("/hrms")) {
+      setActiveModule("hrms");
+      if (path === "/hrms") {
+        setActiveSubmodule("hrms-home");
+      } else if (path.startsWith("/hrms/company-setup")) {
+        setActiveSubmodule("company-setup");
+      } else if (path.startsWith("/hrms/employees")) {
+        setActiveSubmodule("employee-master");
+      } else if (path.startsWith("/hrms/leave")) {
+        setActiveSubmodule("leave-management");
+      } else if (path.startsWith("/hrms/attendance")) {
+        setActiveSubmodule("attendance");
+      } else if (path.startsWith("/hrms/payroll")) {
+        setActiveSubmodule("payroll");
+      } else if (path.startsWith("/hrms/compliance")) {
+        setActiveSubmodule("compliance");
+      } else if (path.startsWith("/hrms/documents")) {
+        setActiveSubmodule("documents");
+      } else if (path.startsWith("/hrms/reports")) {
+        setActiveSubmodule("hrms-reports");
+      } else if (path.startsWith("/hrms/permissions")) {
+        setActiveSubmodule("role-permissions");
+      }
+    } else {
+      setActiveModule("work-management");
+      // Update active submodule based on current path
+      if (path === "/" || path.startsWith("/work")) {
+        setActiveSubmodule("your-work");
+      } else if (path.startsWith("/inbox")) {
+        setActiveSubmodule("inbox");
+      } else if (path.startsWith("/projects")) {
+        setActiveSubmodule("projects");
+      } else if (path.startsWith("/issues")) {
+        setActiveSubmodule("issues");
+      } else if (path.startsWith("/cycles")) {
+        setActiveSubmodule("cycles");
+      } else if (path.startsWith("/analytics")) {
+        setActiveSubmodule("analytics");
+      } else if (path.startsWith("/tasks")) {
+        setActiveSubmodule("tasks");
+      } else if (path.startsWith("/roadmap")) {
+        setActiveSubmodule("roadmap");
+      } else if (path.startsWith("/settings")) {
+        setActiveSubmodule("settings");
+      }
     }
   }, [location.pathname]);
 

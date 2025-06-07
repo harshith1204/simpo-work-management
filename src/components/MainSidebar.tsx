@@ -1,3 +1,4 @@
+
 import { 
   Home, 
   Users, 
@@ -5,7 +6,8 @@ import {
   Receipt, 
   TrendingUp, 
   BarChart3, 
-  Briefcase 
+  Briefcase,
+  UserCog
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +24,7 @@ const simpoApps = [
   { id: "sales", name: "Sales", icon: TrendingUp },
   { id: "analytics", name: "Analytics", icon: BarChart3 },
   { id: "work-management", name: "Work Management", icon: Briefcase },
+  { id: "hrms", name: "HRMS", icon: UserCog },
 ];
 
 const MainSidebar = ({ activeModule, onModuleSelect }: MainSidebarProps) => {

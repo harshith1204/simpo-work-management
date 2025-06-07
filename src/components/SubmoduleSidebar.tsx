@@ -30,6 +30,19 @@ const settingsModule = [
   { id: "settings", name: "Settings", route: "/settings" },
 ];
 
+const hrmsModules = [
+  { id: "hrms-home", name: "Dashboard", route: "/hrms" },
+  { id: "company-setup", name: "Company Setup", route: "/hrms/company-setup" },
+  { id: "employee-master", name: "Employee Master & Org Chart", route: "/hrms/employees" },
+  { id: "leave-management", name: "Leave Management", route: "/hrms/leave" },
+  { id: "attendance", name: "Attendance Management", route: "/hrms/attendance" },
+  { id: "payroll", name: "Payroll Management", route: "/hrms/payroll" },
+  { id: "compliance", name: "Compliance Center", route: "/hrms/compliance" },
+  { id: "documents", name: "Document Center", route: "/hrms/documents" },
+  { id: "hrms-reports", name: "Reports & Analytics", route: "/hrms/reports" },
+  { id: "role-permissions", name: "Role Permissions", route: "/hrms/permissions" },
+];
+
 const SubmoduleSidebar = ({ activeModule, activeSubmodule, onSubmoduleSelect }: SubmoduleSidebarProps) => {
   const navigate = useNavigate();
 
@@ -37,6 +50,41 @@ const SubmoduleSidebar = ({ activeModule, activeSubmodule, onSubmoduleSelect }: 
     onSubmoduleSelect(submodule.id);
     navigate(submodule.route);
   };
+
+  if (activeModule === "hrms") {
+    return (
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col font-dm-sans">
+        {/* Header */}
+        <div className="p-4 border-b border-gray-100">
+          <h2 className="text-sm font-semibold text-gray-900">HRMS</h2>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-2">
+          <ul className="space-y-1">
+            {hrmsModules.map((module) => {
+              const isActive = activeSubmodule === module.id;
+              return (
+                <li key={module.id}>
+                  <button
+                    onClick={() => handleSubmoduleClick(module)}
+                    className={cn(
+                      "w-full flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-150 text-left",
+                      isActive
+                        ? "bg-gray-100 text-gray-900 font-semibold"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    )}
+                  >
+                    <span>{module.name}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+    );
+  }
 
   if (activeModule !== "work-management") {
     return (

@@ -16,6 +16,18 @@ import ProjectDetail from "./pages/ProjectDetail";
 import IssueDetail from "./pages/IssueDetail";
 import RoadmapDetail from "./pages/RoadmapDetail";
 
+// HRMS Pages
+import HRMSDashboard from "./pages/hrms/HRMSDashboard";
+import CompanySetup from "./pages/hrms/CompanySetup";
+import EmployeeMaster from "./pages/hrms/EmployeeMaster";
+import LeaveManagement from "./pages/hrms/LeaveManagement";
+import AttendanceManagement from "./pages/hrms/AttendanceManagement";
+import PayrollManagement from "./pages/hrms/PayrollManagement";
+import ComplianceCenter from "./pages/hrms/ComplianceCenter";
+import DocumentCenter from "./pages/hrms/DocumentCenter";
+import HRMSReports from "./pages/hrms/HRMSReports";
+import RolePermissions from "./pages/hrms/RolePermissions";
+
 function App() {
   return (
     <Router>
@@ -35,6 +47,18 @@ function App() {
             <Route path="analytics" element={<Analytics />} />
             <Route path="roadmap" element={<Roadmap />} />
             <Route path="roadmap/:id" element={<RoadmapDetail />} />
+            
+            {/* HRMS Routes */}
+            <Route path="hrms" element={<HRMSDashboard />} />
+            <Route path="hrms/company-setup" element={<CompanySetup />} />
+            <Route path="hrms/employees" element={<EmployeeMaster />} />
+            <Route path="hrms/leave" element={<LeaveManagement />} />
+            <Route path="hrms/attendance" element={<AttendanceManagement />} />
+            <Route path="hrms/payroll" element={<PayrollManagement />} />
+            <Route path="hrms/compliance" element={<ComplianceCenter />} />
+            <Route path="hrms/documents" element={<DocumentCenter />} />
+            <Route path="hrms/reports" element={<HRMSReports />} />
+            <Route path="hrms/permissions" element={<RolePermissions />} />
           </Route>
         </Routes>
         <Toaster />
