@@ -7,13 +7,15 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit2, Trash2 } from "lucide-react";
+import { Plus, Edit2, Trash2, Building } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import AddMemberModal from "@/components/AddMemberModal";
+import CompanyOnboarding from "@/components/hrms/CompanyOnboarding";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("general");
   const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
+  const [showCompanyOnboarding, setShowCompanyOnboarding] = useState(false);
   const [teamMembers, setTeamMembers] = useState([
     { id: 1, name: "Alex Johnson", email: "alex@company.com", role: "Admin", status: true },
     { id: 2, name: "Sarah Chen", email: "sarah@company.com", role: "Editor", status: true },
@@ -28,6 +30,7 @@ const Settings = () => {
     { id: "team", label: "Team Management" },
     { id: "permissions", label: "Permissions" },
     { id: "notifications", label: "Notifications" },
+    { id: "company", label: "Company Setup" },
   ];
 
   const handleSaveSettings = () => {
@@ -58,6 +61,14 @@ const Settings = () => {
         member.id === id ? { ...member, status: !member.status } : member
       )
     );
+  };
+
+  const handleCompanyOnboardingComplete = () => {
+    setShowCompanyOnboarding(false);
+    toast({
+      title: "Company setup completed",
+      description: "Your company has been successfully configured.",
+    });
   };
 
   const renderGeneralSettings = () => (
@@ -274,6 +285,33 @@ const Settings = () => {
     </Card>
   );
 
+  const renderCompanySetup = () => (
+    <Card>
+      <CardContent className="p-6 space-y-6">
+        <div className="text-center py-8">
+          <Building className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-xl font-medium text-gray-900 mb-2">Company Onboarding</h3>
+          <p className="text-gray-600 mb-6 max-w-md mx-auto">
+            Set up your company profile, organization structure, compliance details, and HR policies
+          </p>
+          <Button onClick={() => setShowCompanyOnboarding(true)}>
+            <Building className="w-4 h-4 mr-2" />
+            Start Company Setup
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  if (showCompanyOnboarding) {
+    return (
+      <CompanyOnboarding 
+        onComplete={handleCompanyOnboardingComplete}
+        onCancel={() => setShowCompanyOnboarding(false)}
+      />
+    );
+  }
+
   return (
     <div className="flex gap-8 font-dm-sans">
       {/* Left Sidebar Navigation */}
@@ -299,6 +337,7 @@ const Settings = () => {
         {activeTab === "team" && renderTeamManagement()}
         {activeTab === "permissions" && renderPermissions()}
         {activeTab === "notifications" && renderNotifications()}
+        {activeTab === "company" && renderCompanySetup()}
       </div>
 
       <AddMemberModal 
