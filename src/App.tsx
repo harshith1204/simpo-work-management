@@ -20,8 +20,6 @@ import RecentActivity from "./pages/RecentActivity";
 import Dashboard from "./pages/Dashboard";
 import Integrations from "./pages/Integrations";
 import NotFound from "./pages/NotFound";
-import AppStore from "./pages/AppStore";
-import AppDetail from "./pages/AppDetail";
 import PayrollSetup from "./pages/PayrollSetup";
 
 // HRMS Pages
