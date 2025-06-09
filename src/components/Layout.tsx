@@ -1,19 +1,16 @@
+
 import { useState, useEffect } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import MainSidebar from "./MainSidebar";
-import SubmoduleSidebar from "./SubmoduleSidebar";
+import { Outlet, useLocation } from "react-router-dom";
+import TopNavigationBar from "./TopNavigationBar";
+import FirstSideNavigationPanel from "./FirstSideNavigationPanel";
+import SecondSideNavigationPanel from "./SecondSideNavigationPanel";
 import Header from "./Header";
-import TopNavbar from "./TopNavbar";
-import PayrollManagement from "@/pages/PayrollManagement";
 
 const Layout = () => {
   const [activeModule, setActiveModule] = useState("work-management");
   const [activeSubmodule, setActiveSubmodule] = useState("your-work");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [payrollInstalled, setPayrollInstalled] = useState(false);
-  const [showPayrollApp, setShowPayrollApp] = useState(false);
+  const [showAppsScreen, setShowAppsScreen] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const path = location.pathname;
@@ -38,9 +35,29 @@ const Layout = () => {
       } else if (path.startsWith("/hrms/documents")) {
         setActiveSubmodule("documents");
       } else if (path.startsWith("/hrms/reports")) {
-        setActiveSubmodule("hrms-reports");
+        setActiveSubmodule("reports");
       } else if (path.startsWith("/hrms/permissions")) {
-        setActiveSubmodule("role-permissions");
+        setActiveSubmodule("permissions");
+      }
+    } else if (path.startsWith("/crm")) {
+      setActiveModule("crm");
+      // Set appropriate CRM submodule based on path
+      if (path.startsWith("/crm/leads")) {
+        setActiveSubmodule("leads");
+      } else if (path.startsWith("/crm/contacts")) {
+        setActiveSubmodule("contacts");
+      } else if (path.startsWith("/crm/accounts")) {
+        setActiveSubmodule("accounts");
+      } else if (path.startsWith("/crm/opportunities")) {
+        setActiveSubmodule("opportunities");
+      } else if (path.startsWith("/crm/tasks")) {
+        setActiveSubmodule("tasks");
+      } else if (path.startsWith("/crm/meetings")) {
+        setActiveSubmodule("meetings");
+      } else if (path.startsWith("/crm/analytics")) {
+        setActiveSubmodule("analytics");
+      } else if (path.startsWith("/crm/reports")) {
+        setActiveSubmodule("reports");
       }
     } else {
       setActiveModule("work-management");
@@ -67,59 +84,32 @@ const Layout = () => {
     }
   }, [location.pathname]);
 
+  const handleAppsClick = () => {
+    setShowAppsScreen(true);
+  };
+
   const handleModuleSelect = (module: string) => {
-    if (module === "payroll") {
-      setShowPayrollApp(true);
-      setActiveModule(module);
-    } else {
-      setShowPayrollApp(false);
-      setActiveModule(module);
-      // Navigate to the appropriate route based on module
-      if (module === "hrms") {
-        navigate("/hrms");
-      } else if (module === "work-management") {
-        navigate("/");
-      }
+    setActiveModule(module);
+    setShowAppsScreen(false);
+    // Reset submodule when changing main module
+    if (module === "hrms") {
+      setActiveSubmodule("hrms-home");
+    } else if (module === "crm") {
+      setActiveSubmodule("leads");
+    } else if (module === "work-management") {
+      setActiveSubmodule("your-work");
     }
   };
 
-  const handleInstallPayroll = () => {
-    setPayrollInstalled(true);
-  };
-
-  const handleBackToApps = () => {
-    setShowPayrollApp(false);
-    setActiveModule("work-management");
-    navigate("/");
-  };
-
-  const handleNavigateToEmployees = () => {
-    setShowPayrollApp(false);
-    setActiveModule("hrms");
-    setActiveSubmodule("employee-master");
-    navigate("/hrms/employees");
-  };
-
-  if (showPayrollApp) {
+  if (showAppsScreen) {
     return (
       <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
-        <TopNavbar 
-          onInstallPayroll={handleInstallPayroll}
-          isPayrollInstalled={payrollInstalled}
-        />
+        <TopNavigationBar onAppsClick={handleAppsClick} />
         <div className="flex flex-1">
-          <MainSidebar 
-            activeModule={activeModule} 
-            onModuleSelect={handleModuleSelect}
-            collapsed={sidebarCollapsed}
-            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-            payrollInstalled={payrollInstalled}
-          />
-          <div className="flex-1 overflow-auto">
-            <PayrollManagement 
-              onBack={handleBackToApps}
-              onNavigateToEmployees={handleNavigateToEmployees}
-            />
+          {/* Apps screen content would go here */}
+          <div className="flex-1 p-8">
+            <h1 className="text-2xl font-bold mb-4">Apps</h1>
+            <p className="text-gray-600">App store content coming soon...</p>
           </div>
         </div>
       </div>
@@ -128,19 +118,13 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
-      <TopNavbar 
-        onInstallPayroll={handleInstallPayroll}
-        isPayrollInstalled={payrollInstalled}
-      />
+      <TopNavigationBar onAppsClick={handleAppsClick} />
       <div className="flex flex-1">
-        <MainSidebar 
-          activeModule={activeModule} 
+        <FirstSideNavigationPanel 
+          activeModule={activeModule}
           onModuleSelect={handleModuleSelect}
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-          payrollInstalled={payrollInstalled}
         />
-        <SubmoduleSidebar 
+        <SecondSideNavigationPanel 
           activeModule={activeModule}
           activeSubmodule={activeSubmodule}
           onSubmoduleSelect={setActiveSubmodule}
