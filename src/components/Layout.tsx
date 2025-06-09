@@ -1,16 +1,28 @@
-
 import { useState, useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import TopNavigationBar from "./TopNavigationBar";
 import FirstSideNavigationPanel from "./FirstSideNavigationPanel";
 import SecondSideNavigationPanel from "./SecondSideNavigationPanel";
+import AppsNavigationPanel from "./AppsNavigationPanel";
+import AppsScreen from "./AppsScreen";
+import AppDetailPage from "./AppDetailPage";
+import AppIntroPopup from "./AppIntroPopup";
 import Header from "./Header";
 
 const Layout = () => {
   const [activeModule, setActiveModule] = useState("work-management");
   const [activeSubmodule, setActiveSubmodule] = useState("your-work");
   const [showAppsScreen, setShowAppsScreen] = useState(false);
+  const [showAppDetail, setShowAppDetail] = useState(false);
+  const [selectedAppId, setSelectedAppId] = useState("");
+  const [activeAppsSection, setActiveAppsSection] = useState("apps");
+  const [isFirstSidebarCollapsed, setIsFirstSidebarCollapsed] = useState(false);
+  const [installedApps, setInstalledApps] = useState<string[]>([]);
+  const [showIntroPopup, setShowIntroPopup] = useState(false);
+  const [introAppId, setIntroAppId] = useState("");
+  
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const path = location.pathname;
@@ -86,11 +98,15 @@ const Layout = () => {
 
   const handleAppsClick = () => {
     setShowAppsScreen(true);
+    setShowAppDetail(false);
+    setIsFirstSidebarCollapsed(true);
   };
 
   const handleModuleSelect = (module: string) => {
     setActiveModule(module);
     setShowAppsScreen(false);
+    setShowAppDetail(false);
+    setIsFirstSidebarCollapsed(false);
     // Reset submodule when changing main module
     if (module === "hrms") {
       setActiveSubmodule("hrms-home");
@@ -101,21 +117,92 @@ const Layout = () => {
     }
   };
 
+  const handleAppSelect = (appId: string) => {
+    setSelectedAppId(appId);
+    setShowAppDetail(true);
+  };
+
+  const handleBackToApps = () => {
+    setShowAppDetail(false);
+    setSelectedAppId("");
+  };
+
+  const handleInstallApp = (appId: string) => {
+    if (!installedApps.includes(appId)) {
+      setInstalledApps(prev => [...prev, appId]);
+      // Show intro popup after installation
+      setIntroAppId(appId);
+      setShowIntroPopup(true);
+      
+      // Add to first navigation if it's a main module
+      if (appId === "payroll" || appId === "employees") {
+        // This could trigger adding to the main navigation
+        console.log(`Installing ${appId} - should add to navigation`);
+      }
+    }
+  };
+
+  const handleSetupApp = () => {
+    if (introAppId === "payroll") {
+      navigate("/hrms/payroll");
+      setActiveModule("hrms");
+      setActiveSubmodule("payroll");
+      setShowAppsScreen(false);
+      setIsFirstSidebarCollapsed(false);
+    }
+    // Handle other app setups here
+  };
+
+  // Apps Screen Layout
   if (showAppsScreen) {
     return (
       <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
         <TopNavigationBar onAppsClick={handleAppsClick} />
         <div className="flex flex-1">
-          {/* Apps screen content would go here */}
-          <div className="flex-1 p-8">
-            <h1 className="text-2xl font-bold mb-4">Apps</h1>
-            <p className="text-gray-600">App store content coming soon...</p>
-          </div>
+          <FirstSideNavigationPanel 
+            activeModule={activeModule}
+            onModuleSelect={handleModuleSelect}
+            isCollapsed={isFirstSidebarCollapsed}
+            onToggleCollapse={() => setIsFirstSidebarCollapsed(!isFirstSidebarCollapsed)}
+          />
+          {showAppDetail ? (
+            <>
+              <AppsNavigationPanel 
+                activeSection={activeAppsSection}
+                onSectionSelect={setActiveAppsSection}
+              />
+              <AppDetailPage
+                appId={selectedAppId}
+                onBack={handleBackToApps}
+                onInstall={handleInstallApp}
+                isInstalled={installedApps.includes(selectedAppId)}
+              />
+            </>
+          ) : (
+            <>
+              <AppsNavigationPanel 
+                activeSection={activeAppsSection}
+                onSectionSelect={setActiveAppsSection}
+              />
+              <AppsScreen
+                onAppSelect={handleAppSelect}
+                onInstallApp={handleInstallApp}
+                installedApps={installedApps}
+              />
+            </>
+          )}
         </div>
+        <AppIntroPopup
+          isOpen={showIntroPopup}
+          onClose={() => setShowIntroPopup(false)}
+          appId={introAppId}
+          onSetup={handleSetupApp}
+        />
       </div>
     );
   }
 
+  // Regular Layout
   return (
     <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
       <TopNavigationBar onAppsClick={handleAppsClick} />
@@ -123,6 +210,8 @@ const Layout = () => {
         <FirstSideNavigationPanel 
           activeModule={activeModule}
           onModuleSelect={handleModuleSelect}
+          isCollapsed={isFirstSidebarCollapsed}
+          onToggleCollapse={() => setIsFirstSidebarCollapsed(!isFirstSidebarCollapsed)}
         />
         <SecondSideNavigationPanel 
           activeModule={activeModule}
@@ -136,6 +225,12 @@ const Layout = () => {
           </main>
         </div>
       </div>
+      <AppIntroPopup
+        isOpen={showIntroPopup}
+        onClose={() => setShowIntroPopup(false)}
+        appId={introAppId}
+        onSetup={handleSetupApp}
+      />
     </div>
   );
 };

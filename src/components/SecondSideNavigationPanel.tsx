@@ -67,20 +67,9 @@ const SecondSideNavigationPanel = ({ activeModule, activeSubmodule, onSubmoduleS
     navigate(submodule.route);
   };
 
+  // Don't render if no modules
   if (modules.length === 0) {
-    return (
-      <div className="w-64 bg-white border-r border-gray-200 flex flex-col font-dm-sans">
-        <div className="p-4 border-b border-gray-100">
-          <h2 className="text-sm font-semibold text-gray-900 capitalize">
-            {activeModule.replace("-", " ")}
-          </h2>
-          <p className="text-xs text-gray-500 mt-1">Coming Soon</p>
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <p className="text-gray-500 text-sm">This module is under development</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

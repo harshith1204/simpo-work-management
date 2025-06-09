@@ -1,5 +1,6 @@
 
 import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { 
   Home, 
   Users, 
@@ -11,12 +12,17 @@ import {
   UserCog,
   Bot,
   PenTool,
-  Headphones
+  Headphones,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface FirstSideNavigationPanelProps {
   activeModule: string;
   onModuleSelect: (module: string) => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 const applicationModules = [
@@ -38,14 +44,45 @@ const aiAgentModules = [
   { id: "ai-analytics", name: "AI Analytics", icon: BarChart3 },
 ];
 
-const FirstSideNavigationPanel = ({ activeModule, onModuleSelect }: FirstSideNavigationPanelProps) => {
+const FirstSideNavigationPanel = ({ 
+  activeModule, 
+  onModuleSelect, 
+  isCollapsed = false, 
+  onToggleCollapse 
+}: FirstSideNavigationPanelProps) => {
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col font-dm-sans">
+    <div className={cn(
+      "bg-white border-r border-gray-200 flex flex-col font-dm-sans transition-all duration-300",
+      isCollapsed ? "w-16" : "w-64"
+    )}>
+      {/* Header with collapse button */}
+      <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+        {!isCollapsed && (
+          <h2 className="text-sm font-semibold text-gray-900">Navigation</h2>
+        )}
+        {onToggleCollapse && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggleCollapse}
+            className="p-1 h-6 w-6"
+          >
+            {isCollapsed ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <ChevronLeft className="w-4 h-4" />
+            )}
+          </Button>
+        )}
+      </div>
+
       {/* Applications Section */}
       <div className="p-4">
-        <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
-          Applications
-        </div>
+        {!isCollapsed && (
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+            Applications
+          </div>
+        )}
         <ul className="space-y-1">
           {applicationModules.map((module) => {
             const isActive = activeModule === module.id;
@@ -55,14 +92,16 @@ const FirstSideNavigationPanel = ({ activeModule, onModuleSelect }: FirstSideNav
                 <button
                   onClick={() => onModuleSelect(module.id)}
                   className={cn(
-                    "w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                    "w-full flex items-center rounded-lg text-sm font-medium transition-all duration-200",
+                    isCollapsed ? "p-2 justify-center" : "px-3 py-2.5",
                     isActive 
                       ? "bg-[#271A29] text-white" 
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   )}
+                  title={isCollapsed ? module.name : undefined}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
-                  <span>{module.name}</span>
+                  <Icon className="w-5 h-5" />
+                  {!isCollapsed && <span className="ml-3">{module.name}</span>}
                 </button>
               </li>
             );
@@ -72,9 +111,11 @@ const FirstSideNavigationPanel = ({ activeModule, onModuleSelect }: FirstSideNav
 
       {/* AI Agents Section */}
       <div className="p-4 border-t border-gray-100">
-        <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
-          AI Agents
-        </div>
+        {!isCollapsed && (
+          <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+            AI Agents
+          </div>
+        )}
         <ul className="space-y-1">
           {aiAgentModules.map((module) => {
             const isActive = activeModule === module.id;
@@ -84,14 +125,16 @@ const FirstSideNavigationPanel = ({ activeModule, onModuleSelect }: FirstSideNav
                 <button
                   onClick={() => onModuleSelect(module.id)}
                   className={cn(
-                    "w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
+                    "w-full flex items-center rounded-lg text-sm font-medium transition-all duration-200",
+                    isCollapsed ? "p-2 justify-center" : "px-3 py-2.5",
                     isActive 
                       ? "bg-[#271A29] text-white" 
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   )}
+                  title={isCollapsed ? module.name : undefined}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
-                  <span>{module.name}</span>
+                  <Icon className="w-5 h-5" />
+                  {!isCollapsed && <span className="ml-3">{module.name}</span>}
                 </button>
               </li>
             );
@@ -101,9 +144,15 @@ const FirstSideNavigationPanel = ({ activeModule, onModuleSelect }: FirstSideNav
 
       {/* Help and Support at bottom */}
       <div className="mt-auto p-4 border-t border-gray-100">
-        <button className="w-full flex items-center px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200">
-          <Headphones className="w-5 h-5 mr-3" />
-          <span>Help and Support</span>
+        <button 
+          className={cn(
+            "w-full flex items-center rounded-lg text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200",
+            isCollapsed ? "p-2 justify-center" : "px-3 py-2.5"
+          )}
+          title={isCollapsed ? "Help and Support" : undefined}
+        >
+          <Headphones className="w-5 h-5" />
+          {!isCollapsed && <span className="ml-3">Help and Support</span>}
         </button>
       </div>
     </div>
