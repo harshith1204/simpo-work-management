@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Check, Upload, User, Briefcase, DollarSign, FileText, Shield, Paperclip, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import BulkUpload from "@/components/hrms/BulkUpload";
 
 interface AddEmployeeWizardProps {
   onClose: () => void;
