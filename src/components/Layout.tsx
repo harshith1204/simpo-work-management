@@ -1,18 +1,17 @@
-
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import DarkTopNavbar from "./DarkTopNavbar";
-import LightSideNavbar from "./LightSideNavbar";
+import MainSidebar from "./MainSidebar";
 import SubmoduleSidebar from "./SubmoduleSidebar";
 import Header from "./Header";
-import Apps from "@/pages/Apps";
+import TopNavbar from "./TopNavbar";
+import PayrollManagement from "@/pages/PayrollManagement";
 
 const Layout = () => {
   const [activeModule, setActiveModule] = useState("work-management");
   const [activeSubmodule, setActiveSubmodule] = useState("your-work");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [showAppsScreen, setShowAppsScreen] = useState(false);
-  const [appsSubmodule, setAppsSubmodule] = useState("recommended");
+  const [payrollInstalled, setPayrollInstalled] = useState(false);
+  const [showPayrollApp, setShowPayrollApp] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -22,7 +21,6 @@ const Layout = () => {
     // Update active module and submodule based on current path
     if (path.startsWith("/hrms")) {
       setActiveModule("hrms");
-      setShowAppsScreen(false);
       if (path === "/hrms") {
         setActiveSubmodule("hrms-home");
       } else if (path.startsWith("/hrms/company-setup")) {
@@ -46,7 +44,6 @@ const Layout = () => {
       }
     } else {
       setActiveModule("work-management");
-      setShowAppsScreen(false);
       // Update active submodule based on current path
       if (path === "/" || path.startsWith("/work")) {
         setActiveSubmodule("your-work");
@@ -70,46 +67,59 @@ const Layout = () => {
     }
   }, [location.pathname]);
 
-  const handleAppsClick = () => {
-    setShowAppsScreen(true);
-    setActiveModule("apps");
+  const handleModuleSelect = (module: string) => {
+    if (module === "payroll") {
+      setShowPayrollApp(true);
+      setActiveModule(module);
+    } else {
+      setShowPayrollApp(false);
+      setActiveModule(module);
+      // Navigate to the appropriate route based on module
+      if (module === "hrms") {
+        navigate("/hrms");
+      } else if (module === "work-management") {
+        navigate("/");
+      }
+    }
   };
 
-  const handleCollapseClick = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
+  const handleInstallPayroll = () => {
+    setPayrollInstalled(true);
   };
 
-  const handleUpgradeClick = () => {
-    console.log("Upgrade clicked");
+  const handleBackToApps = () => {
+    setShowPayrollApp(false);
+    setActiveModule("work-management");
+    navigate("/");
   };
 
-  if (showAppsScreen) {
+  const handleNavigateToEmployees = () => {
+    setShowPayrollApp(false);
+    setActiveModule("hrms");
+    setActiveSubmodule("employee-master");
+    navigate("/hrms/employees");
+  };
+
+  if (showPayrollApp) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col w-full">
-        <DarkTopNavbar
-          companyName="TechCorp Solutions"
-          userName="John Doe"
-          credits={4920}
-          trialDaysLeft={30}
-          onAppsClick={handleAppsClick}
-          onUpgradeClick={handleUpgradeClick}
-          onCollapseClick={handleCollapseClick}
+      <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
+        <TopNavbar 
+          onInstallPayroll={handleInstallPayroll}
+          isPayrollInstalled={payrollInstalled}
         />
         <div className="flex flex-1">
-          <LightSideNavbar
-            activeSubmodule={appsSubmodule}
-            onSubmoduleSelect={setAppsSubmodule}
+          <MainSidebar 
+            activeModule={activeModule} 
+            onModuleSelect={handleModuleSelect}
             collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+            payrollInstalled={payrollInstalled}
           />
           <div className="flex-1 overflow-auto">
-            {appsSubmodule === "apps" ? <Apps /> : (
-              <div className="p-6">
-                <h1 className="text-2xl font-bold text-gray-900 mb-4 capitalize">
-                  {appsSubmodule.replace("-", " ")}
-                </h1>
-                <p className="text-gray-600">This section is coming soon.</p>
-              </div>
-            )}
+            <PayrollManagement 
+              onBack={handleBackToApps}
+              onNavigateToEmployees={handleNavigateToEmployees}
+            />
           </div>
         </div>
       </div>
@@ -117,17 +127,19 @@ const Layout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col w-full">
-      <DarkTopNavbar
-        companyName="TechCorp Solutions"
-        userName="John Doe"
-        credits={4920}
-        trialDaysLeft={30}
-        onAppsClick={handleAppsClick}
-        onUpgradeClick={handleUpgradeClick}
-        onCollapseClick={handleCollapseClick}
+    <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
+      <TopNavbar 
+        onInstallPayroll={handleInstallPayroll}
+        isPayrollInstalled={payrollInstalled}
       />
       <div className="flex flex-1">
+        <MainSidebar 
+          activeModule={activeModule} 
+          onModuleSelect={handleModuleSelect}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+          payrollInstalled={payrollInstalled}
+        />
         <SubmoduleSidebar 
           activeModule={activeModule}
           activeSubmodule={activeSubmodule}
