@@ -17,7 +17,7 @@ const navigationSections = [
   { id: "recommended", name: "Recommended", icon: Star },
   { id: "apps", name: "Apps", icon: Grid3X3 },
   { id: "ai-agents", name: "AI Agents", icon: Bot },
-  { id: "workflow", name: Work Flow", icon: Workflow },
+  { id: "workflow", name: "Work Flow", icon: Workflow },
 ];
 
 const AppsNavigationPanel = ({ activeSection, onSectionSelect }: AppsNavigationPanelProps) => {
