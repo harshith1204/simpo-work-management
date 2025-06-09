@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import TopNavigationBar from "./TopNavigationBar";
@@ -10,6 +9,7 @@ import AppDetailPage from "./AppDetailPage";
 import AppIntroPopup from "./AppIntroPopup";
 import Header from "./Header";
 import PayrollApp from "./PayrollApp";
+import PayrollConfiguration from "./payroll/PayrollConfiguration";
 
 const Layout = () => {
   const [activeModule, setActiveModule] = useState("work-management");
@@ -23,6 +23,7 @@ const Layout = () => {
   const [showIntroPopup, setShowIntroPopup] = useState(false);
   const [introAppId, setIntroAppId] = useState("");
   const [showPayrollScreen, setShowPayrollScreen] = useState(false);
+  const [showPayrollConfiguration, setShowPayrollConfiguration] = useState(false);
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,20 +31,35 @@ const Layout = () => {
   useEffect(() => {
     const path = location.pathname;
     
+    // Check if we're on payroll configuration route
+    if (path === "/payroll/configuration") {
+      setShowPayrollConfiguration(true);
+      setShowPayrollScreen(false);
+      setShowAppsScreen(false);
+      setActiveModule("payroll");
+      setActiveSubmodule("configuration");
+      return;
+    }
+    
     // Check if we're on payroll routes
     if (path.startsWith("/payroll")) {
       setShowPayrollScreen(true);
+      setShowPayrollConfiguration(false);
       setActiveModule("payroll");
       setShowAppsScreen(false);
       setIsFirstSidebarCollapsed(false);
       
-      if (path === "/payroll/configuration") {
-        setActiveSubmodule("configuration");
+      if (path === "/payroll/setup") {
+        setActiveSubmodule("payroll-setup");
       } else if (path === "/payroll") {
         setActiveSubmodule("payroll-dashboard");
       }
       return;
     }
+    
+    // Reset payroll states for other routes
+    setShowPayrollScreen(false);
+    setShowPayrollConfiguration(false);
     
     // Update active module and submodule based on current path
     if (path.startsWith("/hrms")) {
@@ -91,7 +107,6 @@ const Layout = () => {
       }
     } else {
       setActiveModule("work-management");
-      setShowPayrollScreen(false);
       // Update active submodule based on current path
       if (path === "/" || path.startsWith("/work")) {
         setActiveSubmodule("your-work");
@@ -120,6 +135,7 @@ const Layout = () => {
     setShowAppDetail(false);
     setIsFirstSidebarCollapsed(true);
     setShowPayrollScreen(false);
+    setShowPayrollConfiguration(false);
   };
 
   const handleModuleSelect = (module: string) => {
@@ -128,6 +144,7 @@ const Layout = () => {
     setShowAppDetail(false);
     setIsFirstSidebarCollapsed(false);
     setShowPayrollScreen(false);
+    setShowPayrollConfiguration(false);
     
     // Show intro popup for installed apps when clicked
     if (installedApps.includes(module)) {
@@ -171,6 +188,7 @@ const Layout = () => {
     if (introAppId === "payroll") {
       setShowPayrollScreen(true);
       setShowAppsScreen(false);
+      setShowPayrollConfiguration(false);
       setIsFirstSidebarCollapsed(false);
       setActiveModule("payroll");
       setActiveSubmodule("payroll-dashboard");
@@ -183,15 +201,38 @@ const Layout = () => {
     setActiveModule("hrms");
     setActiveSubmodule("employee-master");
     setShowPayrollScreen(false);
+    setShowPayrollConfiguration(false);
     setShowAppsScreen(false);
     setIsFirstSidebarCollapsed(false);
   };
 
   const handleBackFromPayroll = () => {
     setShowPayrollScreen(false);
+    setShowPayrollConfiguration(false);
     setShowAppsScreen(true);
     setIsFirstSidebarCollapsed(true);
   };
+
+  const handleBackFromConfiguration = () => {
+    setShowPayrollConfiguration(false);
+    navigate("/payroll");
+    setShowPayrollScreen(true);
+  };
+
+  // Payroll Configuration Full Screen Layout
+  if (showPayrollConfiguration) {
+    return (
+      <div className="min-h-screen bg-[#F9F9FB] w-full font-dm-sans">
+        <PayrollConfiguration onBack={handleBackFromConfiguration} />
+        <AppIntroPopup
+          isOpen={showIntroPopup}
+          onClose={() => setShowIntroPopup(false)}
+          appId={introAppId}
+          onSetup={handleSetupApp}
+        />
+      </div>
+    );
+  }
 
   // Payroll Screen Layout
   if (showPayrollScreen) {
