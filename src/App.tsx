@@ -59,6 +59,10 @@ function App() {
             <Route path="hrms/documents" element={<DocumentCenter />} />
             <Route path="hrms/reports" element={<HRMSReports />} />
             <Route path="hrms/permissions" element={<RolePermissions />} />
+            
+            {/* Payroll Routes */}
+            <Route path="payroll" element={<PayrollManagement />} />
+            <Route path="payroll/configuration" element={<PayrollManagement />} />
           </Route>
         </Routes>
         <Toaster />

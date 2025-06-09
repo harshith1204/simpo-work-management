@@ -3,8 +3,9 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DollarSign, Settings, Users, ArrowLeft } from "lucide-react";
+import { DollarSign, Settings, Users, ArrowLeft, Cog } from "lucide-react";
 import PayrollSetup from "@/components/payroll/PayrollSetup";
+import PayrollConfiguration from "@/components/payroll/PayrollConfiguration";
 
 interface PayrollAppProps {
   onBack: () => void;
@@ -14,17 +15,28 @@ interface PayrollAppProps {
 const PayrollApp = ({ onBack, onNavigateToEmployees }: PayrollAppProps) => {
   const [setupComplete, setSetupComplete] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
+  const [showConfiguration, setShowConfiguration] = useState(false);
 
   if (showSetup) {
     return (
-      <PayrollSetup 
-        onBack={() => setShowSetup(false)}
-        onComplete={() => {
-          setSetupComplete(true);
-          setShowSetup(false);
-        }}
-        onAddEmployee={onNavigateToEmployees}
-      />
+      <div className="min-h-screen bg-[#F9F9FB] w-full">
+        <PayrollSetup 
+          onBack={() => setShowSetup(false)}
+          onComplete={() => {
+            setSetupComplete(true);
+            setShowSetup(false);
+          }}
+          onAddEmployee={onNavigateToEmployees}
+        />
+      </div>
+    );
+  }
+
+  if (showConfiguration) {
+    return (
+      <div className="min-h-screen bg-[#F9F9FB] w-full">
+        <PayrollConfiguration onBack={() => setShowConfiguration(false)} />
+      </div>
     );
   }
 
@@ -57,7 +69,7 @@ const PayrollApp = ({ onBack, onNavigateToEmployees }: PayrollAppProps) => {
             </p>
             <Button onClick={() => setShowSetup(true)} size="lg">
               <Settings className="w-4 h-4 mr-2" />
-              Start Payroll Setup
+              Setup Payroll
             </Button>
           </CardContent>
         </Card>
@@ -107,6 +119,10 @@ const PayrollApp = ({ onBack, onNavigateToEmployees }: PayrollAppProps) => {
                   <Button variant="outline" onClick={onNavigateToEmployees}>
                     <Users className="w-4 h-4 mr-2" />
                     Manage Employees
+                  </Button>
+                  <Button variant="outline" onClick={() => setShowConfiguration(true)}>
+                    <Cog className="w-4 h-4 mr-2" />
+                    Configuration
                   </Button>
                   <Button>
                     <DollarSign className="w-4 h-4 mr-2" />

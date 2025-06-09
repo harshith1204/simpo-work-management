@@ -53,6 +53,7 @@ const payrollModules = [
   { id: "payroll-processing", name: "Process Payroll", route: "/payroll/process" },
   { id: "payslips", name: "Payslips", route: "/payroll/payslips" },
   { id: "statutory-reports", name: "Statutory Reports", route: "/payroll/reports" },
+  { id: "configuration", name: "Configuration", route: "/payroll/configuration" },
   { id: "compliance", name: "Compliance", route: "/payroll/compliance" },
 ];
 
