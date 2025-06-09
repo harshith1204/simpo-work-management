@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import TopNavigationBar from "./TopNavigationBar";
@@ -191,24 +192,6 @@ const Layout = () => {
     setShowAppsScreen(true);
     setIsFirstSidebarCollapsed(true);
   };
-
-  // Full Screen Layout for Payroll Setup and Configuration
-  if (showPayrollScreen && (location.pathname === "/payroll/setup" || location.pathname === "/payroll/configuration")) {
-    return (
-      <div className="min-h-screen bg-[#F9F9FB] w-full font-dm-sans">
-        <PayrollApp 
-          onBack={handleBackFromPayroll}
-          onNavigateToEmployees={handleNavigateToEmployees}
-        />
-        <AppIntroPopup
-          isOpen={showIntroPopup}
-          onClose={() => setShowIntroPopup(false)}
-          appId={introAppId}
-          onSetup={handleSetupApp}
-        />
-      </div>
-    );
-  }
 
   // Payroll Screen Layout
   if (showPayrollScreen) {
