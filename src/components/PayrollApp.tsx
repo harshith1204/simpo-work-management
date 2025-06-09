@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,22 @@ const PayrollApp = ({ onBack, onNavigateToEmployees }: PayrollAppProps) => {
   const [setupComplete, setSetupComplete] = useState(false);
   const [showSetup, setShowSetup] = useState(false);
   const [showConfiguration, setShowConfiguration] = useState(false);
+  
+  const location = useLocation();
+
+  useEffect(() => {
+    // Check current route to determine what to show
+    if (location.pathname === "/payroll/configuration") {
+      setShowConfiguration(true);
+      setShowSetup(false);
+    } else if (location.pathname === "/payroll/setup") {
+      setShowSetup(true);
+      setShowConfiguration(false);
+    } else {
+      setShowConfiguration(false);
+      setShowSetup(false);
+    }
+  }, [location.pathname]);
 
   if (showSetup) {
     return (

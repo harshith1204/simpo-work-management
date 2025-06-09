@@ -30,6 +30,21 @@ const Layout = () => {
   useEffect(() => {
     const path = location.pathname;
     
+    // Check if we're on payroll routes
+    if (path.startsWith("/payroll")) {
+      setShowPayrollScreen(true);
+      setActiveModule("payroll");
+      setShowAppsScreen(false);
+      setIsFirstSidebarCollapsed(false);
+      
+      if (path === "/payroll/configuration") {
+        setActiveSubmodule("configuration");
+      } else if (path === "/payroll") {
+        setActiveSubmodule("payroll-dashboard");
+      }
+      return;
+    }
+    
     // Update active module and submodule based on current path
     if (path.startsWith("/hrms")) {
       setActiveModule("hrms");
@@ -76,6 +91,7 @@ const Layout = () => {
       }
     } else {
       setActiveModule("work-management");
+      setShowPayrollScreen(false);
       // Update active submodule based on current path
       if (path === "/" || path.startsWith("/work")) {
         setActiveSubmodule("your-work");
