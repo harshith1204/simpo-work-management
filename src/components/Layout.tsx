@@ -8,6 +8,7 @@ import AppsScreen from "./AppsScreen";
 import AppDetailPage from "./AppDetailPage";
 import AppIntroPopup from "./AppIntroPopup";
 import Header from "./Header";
+import PayrollManagement from "./PayrollManagement";
 
 const Layout = () => {
   const [activeModule, setActiveModule] = useState("work-management");
@@ -20,6 +21,7 @@ const Layout = () => {
   const [installedApps, setInstalledApps] = useState<string[]>([]);
   const [showIntroPopup, setShowIntroPopup] = useState(false);
   const [introAppId, setIntroAppId] = useState("");
+  const [showPayrollScreen, setShowPayrollScreen] = useState(false);
   
   const location = useLocation();
   const navigate = useNavigate();
@@ -100,6 +102,7 @@ const Layout = () => {
     setShowAppsScreen(true);
     setShowAppDetail(false);
     setIsFirstSidebarCollapsed(true);
+    setShowPayrollScreen(false);
   };
 
   const handleModuleSelect = (module: string) => {
@@ -107,6 +110,15 @@ const Layout = () => {
     setShowAppsScreen(false);
     setShowAppDetail(false);
     setIsFirstSidebarCollapsed(false);
+    setShowPayrollScreen(false);
+    
+    // Show intro popup for installed apps when clicked
+    if (installedApps.includes(module)) {
+      setIntroAppId(module);
+      setShowIntroPopup(true);
+      return;
+    }
+    
     // Reset submodule when changing main module
     if (module === "hrms") {
       setActiveSubmodule("hrms-home");
@@ -114,6 +126,8 @@ const Layout = () => {
       setActiveSubmodule("leads");
     } else if (module === "work-management") {
       setActiveSubmodule("your-work");
+    } else if (module === "payroll") {
+      setActiveSubmodule("payroll-dashboard");
     }
   };
 
@@ -133,25 +147,69 @@ const Layout = () => {
       // Show intro popup after installation
       setIntroAppId(appId);
       setShowIntroPopup(true);
-      
-      // Add to first navigation if it's a main module
-      if (appId === "payroll" || appId === "employees") {
-        // This could trigger adding to the main navigation
-        console.log(`Installing ${appId} - should add to navigation`);
-      }
     }
   };
 
   const handleSetupApp = () => {
     if (introAppId === "payroll") {
-      navigate("/hrms/payroll");
-      setActiveModule("hrms");
-      setActiveSubmodule("payroll");
+      setShowPayrollScreen(true);
       setShowAppsScreen(false);
       setIsFirstSidebarCollapsed(false);
+      setActiveModule("payroll");
+      setActiveSubmodule("payroll-dashboard");
     }
     // Handle other app setups here
   };
+
+  const handleNavigateToEmployees = () => {
+    navigate("/hrms/employees");
+    setActiveModule("hrms");
+    setActiveSubmodule("employee-master");
+    setShowPayrollScreen(false);
+    setShowAppsScreen(false);
+    setIsFirstSidebarCollapsed(false);
+  };
+
+  const handleBackFromPayroll = () => {
+    setShowPayrollScreen(false);
+    setShowAppsScreen(true);
+    setIsFirstSidebarCollapsed(true);
+  };
+
+  // Payroll Screen Layout
+  if (showPayrollScreen) {
+    return (
+      <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
+        <TopNavigationBar onAppsClick={handleAppsClick} />
+        <div className="flex flex-1">
+          <FirstSideNavigationPanel 
+            activeModule={activeModule}
+            onModuleSelect={handleModuleSelect}
+            isCollapsed={isFirstSidebarCollapsed}
+            onToggleCollapse={() => setIsFirstSidebarCollapsed(!isFirstSidebarCollapsed)}
+            installedApps={installedApps}
+          />
+          <SecondSideNavigationPanel 
+            activeModule={activeModule}
+            activeSubmodule={activeSubmodule}
+            onSubmoduleSelect={setActiveSubmodule}
+          />
+          <div className="flex-1">
+            <PayrollManagement 
+              onBack={handleBackFromPayroll}
+              onNavigateToEmployees={handleNavigateToEmployees}
+            />
+          </div>
+        </div>
+        <AppIntroPopup
+          isOpen={showIntroPopup}
+          onClose={() => setShowIntroPopup(false)}
+          appId={introAppId}
+          onSetup={handleSetupApp}
+        />
+      </div>
+    );
+  }
 
   // Apps Screen Layout
   if (showAppsScreen) {
@@ -164,6 +222,7 @@ const Layout = () => {
             onModuleSelect={handleModuleSelect}
             isCollapsed={isFirstSidebarCollapsed}
             onToggleCollapse={() => setIsFirstSidebarCollapsed(!isFirstSidebarCollapsed)}
+            installedApps={installedApps}
           />
           {showAppDetail ? (
             <>
@@ -212,6 +271,7 @@ const Layout = () => {
           onModuleSelect={handleModuleSelect}
           isCollapsed={isFirstSidebarCollapsed}
           onToggleCollapse={() => setIsFirstSidebarCollapsed(!isFirstSidebarCollapsed)}
+          installedApps={installedApps}
         />
         <SecondSideNavigationPanel 
           activeModule={activeModule}

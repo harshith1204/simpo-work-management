@@ -45,6 +45,17 @@ const crmModules = [
   { id: "reports", name: "Reports", route: "/crm/reports" },
 ];
 
+const payrollModules = [
+  { id: "payroll-dashboard", name: "Dashboard", route: "/payroll" },
+  { id: "payroll-setup", name: "Payroll Setup", route: "/payroll/setup" },
+  { id: "salary-structures", name: "Salary Structures", route: "/payroll/structures" },
+  { id: "salary-components", name: "Salary Components", route: "/payroll/components" },
+  { id: "payroll-processing", name: "Process Payroll", route: "/payroll/process" },
+  { id: "payslips", name: "Payslips", route: "/payroll/payslips" },
+  { id: "statutory-reports", name: "Statutory Reports", route: "/payroll/reports" },
+  { id: "compliance", name: "Compliance", route: "/payroll/compliance" },
+];
+
 const getModulesForActiveModule = (activeModule: string) => {
   switch (activeModule) {
     case "work-management":
@@ -53,6 +64,8 @@ const getModulesForActiveModule = (activeModule: string) => {
       return hrmsModules;
     case "crm":
       return crmModules;
+    case "payroll":
+      return payrollModules;
     default:
       return [];
   }

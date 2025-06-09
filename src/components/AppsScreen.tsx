@@ -29,7 +29,7 @@ const appCategories = {
       {
         id: "employees",
         name: "Employees",
-        description: "Manage your workforce with comprehensive employee profiles",
+        description: "Manage your workforce with comprehensive employee profiles and organizational charts",
         icon: Users,
         tags: ["HR", "Management"],
         installed: false
@@ -37,7 +37,7 @@ const appCategories = {
       {
         id: "payroll",
         name: "Payroll",
-        description: "Smart salary management and compliance made simple",
+        description: "Smart salary management and compliance made simple with automated payroll processing",
         icon: DollarSign,
         tags: ["Finance", "HR", "Compliance"],
         installed: false
@@ -45,7 +45,7 @@ const appCategories = {
       {
         id: "attendance",
         name: "Attendance",
-        description: "Track employee attendance and working hours efficiently",
+        description: "Track employee attendance and working hours efficiently with automated time tracking",
         icon: Calendar,
         tags: ["HR", "Time Tracking"],
         installed: false
@@ -53,7 +53,7 @@ const appCategories = {
       {
         id: "leave-management",
         name: "Leave Management",
-        description: "Streamline leave requests and approvals",
+        description: "Streamline leave requests and approvals with automated workflow management",
         icon: UserCheck,
         tags: ["HR", "Management"],
         installed: false
@@ -61,7 +61,7 @@ const appCategories = {
       {
         id: "engage",
         name: "Engage",
-        description: "Boost employee engagement and satisfaction",
+        description: "Boost employee engagement and satisfaction with comprehensive feedback tools",
         icon: Heart,
         tags: ["HR", "Engagement"],
         installed: false
@@ -74,7 +74,7 @@ const appCategories = {
       {
         id: "invoice",
         name: "Invoice",
-        description: "Create and manage professional invoices",
+        description: "Create and manage professional invoices with automated billing workflows",
         icon: FileText,
         tags: ["Finance", "Billing"],
         installed: false
@@ -82,7 +82,7 @@ const appCategories = {
       {
         id: "quotation",
         name: "Quotation",
-        description: "Generate quotes and proposals quickly",
+        description: "Generate quotes and proposals quickly with customizable templates",
         icon: Calculator,
         tags: ["Sales", "Finance"],
         installed: false
@@ -90,7 +90,7 @@ const appCategories = {
       {
         id: "ledger",
         name: "Ledger",
-        description: "Comprehensive accounting and bookkeeping",
+        description: "Comprehensive accounting and bookkeeping with real-time financial insights",
         icon: BookOpen,
         tags: ["Finance", "Accounting"],
         installed: false
@@ -111,9 +111,9 @@ const AppsScreen = ({ onAppSelect, onInstallApp, installedApps }: AppsScreenProp
         {Object.entries(appCategories).map(([categoryKey, category]) => (
           <div key={categoryKey} className="mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-              Function: {category.name}
+              {category.name}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {category.apps.map((app) => {
                 const Icon = app.icon;
                 const isInstalled = installedApps.includes(app.id);
@@ -121,7 +121,7 @@ const AppsScreen = ({ onAppSelect, onInstallApp, installedApps }: AppsScreenProp
                 return (
                   <Card 
                     key={app.id} 
-                    className="group hover:shadow-lg transition-all duration-200 cursor-pointer border-gray-200"
+                    className="group hover:shadow-lg transition-all duration-200 cursor-pointer border-gray-200 h-full"
                     onClick={() => onAppSelect(app.id)}
                   >
                     <CardHeader className="pb-4">
@@ -138,11 +138,11 @@ const AppsScreen = ({ onAppSelect, onInstallApp, installedApps }: AppsScreenProp
                       <CardTitle className="text-lg group-hover:text-[#271A29] transition-colors">
                         {app.name}
                       </CardTitle>
-                      <CardDescription className="text-sm text-gray-600 line-clamp-2">
+                      <CardDescription className="text-sm text-gray-600 line-clamp-3 min-h-[4rem]">
                         {app.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="pt-0">
+                    <CardContent className="pt-0 flex flex-col justify-between flex-1">
                       <div className="flex flex-wrap gap-2 mb-4">
                         {app.tags.map((tag) => (
                           <Badge 
@@ -154,19 +154,7 @@ const AppsScreen = ({ onAppSelect, onInstallApp, installedApps }: AppsScreenProp
                           </Badge>
                         ))}
                       </div>
-                      <div className="flex items-center justify-between">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-[#271A29] hover:bg-[#271A29]/10 p-0 h-auto"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onAppSelect(app.id);
-                          }}
-                        >
-                          View Details
-                          <ArrowRight className="w-4 h-4 ml-1" />
-                        </Button>
+                      <div className="flex items-center justify-end">
                         {!isInstalled && (
                           <Button
                             size="sm"

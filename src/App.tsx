@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
@@ -22,7 +21,7 @@ import CompanySetup from "./pages/hrms/CompanySetup";
 import EmployeeMaster from "./pages/hrms/EmployeeMaster";
 import LeaveManagement from "./pages/hrms/LeaveManagement";
 import AttendanceManagement from "./pages/hrms/AttendanceManagement";
-import PayrollManagement from "./pages/hrms/PayrollManagement";
+import PayrollManagement from "./pages/PayrollManagement";
 import ComplianceCenter from "./pages/hrms/ComplianceCenter";
 import DocumentCenter from "./pages/hrms/DocumentCenter";
 import HRMSReports from "./pages/hrms/HRMSReports";
@@ -59,6 +58,9 @@ function App() {
             <Route path="hrms/documents" element={<DocumentCenter />} />
             <Route path="hrms/reports" element={<HRMSReports />} />
             <Route path="hrms/permissions" element={<RolePermissions />} />
+            
+            {/* Payroll Routes */}
+            <Route path="payroll" element={<PayrollManagement />} />
           </Route>
         </Routes>
         <Toaster />

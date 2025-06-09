@@ -14,7 +14,8 @@ import {
   PenTool,
   Headphones,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -23,6 +24,7 @@ interface FirstSideNavigationPanelProps {
   onModuleSelect: (module: string) => void;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
+  installedApps?: string[];
 }
 
 const applicationModules = [
@@ -44,12 +46,27 @@ const aiAgentModules = [
   { id: "ai-analytics", name: "AI Analytics", icon: BarChart3 },
 ];
 
+const getInstalledAppModules = (installedApps: string[] = []) => {
+  const appModules = [];
+  if (installedApps.includes("payroll")) {
+    appModules.push({ id: "payroll", name: "Payroll", icon: DollarSign });
+  }
+  if (installedApps.includes("employees")) {
+    appModules.push({ id: "employees", name: "Employees", icon: Users });
+  }
+  return appModules;
+};
+
 const FirstSideNavigationPanel = ({ 
   activeModule, 
   onModuleSelect, 
   isCollapsed = false, 
-  onToggleCollapse 
+  onToggleCollapse,
+  installedApps = []
 }: FirstSideNavigationPanelProps) => {
+  const installedAppModules = getInstalledAppModules(installedApps);
+  const allApplicationModules = [...applicationModules, ...installedAppModules];
+
   return (
     <div className={cn(
       "bg-white border-r border-gray-200 flex flex-col font-dm-sans transition-all duration-300",
@@ -84,7 +101,7 @@ const FirstSideNavigationPanel = ({
           </div>
         )}
         <ul className="space-y-1">
-          {applicationModules.map((module) => {
+          {allApplicationModules.map((module) => {
             const isActive = activeModule === module.id;
             const Icon = module.icon;
             return (
