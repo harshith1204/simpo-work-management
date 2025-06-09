@@ -36,24 +36,20 @@ const PayrollApp = ({ onBack, onNavigateToEmployees }: PayrollAppProps) => {
 
   if (showSetup) {
     return (
-      <div className="min-h-screen bg-[#F9F9FB] w-full">
-        <PayrollSetup 
-          onBack={() => setShowSetup(false)}
-          onComplete={() => {
-            setSetupComplete(true);
-            setShowSetup(false);
-          }}
-          onAddEmployee={onNavigateToEmployees}
-        />
-      </div>
+      <PayrollSetup 
+        onBack={() => setShowSetup(false)}
+        onComplete={() => {
+          setSetupComplete(true);
+          setShowSetup(false);
+        }}
+        onAddEmployee={onNavigateToEmployees}
+      />
     );
   }
 
   if (showConfiguration) {
     return (
-      <div className="min-h-screen bg-[#F9F9FB] w-full">
-        <PayrollConfiguration onBack={() => setShowConfiguration(false)} />
-      </div>
+      <PayrollConfiguration onBack={() => setShowConfiguration(false)} />
     );
   }
 
