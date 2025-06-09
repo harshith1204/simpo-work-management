@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ interface AddEmployeeWizardProps {
 
 const AddEmployeeWizard = ({ onClose, onComplete }: AddEmployeeWizardProps) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [showBulkUpload, setShowBulkUpload] = useState(false);
   const [formData, setFormData] = useState({
     // Personal Details
     fullName: "",
@@ -470,14 +470,29 @@ const AddEmployeeWizard = ({ onClose, onComplete }: AddEmployeeWizardProps) => {
     }
   };
 
+  if (showBulkUpload) {
+    return (
+      <BulkUpload onBack={() => setShowBulkUpload(false)} />
+    );
+  }
+
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex items-center mb-6">
-        <Button variant="outline" className="mr-4" onClick={onClose}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <Button variant="outline" className="mr-4" onClick={onClose}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Directory
+          </Button>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Add New Employee</h2>
+            <p className="text-gray-600">Complete employee information and onboarding</p>
+          </div>
+        </div>
+        <Button variant="outline" onClick={() => setShowBulkUpload(true)}>
+          <Upload className="w-4 h-4 mr-2" />
+          Bulk Upload
         </Button>
-        <h1 className="text-2xl font-bold text-gray-900">Add New Employee</h1>
       </div>
 
       <div className="mb-8">
