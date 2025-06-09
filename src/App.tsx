@@ -181,10 +181,6 @@ function App() {
               <Route path="recent-activity" element={<RecentActivity />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="integrations" element={<Integrations />} />
-
-              {/* App Store Routes */}
-              <Route path="apps" element={<AppStore />} />
-              <Route path="apps/:appId" element={<AppDetail />} />
               
               {/* Payroll Setup Route */}
               <Route path="payroll/setup" element={<PayrollSetup />} />
