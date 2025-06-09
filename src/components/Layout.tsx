@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import TopNavigationBar from "./TopNavigationBar";
@@ -8,7 +9,7 @@ import AppsScreen from "./AppsScreen";
 import AppDetailPage from "./AppDetailPage";
 import AppIntroPopup from "./AppIntroPopup";
 import Header from "./Header";
-import PayrollManagement from "./PayrollManagement";
+import PayrollApp from "./PayrollApp";
 
 const Layout = () => {
   const [activeModule, setActiveModule] = useState("work-management");
@@ -195,7 +196,7 @@ const Layout = () => {
             onSubmoduleSelect={setActiveSubmodule}
           />
           <div className="flex-1">
-            <PayrollManagement 
+            <PayrollApp 
               onBack={handleBackFromPayroll}
               onNavigateToEmployees={handleNavigateToEmployees}
             />

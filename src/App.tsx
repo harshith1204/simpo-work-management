@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
@@ -58,9 +59,6 @@ function App() {
             <Route path="hrms/documents" element={<DocumentCenter />} />
             <Route path="hrms/reports" element={<HRMSReports />} />
             <Route path="hrms/permissions" element={<RolePermissions />} />
-            
-            {/* Payroll Routes */}
-            <Route path="payroll" element={<PayrollManagement />} />
           </Route>
         </Routes>
         <Toaster />
