@@ -27,14 +27,14 @@ const PayrollConfiguration = ({ onBack }: PayrollConfigurationProps) => {
     { id: "company", name: "Company Details", icon: Building2, component: CompanyDetails },
     { id: "payroll", name: "Payroll Settings", icon: Settings, component: PayrollSettings },
     { id: "compliance", name: "Compliance & Statutory", icon: Shield, component: ComplianceSettings },
-    { id: "salary", name: "Salary Components", icon: DollarSign, component: SalaryComponentsStructure },
+    { id: "salary", name: "Salary Components & Structure", icon: DollarSign, component: SalaryComponentsStructure },
     { id: "leave", name: "Leave Policy", icon: Calendar, component: LeavePolicy },
-    { id: "office", name: "Office Timings", icon: Clock, component: OfficeTimings },
+    { id: "office", name: "Office Timings & Shifts", icon: Clock, component: OfficeTimings },
     { id: "attendance", name: "Attendance Settings", icon: Clock, component: AttendanceSettings },
-    { id: "reimbursement", name: "Reimbursements", icon: Receipt, component: ReimbursementSettings },
+    { id: "reimbursement", name: "Reimbursement Settings", icon: Receipt, component: ReimbursementSettings },
     { id: "payslip", name: "Payslip Settings", icon: FileText, component: PayslipSettings },
-    { id: "roles", name: "Role Permissions", icon: Users, component: RolePermissions },
-    { id: "notifications", name: "Notifications", icon: Bell, component: NotificationSettings },
+    { id: "roles", name: "Roles & Access Management", icon: Users, component: RolePermissions },
+    { id: "notifications", name: "Notification Settings", icon: Bell, component: NotificationSettings },
   ];
 
   const handleSectionComplete = (sectionId: string) => {
@@ -50,20 +50,25 @@ const PayrollConfiguration = ({ onBack }: PayrollConfigurationProps) => {
           <ArrowLeft className="w-4 h-4" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Payroll Configuration</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Payroll Settings</h1>
           <p className="text-gray-600 mt-2">Configure all payroll settings and rules</p>
         </div>
       </div>
 
-      {/* Configuration Tabs */}
+      {/* Settings Tabs */}
       <Tabs defaultValue="company" className="w-full">
-        <TabsList className="grid grid-cols-6 lg:grid-cols-11 w-full">
+        <TabsList className="grid grid-cols-4 lg:grid-cols-11 w-full h-auto flex-wrap gap-1">
           {configSections.map((section) => {
             const Icon = section.icon;
             return (
-              <TabsTrigger key={section.id} value={section.id} className="flex items-center space-x-1">
-                <Icon className="w-4 h-4" />
-                <span className="hidden lg:inline">{section.name}</span>
+              <TabsTrigger 
+                key={section.id} 
+                value={section.id} 
+                className="flex items-center space-x-1 px-2 py-2 text-xs lg:text-sm whitespace-nowrap min-w-0"
+              >
+                <Icon className="w-3 h-3 lg:w-4 lg:h-4 flex-shrink-0" />
+                <span className="hidden lg:inline truncate">{section.name}</span>
+                <span className="lg:hidden truncate">{section.name.split(' ')[0]}</span>
               </TabsTrigger>
             );
           })}
