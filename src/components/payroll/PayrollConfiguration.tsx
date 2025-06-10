@@ -4,7 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Building2, Settings, Shield, DollarSign, Calendar, Clock, Receipt, FileText, Users, Bell } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CompanyDetails from "./config/CompanyDetails";
 import PayrollSettings from "./config/PayrollSettings";
+import ComplianceSettings from "./config/ComplianceSettings";
+import SalaryComponentsStructure from "./config/SalaryComponentsStructure";
+import LeavePolicy from "./config/LeavePolicy";
+import OfficeTimings from "./config/OfficeTimings";
+import AttendanceSettings from "./config/AttendanceSettings";
+import ReimbursementSettings from "./config/ReimbursementSettings";
+import PayslipSettings from "./config/PayslipSettings";
+import RolePermissions from "./config/RolePermissions";
+import NotificationSettings from "./config/NotificationSettings";
 
 interface PayrollConfigurationProps {
   onBack: () => void;
@@ -114,20 +124,7 @@ const PayrollConfiguration = ({ onBack }: PayrollConfigurationProps) => {
         </TabsList>
 
         <TabsContent value="company-details" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Building2 className="w-5 h-5" />
-                <span>Company Details</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Legal and operational details required for payroll setup.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Company Details configuration will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <CompanyDetails onComplete={() => handleSectionComplete("company-details")} />
         </TabsContent>
 
         <TabsContent value="payroll-settings" className="mt-6">
@@ -135,156 +132,39 @@ const PayrollConfiguration = ({ onBack }: PayrollConfigurationProps) => {
         </TabsContent>
 
         <TabsContent value="compliance" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="w-5 h-5" />
-                <span>Compliance & Statutory</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Set regulatory IDs and percentages for payroll deductions.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Compliance settings will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <ComplianceSettings onComplete={() => handleSectionComplete("compliance")} />
         </TabsContent>
 
         <TabsContent value="salary-components" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <DollarSign className="w-5 h-5" />
-                <span>Salary Components & Structure</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Define salary heads and reusable structures for automation.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Salary components configuration will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <SalaryComponentsStructure onComplete={() => handleSectionComplete("salary-components")} />
         </TabsContent>
 
         <TabsContent value="leave-policy" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Calendar className="w-5 h-5" />
-                <span>Leave Policy</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Manage leave types, entitlement logic, and salary deductions.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Leave policy configuration will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <LeavePolicy onComplete={() => handleSectionComplete("leave-policy")} />
         </TabsContent>
 
         <TabsContent value="office-timings" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Clock className="w-5 h-5" />
-                <span>Office Timings & Shifts</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Manage working hours and shift-wise schedules.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Office timings configuration will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <OfficeTimings onComplete={() => handleSectionComplete("office-timings")} />
         </TabsContent>
 
         <TabsContent value="attendance" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Users className="w-5 h-5" />
-                <span>Attendance Settings</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Link attendance to payroll rules and automation.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Attendance settings will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <AttendanceSettings onComplete={() => handleSectionComplete("attendance")} />
         </TabsContent>
 
         <TabsContent value="reimbursement" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Receipt className="w-5 h-5" />
-                <span>Reimbursement Settings</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Enable or restrict reimbursements per company policy.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Reimbursement settings will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <ReimbursementSettings onComplete={() => handleSectionComplete("reimbursement")} />
         </TabsContent>
 
         <TabsContent value="payslip-settings" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <FileText className="w-5 h-5" />
-                <span>Payslip Settings</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Design how employee payslips will look and what they include.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Payslip settings will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <PayslipSettings onComplete={() => handleSectionComplete("payslip-settings")} />
         </TabsContent>
 
         <TabsContent value="roles-access" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Shield className="w-5 h-5" />
-                <span>Roles & Access Management</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Control who can view, edit, approve or run payroll actions.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Roles & access configuration will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <RolePermissions onComplete={() => handleSectionComplete("roles-access")} />
         </TabsContent>
 
         <TabsContent value="notifications" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Bell className="w-5 h-5" />
-                <span>Notification Settings</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600 mb-4">Set up alerts and communication for payroll events.</p>
-              <div className="text-center py-8">
-                <p className="text-sm text-gray-500">Notification settings will be implemented here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <NotificationSettings onComplete={() => handleSectionComplete("notifications")} />
         </TabsContent>
       </Tabs>
     </div>
