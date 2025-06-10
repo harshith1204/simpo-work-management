@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Settings } from "lucide-react";
 
 interface PayrollSettingsProps {
@@ -16,14 +18,13 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
     payrollFrequency: "",
     cycleStartDate: "",
     disbursementDay: "",
-    prorataRule: "",
+    prorataRule: "calendar",
     autoLock: false,
     enableGratuity: false,
     defaultSalaryStructure: ""
   });
 
   const handleSave = () => {
-    // Save logic here
     onComplete();
   };
 
@@ -52,6 +53,16 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
           </div>
 
           <div>
+            <Label htmlFor="cycleStartDate">Payroll Cycle Start Date</Label>
+            <Input
+              id="cycleStartDate"
+              type="date"
+              value={settings.cycleStartDate}
+              onChange={(e) => setSettings({...settings, cycleStartDate: e.target.value})}
+            />
+          </div>
+
+          <div>
             <Label>Salary Disbursement Day</Label>
             <Select onValueChange={(value) => setSettings({...settings, disbursementDay: value})}>
               <SelectTrigger>
@@ -62,20 +73,8 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
                 <SelectItem value="5">5th of month</SelectItem>
                 <SelectItem value="7">7th of month</SelectItem>
                 <SelectItem value="15">15th of month</SelectItem>
+                <SelectItem value="25">25th of month</SelectItem>
                 <SelectItem value="last">Last working day</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label>Prorata Calculation Rule</Label>
-            <Select onValueChange={(value) => setSettings({...settings, prorataRule: value})}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select rule" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="calendar">Calendar Days</SelectItem>
-                <SelectItem value="working">Working Days</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -93,6 +92,24 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
               </SelectContent>
             </Select>
           </div>
+        </div>
+
+        <div>
+          <Label className="text-base font-medium">Prorata Calculation Rule</Label>
+          <RadioGroup 
+            value={settings.prorataRule} 
+            onValueChange={(value) => setSettings({...settings, prorataRule: value})}
+            className="mt-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="calendar" id="calendar" />
+              <Label htmlFor="calendar">Calendar Days</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="working" id="working" />
+              <Label htmlFor="working">Working Days</Label>
+            </div>
+          </RadioGroup>
         </div>
 
         <div className="space-y-4">

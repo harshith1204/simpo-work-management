@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 
@@ -47,14 +46,9 @@ const crmModules = [
 
 const payrollModules = [
   { id: "payroll-dashboard", name: "Dashboard", route: "/payroll" },
-  { id: "payroll-setup", name: "Payroll Setup", route: "/payroll/setup" },
-  { id: "salary-structures", name: "Salary Structures", route: "/payroll/structures" },
-  { id: "salary-components", name: "Salary Components", route: "/payroll/components" },
   { id: "payroll-processing", name: "Process Payroll", route: "/payroll/process" },
-  { id: "payslips", name: "Payslips", route: "/payroll/payslips" },
   { id: "statutory-reports", name: "Statutory Reports", route: "/payroll/reports" },
-  { id: "configuration", name: "Configuration", route: "/payroll/configuration" },
-  { id: "compliance", name: "Compliance", route: "/payroll/compliance" },
+  { id: "settings", name: "Settings", route: "/payroll/configuration" },
 ];
 
 const getModulesForActiveModule = (activeModule: string) => {
