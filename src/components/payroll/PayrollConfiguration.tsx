@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Building2, Settings, Shield, DollarSign, Calendar, Clock, Receipt, FileText, Users, Bell, CreditCard } from "lucide-react";
+import { ArrowLeft, Building2, Settings, Shield, DollarSign, Calendar, Clock, Receipt, FileText, Users, Bell } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CompanyDetails from "./config/CompanyDetails";
 import PayrollSettings from "./config/PayrollSettings";
@@ -12,7 +12,6 @@ import LeavePolicy from "./config/LeavePolicy";
 import OfficeTimings from "./config/OfficeTimings";
 import AttendanceSettings from "./config/AttendanceSettings";
 import ReimbursementSettings from "./config/ReimbursementSettings";
-import BankPayoutSettings from "./config/BankPayoutSettings";
 import PayslipSettings from "./config/PayslipSettings";
 import RolePermissions from "./config/RolePermissions";
 import NotificationSettings from "./config/NotificationSettings";
@@ -33,9 +32,8 @@ const PayrollConfiguration = ({ onBack }: PayrollConfigurationProps) => {
     { id: "office", name: "Office Timings", icon: Clock, component: OfficeTimings },
     { id: "attendance", name: "Attendance Settings", icon: Clock, component: AttendanceSettings },
     { id: "reimbursement", name: "Reimbursements", icon: Receipt, component: ReimbursementSettings },
-    { id: "bank", name: "Bank & Payout", icon: CreditCard, component: BankPayoutSettings },
     { id: "payslip", name: "Payslip Settings", icon: FileText, component: PayslipSettings },
-    { id: "roles", name: "Access & Roles", icon: Users, component: RolePermissions },
+    { id: "roles", name: "Role Permissions", icon: Users, component: RolePermissions },
     { id: "notifications", name: "Notifications", icon: Bell, component: NotificationSettings },
   ];
 
@@ -52,14 +50,14 @@ const PayrollConfiguration = ({ onBack }: PayrollConfigurationProps) => {
           <ArrowLeft className="w-4 h-4" />
         </Button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Payroll Settings</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Payroll Configuration</h1>
           <p className="text-gray-600 mt-2">Configure all payroll settings and rules</p>
         </div>
       </div>
 
       {/* Configuration Tabs */}
       <Tabs defaultValue="company" className="w-full">
-        <TabsList className="grid grid-cols-6 lg:grid-cols-12 w-full">
+        <TabsList className="grid grid-cols-6 lg:grid-cols-11 w-full">
           {configSections.map((section) => {
             const Icon = section.icon;
             return (
