@@ -31,6 +31,16 @@ const Layout = () => {
   useEffect(() => {
     const path = location.pathname;
     
+    // Check if we're on payroll settings route
+    if (path === "/payroll/settings") {
+      setShowPayrollConfiguration(true);
+      setShowPayrollScreen(false);
+      setShowAppsScreen(false);
+      setActiveModule("payroll");
+      setActiveSubmodule("settings");
+      return;
+    }
+    
     // Check if we're on payroll configuration route
     if (path === "/payroll/configuration") {
       setShowPayrollConfiguration(true);
