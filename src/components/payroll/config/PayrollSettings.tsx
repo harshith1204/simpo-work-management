@@ -10,7 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Upload, Settings, Calendar } from "lucide-react";
+import { Plus, Trash2, Upload, Settings, Calendar, Building, Shield, DollarSign, Users, Bell, Clock, Receipt, FileText, CreditCard } from "lucide-react";
 
 interface PayrollSettingsProps {
   onComplete: () => void;
@@ -71,8 +71,13 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
   });
 
   // Salary Components State
-  const [salaryComponents, setSalaryComponents] = useState([]);
-  const [salaryTemplates, setSalaryTemplates] = useState([]);
+  const [salaryComponents, setSalaryComponents] = useState([
+    { name: "Basic Salary", type: "earning", taxable: true, fixed: true, amount: "" }
+  ]);
+
+  const [salaryTemplates, setSalaryTemplates] = useState([
+    { name: "Standard Template", components: [], roles: [], allowOverrides: true }
+  ]);
 
   // Leave Policy State
   const [leavePolicy, setLeavePolicy] = useState([
@@ -98,7 +103,9 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
     enableOvertime: false
   });
 
-  const [shifts, setShifts] = useState([]);
+  const [shifts, setShifts] = useState([
+    { name: "General Shift", inTime: "09:00", outTime: "18:00", breakDuration: 60, roles: [] }
+  ]);
 
   // Attendance Settings State
   const [attendanceSettings, setAttendanceSettings] = useState({
@@ -119,6 +126,15 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
       showInPayslip: true
     }
   ]);
+
+  // Bank & Payout Settings State
+  const [bankSettings, setBankSettings] = useState({
+    accountHolderName: "",
+    accountNumber: "",
+    ifscCode: "",
+    paymentMethod: "manual",
+    exportFormat: "excel"
+  });
 
   // Payslip Settings State
   const [payslipSettings, setPayslipSettings] = useState({
@@ -167,18 +183,63 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
     setWorkLocations(updated);
   };
 
+  const addSalaryComponent = () => {
+    setSalaryComponents([...salaryComponents, { name: "", type: "earning", taxable: true, fixed: true, amount: "" }]);
+  };
+
+  const addLeaveType = () => {
+    setLeavePolicy([...leavePolicy, {
+      type: "",
+      quota: 0,
+      carryForward: false,
+      maxCarryForward: 0,
+      encashment: false,
+      cycle: "calendar",
+      autoLOP: false
+    }]);
+  };
+
+  const addShift = () => {
+    setShifts([...shifts, { name: "", inTime: "09:00", outTime: "18:00", breakDuration: 60, roles: [] }]);
+  };
+
+  const addReimbursementType = () => {
+    setReimbursements([...reimbursements, {
+      type: "",
+      monthlyCap: 0,
+      taxable: false,
+      approvalFlow: "manual",
+      showInPayslip: true
+    }]);
+  };
+
+  const addRole = () => {
+    setRoles([...roles, {
+      name: "",
+      permissions: {
+        view: false,
+        edit: false,
+        approve: false,
+        finalize: false,
+        payslipView: false
+      }
+    }]);
+  };
+
   const handleSave = () => {
-    // Save all settings
     console.log("Saving all payroll settings:", {
       companyDetails,
       workLocations,
       payrollSettings,
       complianceSettings,
       salaryComponents,
+      salaryTemplates,
       leavePolicy,
       officeTimings,
+      shifts,
       attendanceSettings,
       reimbursements,
+      bankSettings,
       payslipSettings,
       roles,
       notifications
@@ -196,21 +257,58 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="company" className="w-full">
-          <TabsList className="grid grid-cols-11 w-full mb-6 h-auto p-1">
-            <TabsTrigger value="company" className="text-xs px-2 py-2">Company</TabsTrigger>
-            <TabsTrigger value="payroll" className="text-xs px-2 py-2">Payroll</TabsTrigger>
-            <TabsTrigger value="compliance" className="text-xs px-2 py-2">Compliance</TabsTrigger>
-            <TabsTrigger value="salary" className="text-xs px-2 py-2">Salary</TabsTrigger>
-            <TabsTrigger value="leave" className="text-xs px-2 py-2">Leave</TabsTrigger>
-            <TabsTrigger value="timings" className="text-xs px-2 py-2">Timings</TabsTrigger>
-            <TabsTrigger value="attendance" className="text-xs px-2 py-2">Attendance</TabsTrigger>
-            <TabsTrigger value="reimbursement" className="text-xs px-2 py-2">Reimburse</TabsTrigger>
-            <TabsTrigger value="payslip" className="text-xs px-2 py-2">Payslip</TabsTrigger>
-            <TabsTrigger value="roles" className="text-xs px-2 py-2">Roles</TabsTrigger>
-            <TabsTrigger value="notifications" className="text-xs px-2 py-2">Notify</TabsTrigger>
+          <TabsList className="grid grid-cols-11 w-full mb-6 h-auto p-1 overflow-x-auto">
+            <TabsTrigger value="company" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Building className="w-4 h-4 mr-1" />
+              Company
+            </TabsTrigger>
+            <TabsTrigger value="payroll" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Settings className="w-4 h-4 mr-1" />
+              Payroll
+            </TabsTrigger>
+            <TabsTrigger value="compliance" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Shield className="w-4 h-4 mr-1" />
+              Compliance
+            </TabsTrigger>
+            <TabsTrigger value="salary" className="text-xs px-2 py-2 whitespace-nowrap">
+              <DollarSign className="w-4 h-4 mr-1" />
+              Salary
+            </TabsTrigger>
+            <TabsTrigger value="leave" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Calendar className="w-4 h-4 mr-1" />
+              Leave
+            </TabsTrigger>
+            <TabsTrigger value="timings" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Clock className="w-4 h-4 mr-1" />
+              Timings
+            </TabsTrigger>
+            <TabsTrigger value="attendance" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Clock className="w-4 h-4 mr-1" />
+              Attendance
+            </TabsTrigger>
+            <TabsTrigger value="reimbursement" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Receipt className="w-4 h-4 mr-1" />
+              Reimburse
+            </TabsTrigger>
+            <TabsTrigger value="bank" className="text-xs px-2 py-2 whitespace-nowrap">
+              <CreditCard className="w-4 h-4 mr-1" />
+              Bank
+            </TabsTrigger>
+            <TabsTrigger value="payslip" className="text-xs px-2 py-2 whitespace-nowrap">
+              <FileText className="w-4 h-4 mr-1" />
+              Payslip
+            </TabsTrigger>
+            <TabsTrigger value="roles" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Users className="w-4 h-4 mr-1" />
+              Roles
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="text-xs px-2 py-2 whitespace-nowrap">
+              <Bell className="w-4 h-4 mr-1" />
+              Notify
+            </TabsTrigger>
           </TabsList>
 
-          {/* Company Details Tab */}
+          {/* 1. Company Details Tab */}
           <TabsContent value="company" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Company Details</h3>
@@ -268,7 +366,6 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
                 />
               </div>
 
-              {/* Work Locations */}
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <Label>Work Locations</Label>
@@ -313,7 +410,6 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
                 </div>
               </div>
 
-              {/* HR Contact */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="hrContactName">HR Contact Person</Label>
@@ -336,7 +432,6 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
                 </div>
               </div>
 
-              {/* Company Logo */}
               <div>
                 <Label>Company Logo</Label>
                 <div className="mt-2 flex items-center space-x-4">
@@ -359,7 +454,7 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
             </div>
           </TabsContent>
 
-          {/* Payroll Settings Tab */}
+          {/* 2. Payroll Settings Tab */}
           <TabsContent value="payroll" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Payroll Settings</h3>
@@ -465,7 +560,7 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
             </div>
           </TabsContent>
 
-          {/* Compliance Tab */}
+          {/* 3. Compliance Tab */}
           <TabsContent value="compliance" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Compliance & Statutory</h3>
@@ -669,70 +764,797 @@ const PayrollSettings = ({ onComplete }: PayrollSettingsProps) => {
             </div>
           </TabsContent>
 
-          {/* Additional tabs for other sections would continue here with similar structure */}
-          {/* For brevity, I'll add placeholders for the remaining tabs */}
-          
+          {/* 4. Salary Components & Structure Tab */}
           <TabsContent value="salary" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Salary Components & Structure</h3>
-              <p className="text-gray-600">Configure salary components and create reusable templates.</p>
-              {/* Add detailed salary component configuration here */}
+              
+              <Tabs defaultValue="components" className="w-full">
+                <TabsList className="grid grid-cols-2 w-full max-w-md">
+                  <TabsTrigger value="components">Components</TabsTrigger>
+                  <TabsTrigger value="templates">Templates</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="components" className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-medium">Salary Components</h4>
+                    <Button onClick={addSalaryComponent} size="sm" variant="outline">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Component
+                    </Button>
+                  </div>
+                  <div className="space-y-4">
+                    {salaryComponents.map((component, index) => (
+                      <div key={index} className="border rounded-lg p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                          <div>
+                            <Label>Component Name</Label>
+                            <Input
+                              value={component.name}
+                              onChange={(e) => {
+                                const updated = [...salaryComponents];
+                                updated[index].name = e.target.value;
+                                setSalaryComponents(updated);
+                              }}
+                              placeholder="e.g., Basic Salary"
+                            />
+                          </div>
+                          <div>
+                            <Label>Type</Label>
+                            <Select value={component.type} onValueChange={(value) => {
+                              const updated = [...salaryComponents];
+                              updated[index].type = value;
+                              setSalaryComponents(updated);
+                            }}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="earning">Earning</SelectItem>
+                                <SelectItem value="deduction">Deduction</SelectItem>
+                                <SelectItem value="reimbursement">Reimbursement</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-2">
+                              <Switch
+                                checked={component.taxable}
+                                onCheckedChange={(checked) => {
+                                  const updated = [...salaryComponents];
+                                  updated[index].taxable = checked;
+                                  setSalaryComponents(updated);
+                                }}
+                              />
+                              <Label>Taxable</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Switch
+                                checked={component.fixed}
+                                onCheckedChange={(checked) => {
+                                  const updated = [...salaryComponents];
+                                  updated[index].fixed = checked;
+                                  setSalaryComponents(updated);
+                                }}
+                              />
+                              <Label>Fixed</Label>
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Amount/Formula</Label>
+                            <Input
+                              value={component.amount}
+                              onChange={(e) => {
+                                const updated = [...salaryComponents];
+                                updated[index].amount = e.target.value;
+                                setSalaryComponents(updated);
+                              }}
+                              placeholder="Amount or formula"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="templates" className="space-y-4 mt-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-lg font-medium">Salary Templates</h4>
+                    <Button size="sm" variant="outline">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create Template
+                    </Button>
+                  </div>
+                  <div className="space-y-4">
+                    {salaryTemplates.map((template, index) => (
+                      <div key={index} className="border rounded-lg p-4">
+                        <div className="space-y-4">
+                          <div>
+                            <Label>Template Name</Label>
+                            <Input
+                              value={template.name}
+                              placeholder="e.g., Executive Template"
+                            />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Label>Allow HR Overrides</Label>
+                            <Switch checked={template.allowOverrides} />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </TabsContent>
+              </Tabs>
             </div>
           </TabsContent>
 
+          {/* 5. Leave Policy Tab */}
           <TabsContent value="leave" className="space-y-6 mt-6">
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold">Leave Policy</h3>
-              <p className="text-gray-600">Manage leave types, entitlement logic, and salary deductions.</p>
-              {/* Add leave policy configuration here */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Leave Policy</h3>
+                <Button onClick={addLeaveType} size="sm" variant="outline">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Leave Type
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {leavePolicy.map((leave, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label>Leave Type</Label>
+                        <Input
+                          value={leave.type}
+                          onChange={(e) => {
+                            const updated = [...leavePolicy];
+                            updated[index].type = e.target.value;
+                            setLeavePolicy(updated);
+                          }}
+                          placeholder="e.g., Annual Leave"
+                        />
+                      </div>
+                      <div>
+                        <Label>Annual Quota</Label>
+                        <Input
+                          type="number"
+                          value={leave.quota}
+                          onChange={(e) => {
+                            const updated = [...leavePolicy];
+                            updated[index].quota = parseInt(e.target.value);
+                            setLeavePolicy(updated);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Label>Leave Cycle</Label>
+                        <Select value={leave.cycle} onValueChange={(value) => {
+                          const updated = [...leavePolicy];
+                          updated[index].cycle = value;
+                          setLeavePolicy(updated);
+                        }}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="calendar">Calendar Year</SelectItem>
+                            <SelectItem value="doj">DOJ Anniversary</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={leave.carryForward}
+                          onCheckedChange={(checked) => {
+                            const updated = [...leavePolicy];
+                            updated[index].carryForward = checked;
+                            setLeavePolicy(updated);
+                          }}
+                        />
+                        <Label>Carry Forward</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={leave.encashment}
+                          onCheckedChange={(checked) => {
+                            const updated = [...leavePolicy];
+                            updated[index].encashment = checked;
+                            setLeavePolicy(updated);
+                          }}
+                        />
+                        <Label>Encashment</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={leave.autoLOP}
+                          onCheckedChange={(checked) => {
+                            const updated = [...leavePolicy];
+                            updated[index].autoLOP = checked;
+                            setLeavePolicy(updated);
+                          }}
+                        />
+                        <Label>Auto LOP</Label>
+                      </div>
+                      {leave.carryForward && (
+                        <div>
+                          <Label>Max Carry Forward</Label>
+                          <Input
+                            type="number"
+                            value={leave.maxCarryForward}
+                            onChange={(e) => {
+                              const updated = [...leavePolicy];
+                              updated[index].maxCarryForward = parseInt(e.target.value);
+                              setLeavePolicy(updated);
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </TabsContent>
 
+          {/* 6. Office Timings & Shifts Tab */}
           <TabsContent value="timings" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Office Timings & Shifts</h3>
-              <p className="text-gray-600">Manage working hours and shift-wise schedules.</p>
-              {/* Add office timings configuration here */}
+              
+              <div className="border rounded-lg p-4">
+                <h4 className="text-lg font-medium mb-4">Default Office Hours</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label>In Time</Label>
+                    <Input
+                      type="time"
+                      value={officeTimings.inTime}
+                      onChange={(e) => setOfficeTimings({...officeTimings, inTime: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label>Out Time</Label>
+                    <Input
+                      type="time"
+                      value={officeTimings.outTime}
+                      onChange={(e) => setOfficeTimings({...officeTimings, outTime: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label>Break Duration (minutes)</Label>
+                    <Input
+                      type="number"
+                      value={officeTimings.breakDuration}
+                      onChange={(e) => setOfficeTimings({...officeTimings, breakDuration: parseInt(e.target.value)})}
+                    />
+                  </div>
+                  <div>
+                    <Label>Grace Period (minutes)</Label>
+                    <Input
+                      type="number"
+                      value={officeTimings.gracePeriod}
+                      onChange={(e) => setOfficeTimings({...officeTimings, gracePeriod: parseInt(e.target.value)})}
+                    />
+                  </div>
+                  <div>
+                    <Label>Min Hours for Full Day</Label>
+                    <Input
+                      type="number"
+                      value={officeTimings.minHours}
+                      onChange={(e) => setOfficeTimings({...officeTimings, minHours: parseInt(e.target.value)})}
+                    />
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={officeTimings.enableOvertime}
+                      onCheckedChange={(checked) => setOfficeTimings({...officeTimings, enableOvertime: checked})}
+                    />
+                    <Label>Enable Overtime</Label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-medium">Shifts</h4>
+                  <Button onClick={addShift} size="sm" variant="outline">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Shift
+                  </Button>
+                </div>
+                <div className="space-y-4">
+                  {shifts.map((shift, index) => (
+                    <div key={index} className="border rounded-lg p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                          <Label>Shift Name</Label>
+                          <Input
+                            value={shift.name}
+                            onChange={(e) => {
+                              const updated = [...shifts];
+                              updated[index].name = e.target.value;
+                              setShifts(updated);
+                            }}
+                            placeholder="e.g., Night Shift"
+                          />
+                        </div>
+                        <div>
+                          <Label>In Time</Label>
+                          <Input
+                            type="time"
+                            value={shift.inTime}
+                            onChange={(e) => {
+                              const updated = [...shifts];
+                              updated[index].inTime = e.target.value;
+                              setShifts(updated);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <Label>Out Time</Label>
+                          <Input
+                            type="time"
+                            value={shift.outTime}
+                            onChange={(e) => {
+                              const updated = [...shifts];
+                              updated[index].outTime = e.target.value;
+                              setShifts(updated);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <Label>Break (minutes)</Label>
+                          <Input
+                            type="number"
+                            value={shift.breakDuration}
+                            onChange={(e) => {
+                              const updated = [...shifts];
+                              updated[index].breakDuration = parseInt(e.target.value);
+                              setShifts(updated);
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </TabsContent>
 
+          {/* 7. Attendance Settings Tab */}
           <TabsContent value="attendance" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Attendance Settings</h3>
-              <p className="text-gray-600">Link attendance to payroll rules and automation.</p>
-              {/* Add attendance settings here */}
+              
+              <div className="border rounded-lg p-4 space-y-4">
+                <div>
+                  <Label>Attendance Source</Label>
+                  <Select value={attendanceSettings.source} onValueChange={(value) => setAttendanceSettings({...attendanceSettings, source: value})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="manual">Manual Upload</SelectItem>
+                      <SelectItem value="biometric">Biometric Device</SelectItem>
+                      <SelectItem value="app">Mobile App</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Grace Period (minutes)</Label>
+                  <Input
+                    type="number"
+                    value={attendanceSettings.gracePeriod}
+                    onChange={(e) => setAttendanceSettings({...attendanceSettings, gracePeriod: parseInt(e.target.value)})}
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label>Enable Overtime Tracking</Label>
+                    <Switch
+                      checked={attendanceSettings.overtimeTracking}
+                      onCheckedChange={(checked) => setAttendanceSettings({...attendanceSettings, overtimeTracking: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label>Mark LOP on Missing Attendance</Label>
+                    <Switch
+                      checked={attendanceSettings.markLOP}
+                      onCheckedChange={(checked) => setAttendanceSettings({...attendanceSettings, markLOP: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label>Sync Attendance with Payroll</Label>
+                    <Switch
+                      checked={attendanceSettings.syncWithPayroll}
+                      onCheckedChange={(checked) => setAttendanceSettings({...attendanceSettings, syncWithPayroll: checked})}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </TabsContent>
 
+          {/* 8. Reimbursement Settings Tab */}
           <TabsContent value="reimbursement" className="space-y-6 mt-6">
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold">Reimbursement Settings</h3>
-              <p className="text-gray-600">Enable or restrict reimbursements per company policy.</p>
-              {/* Add reimbursement settings here */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Reimbursement Settings</h3>
+                <Button onClick={addReimbursementType} size="sm" variant="outline">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Type
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {reimbursements.map((reimbursement, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label>Reimbursement Type</Label>
+                        <Input
+                          value={reimbursement.type}
+                          onChange={(e) => {
+                            const updated = [...reimbursements];
+                            updated[index].type = e.target.value;
+                            setReimbursements(updated);
+                          }}
+                          placeholder="e.g., Travel, Internet"
+                        />
+                      </div>
+                      <div>
+                        <Label>Monthly Cap (₹)</Label>
+                        <Input
+                          type="number"
+                          value={reimbursement.monthlyCap}
+                          onChange={(e) => {
+                            const updated = [...reimbursements];
+                            updated[index].monthlyCap = parseInt(e.target.value);
+                            setReimbursements(updated);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Label>Approval Flow</Label>
+                        <Select value={reimbursement.approvalFlow} onValueChange={(value) => {
+                          const updated = [...reimbursements];
+                          updated[index].approvalFlow = value;
+                          setReimbursements(updated);
+                        }}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="auto">Auto Approval</SelectItem>
+                            <SelectItem value="manual">Manual Approval</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={reimbursement.taxable}
+                          onCheckedChange={(checked) => {
+                            const updated = [...reimbursements];
+                            updated[index].taxable = checked;
+                            setReimbursements(updated);
+                          }}
+                        />
+                        <Label>Taxable</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Switch
+                          checked={reimbursement.showInPayslip}
+                          onCheckedChange={(checked) => {
+                            const updated = [...reimbursements];
+                            updated[index].showInPayslip = checked;
+                            setReimbursements(updated);
+                          }}
+                        />
+                        <Label>Show in Payslip</Label>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </TabsContent>
 
+          {/* 9. Bank & Payout Settings Tab */}
+          <TabsContent value="bank" className="space-y-6 mt-6">
+            <div className="space-y-6">
+              <h3 className="text-lg font-semibold">Bank & Payout Settings</h3>
+              
+              <div className="border rounded-lg p-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Bank Account Holder Name</Label>
+                    <Input
+                      value={bankSettings.accountHolderName}
+                      onChange={(e) => setBankSettings({...bankSettings, accountHolderName: e.target.value})}
+                      placeholder="As per bank records"
+                    />
+                  </div>
+                  <div>
+                    <Label>Account Number</Label>
+                    <Input
+                      value={bankSettings.accountNumber}
+                      onChange={(e) => setBankSettings({...bankSettings, accountNumber: e.target.value})}
+                      placeholder="Bank account number"
+                    />
+                  </div>
+                  <div>
+                    <Label>IFSC Code</Label>
+                    <Input
+                      value={bankSettings.ifscCode}
+                      onChange={(e) => setBankSettings({...bankSettings, ifscCode: e.target.value})}
+                      placeholder="11-character IFSC code"
+                      maxLength={11}
+                    />
+                  </div>
+                  <div>
+                    <Label>Payment Method</Label>
+                    <Select value={bankSettings.paymentMethod} onValueChange={(value) => setBankSettings({...bankSettings, paymentMethod: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="manual">Manual Export</SelectItem>
+                        <SelectItem value="api">Bank API Integration</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>Export Format</Label>
+                    <Select value={bankSettings.exportFormat} onValueChange={(value) => setBankSettings({...bankSettings, exportFormat: value})}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="excel">Excel Format</SelectItem>
+                        <SelectItem value="csv">CSV Format</SelectItem>
+                        <SelectItem value="txt">TXT Format</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* 10. Payslip Settings Tab */}
           <TabsContent value="payslip" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Payslip Settings</h3>
-              <p className="text-gray-600">Design how employee payslips will look and what they include.</p>
-              {/* Add payslip settings here */}
+              
+              <div className="border rounded-lg p-4 space-y-4">
+                <div>
+                  <Label>Payslip Format</Label>
+                  <Select value={payslipSettings.format} onValueChange={(value) => setPayslipSettings({...payslipSettings, format: value})}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="modern">Modern</SelectItem>
+                      <SelectItem value="classic">Classic</SelectItem>
+                      <SelectItem value="minimal">Minimal</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label>Show CTC Breakdown</Label>
+                    <Switch
+                      checked={payslipSettings.showCTCBreakdown}
+                      onCheckedChange={(checked) => setPayslipSettings({...payslipSettings, showCTCBreakdown: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label>Show Employer Contributions</Label>
+                    <Switch
+                      checked={payslipSettings.showEmployerContributions}
+                      onCheckedChange={(checked) => setPayslipSettings({...payslipSettings, showEmployerContributions: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label>Include Bank Account Info</Label>
+                    <Switch
+                      checked={payslipSettings.showBankAccount}
+                      onCheckedChange={(checked) => setPayslipSettings({...payslipSettings, showBankAccount: checked})}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Label>Include Leave Summary</Label>
+                    <Switch
+                      checked={payslipSettings.showLeaveSummary}
+                      onCheckedChange={(checked) => setPayslipSettings({...payslipSettings, showLeaveSummary: checked})}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </TabsContent>
 
+          {/* 11. Access & Roles Tab */}
           <TabsContent value="roles" className="space-y-6 mt-6">
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold">Roles & Access Management</h3>
-              <p className="text-gray-600">Control who can view, edit, approve or run payroll actions.</p>
-              {/* Add roles and access management here */}
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold">Access & Roles</h3>
+                <Button onClick={addRole} size="sm" variant="outline">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Role
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {roles.map((role, index) => (
+                  <div key={index} className="border rounded-lg p-4">
+                    <div className="space-y-4">
+                      <div>
+                        <Label>Role Name</Label>
+                        <Input
+                          value={role.name}
+                          onChange={(e) => {
+                            const updated = [...roles];
+                            updated[index].name = e.target.value;
+                            setRoles(updated);
+                          }}
+                          placeholder="e.g., HR Admin, Finance"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-base font-medium">Access Rights</Label>
+                        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-2">
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={role.permissions.view}
+                              onCheckedChange={(checked) => {
+                                const updated = [...roles];
+                                updated[index].permissions.view = checked;
+                                setRoles(updated);
+                              }}
+                            />
+                            <Label>View</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={role.permissions.edit}
+                              onCheckedChange={(checked) => {
+                                const updated = [...roles];
+                                updated[index].permissions.edit = checked;
+                                setRoles(updated);
+                              }}
+                            />
+                            <Label>Edit</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={role.permissions.approve}
+                              onCheckedChange={(checked) => {
+                                const updated = [...roles];
+                                updated[index].permissions.approve = checked;
+                                setRoles(updated);
+                              }}
+                            />
+                            <Label>Approve</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={role.permissions.finalize}
+                              onCheckedChange={(checked) => {
+                                const updated = [...roles];
+                                updated[index].permissions.finalize = checked;
+                                setRoles(updated);
+                              }}
+                            />
+                            <Label>Finalize</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={role.permissions.payslipView}
+                              onCheckedChange={(checked) => {
+                                const updated = [...roles];
+                                updated[index].permissions.payslipView = checked;
+                                setRoles(updated);
+                              }}
+                            />
+                            <Label>Payslip View</Label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </TabsContent>
 
+          {/* 12. Notification Settings Tab */}
           <TabsContent value="notifications" className="space-y-6 mt-6">
             <div className="space-y-6">
               <h3 className="text-lg font-semibold">Notification Settings</h3>
-              <p className="text-gray-600">Set up alerts and communication for payroll events.</p>
-              {/* Add notification settings here */}
+              
+              <div className="border rounded-lg p-4 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Notify Employees When Payslip is Generated</Label>
+                    <p className="text-sm text-gray-600">Send email/SMS when payslip is ready</p>
+                  </div>
+                  <Switch
+                    checked={notifications.payslipGenerated}
+                    onCheckedChange={(checked) => setNotifications({...notifications, payslipGenerated: checked})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Alert HR/Admin on Pending Payroll</Label>
+                    <p className="text-sm text-gray-600">Notify when payroll approval is pending</p>
+                  </div>
+                  <Switch
+                    checked={notifications.pendingPayroll}
+                    onCheckedChange={(checked) => setNotifications({...notifications, pendingPayroll: checked})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Compliance Deadline Alerts</Label>
+                    <p className="text-sm text-gray-600">Remind about PF, ESI, TDS deadlines</p>
+                  </div>
+                  <Switch
+                    checked={notifications.complianceDeadlines}
+                    onCheckedChange={(checked) => setNotifications({...notifications, complianceDeadlines: checked})}
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Weekly Payroll Summary to Admin</Label>
+                    <p className="text-sm text-gray-600">Send weekly summary email</p>
+                  </div>
+                  <Switch
+                    checked={notifications.weeklySummary}
+                    onCheckedChange={(checked) => setNotifications({...notifications, weeklySummary: checked})}
+                  />
+                </div>
+
+                {notifications.weeklySummary && (
+                  <div>
+                    <Label>Summary Day</Label>
+                    <Select value={notifications.summaryDay} onValueChange={(value) => setNotifications({...notifications, summaryDay: value})}>
+                      <SelectTrigger className="w-40">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="monday">Monday</SelectItem>
+                        <SelectItem value="tuesday">Tuesday</SelectItem>
+                        <SelectItem value="wednesday">Wednesday</SelectItem>
+                        <SelectItem value="thursday">Thursday</SelectItem>
+                        <SelectItem value="friday">Friday</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
             </div>
           </TabsContent>
 
