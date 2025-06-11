@@ -4,202 +4,374 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Shield } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import { Shield, FileText, Calculator, AlertCircle } from "lucide-react";
 
 interface ComplianceSettingsProps {
   onComplete: () => void;
 }
 
 const ComplianceSettings = ({ onComplete }: ComplianceSettingsProps) => {
-  const [pfSettings, setPfSettings] = useState({
-    enabled: false,
-    registrationNumber: "",
-    adminCode: "",
-    employeeContribution: "12",
-    employerContribution: "12"
-  });
-
-  const [esiSettings, setEsiSettings] = useState({
-    enabled: false,
-    registrationNumber: "",
-    employeeContribution: "0.75",
-    employerContribution: "3.25"
-  });
-
-  const [ptSettings, setPtSettings] = useState({
-    enabled: false,
-    state: ""
-  });
-
-  const [tdsSettings, setTdsSettings] = useState({
-    enabled: false,
+  const [formData, setFormData] = useState({
+    // PF Settings
+    enablePF: true,
+    pfAccountNumber: "",
+    pfRate: "12",
+    pfCeiling: "15000",
+    pfApplicableFrom: "joining-date",
+    
+    // ESI Settings
+    enableESI: true,
+    esiNumber: "",
+    employeeESIRate: "0.75",
+    employerESIRate: "3.25",
+    esiCeiling: "21000",
+    
+    // Professional Tax
+    enablePT: true,
+    ptState: "maharashtra",
+    ptRegistrationNumber: "",
+    
+    // Income Tax
+    enableTDS: true,
     tanNumber: "",
-    autoDeduction: false
+    taxCalculationMethod: "old-regime",
+    standardDeduction: "50000",
+    
+    // Gratuity
+    enableGratuity: true,
+    gratuityEligibilityYears: "5",
+    gratuityCalculationMethod: "15-days",
+    maxGratuityAmount: "2000000",
+    
+    // Labor Welfare Fund
+    enableLWF: false,
+    lwfState: "",
+    lwfAmount: "20",
+    
+    // Bonus
+    enableBonus: true,
+    bonusEligibilityMonths: "8.33",
+    bonusCalculationMethod: "minimum-wages",
+    maxBonusAmount: "7000"
   });
 
   const handleSave = () => {
+    console.log("Compliance settings saved:", formData);
     onComplete();
   };
 
+  const handleInputChange = (field: string, value: string | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <Shield className="w-5 h-5" />
-          <span>Compliance & Statutory Settings</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-8">
-        {/* PF Settings */}
-        <div className="border rounded-lg p-4">
+    <div className="space-y-6">
+      {/* Provident Fund Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Shield className="w-5 h-5 text-blue-600" />
+            <span>Provident Fund (PF) Settings</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium">Provident Fund (PF)</h3>
+            <div>
+              <Label>Enable Provident Fund</Label>
+              <p className="text-sm text-gray-600">Automatically deduct PF from eligible employees</p>
+            </div>
             <Switch
-              checked={pfSettings.enabled}
-              onCheckedChange={(checked) => setPfSettings({...pfSettings, enabled: checked})}
+              checked={formData.enablePF}
+              onCheckedChange={(checked) => handleInputChange("enablePF", checked)}
             />
           </div>
-          {pfSettings.enabled && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          {formData.enablePF && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label>PF Registration Number</Label>
+                <Label htmlFor="pfAccountNumber">PF Account Number</Label>
                 <Input
-                  value={pfSettings.registrationNumber}
-                  onChange={(e) => setPfSettings({...pfSettings, registrationNumber: e.target.value})}
-                  placeholder="Enter PF registration number"
+                  value={formData.pfAccountNumber}
+                  onChange={(e) => handleInputChange("pfAccountNumber", e.target.value)}
+                  placeholder="Enter PF account number"
                 />
               </div>
+
               <div>
-                <Label>PF Admin/Sub Code</Label>
+                <Label htmlFor="pfRate">PF Rate (%)</Label>
                 <Input
-                  value={pfSettings.adminCode}
-                  onChange={(e) => setPfSettings({...pfSettings, adminCode: e.target.value})}
-                  placeholder="Enter admin code"
+                  value={formData.pfRate}
+                  onChange={(e) => handleInputChange("pfRate", e.target.value)}
+                  placeholder="12"
                 />
               </div>
+
               <div>
-                <Label>Employee Contribution (%)</Label>
+                <Label htmlFor="pfCeiling">PF Ceiling Amount</Label>
                 <Input
-                  type="number"
-                  value={pfSettings.employeeContribution}
-                  onChange={(e) => setPfSettings({...pfSettings, employeeContribution: e.target.value})}
+                  value={formData.pfCeiling}
+                  onChange={(e) => handleInputChange("pfCeiling", e.target.value)}
+                  placeholder="15000"
                 />
               </div>
+
               <div>
-                <Label>Employer Contribution (%)</Label>
-                <Input
-                  type="number"
-                  value={pfSettings.employerContribution}
-                  onChange={(e) => setPfSettings({...pfSettings, employerContribution: e.target.value})}
-                />
+                <Label htmlFor="pfApplicableFrom">PF Applicable From</Label>
+                <Select value={formData.pfApplicableFrom} onValueChange={(value) => handleInputChange("pfApplicableFrom", value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="joining-date">From Joining Date</SelectItem>
+                    <SelectItem value="after-probation">After Probation Period</SelectItem>
+                    <SelectItem value="custom-date">Custom Date</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           )}
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* ESI Settings */}
-        <div className="border rounded-lg p-4">
+      {/* ESI Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <FileText className="w-5 h-5 text-green-600" />
+            <span>Employee State Insurance (ESI) Settings</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium">Employee State Insurance (ESI)</h3>
+            <div>
+              <Label>Enable ESI</Label>
+              <p className="text-sm text-gray-600">Automatically deduct ESI from eligible employees</p>
+            </div>
             <Switch
-              checked={esiSettings.enabled}
-              onCheckedChange={(checked) => setEsiSettings({...esiSettings, enabled: checked})}
+              checked={formData.enableESI}
+              onCheckedChange={(checked) => handleInputChange("enableESI", checked)}
             />
           </div>
-          {esiSettings.enabled && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          {formData.enableESI && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label>ESI Registration Number</Label>
+                <Label htmlFor="esiNumber">ESI Registration Number</Label>
                 <Input
-                  value={esiSettings.registrationNumber}
-                  onChange={(e) => setEsiSettings({...esiSettings, registrationNumber: e.target.value})}
+                  value={formData.esiNumber}
+                  onChange={(e) => handleInputChange("esiNumber", e.target.value)}
                   placeholder="Enter ESI registration number"
                 />
               </div>
-              <div></div>
+
               <div>
-                <Label>Employee Contribution (%)</Label>
+                <Label htmlFor="esiCeiling">ESI Ceiling Amount</Label>
                 <Input
-                  type="number"
-                  value={esiSettings.employeeContribution}
-                  onChange={(e) => setEsiSettings({...esiSettings, employeeContribution: e.target.value})}
+                  value={formData.esiCeiling}
+                  onChange={(e) => handleInputChange("esiCeiling", e.target.value)}
+                  placeholder="21000"
                 />
               </div>
+
               <div>
-                <Label>Employer Contribution (%)</Label>
+                <Label htmlFor="employeeESIRate">Employee ESI Rate (%)</Label>
                 <Input
-                  type="number"
-                  value={esiSettings.employerContribution}
-                  onChange={(e) => setEsiSettings({...esiSettings, employerContribution: e.target.value})}
+                  value={formData.employeeESIRate}
+                  onChange={(e) => handleInputChange("employeeESIRate", e.target.value)}
+                  placeholder="0.75"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="employerESIRate">Employer ESI Rate (%)</Label>
+                <Input
+                  value={formData.employerESIRate}
+                  onChange={(e) => handleInputChange("employerESIRate", e.target.value)}
+                  placeholder="3.25"
                 />
               </div>
             </div>
           )}
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Professional Tax */}
-        <div className="border rounded-lg p-4">
+      {/* Professional Tax Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Calculator className="w-5 h-5 text-purple-600" />
+            <span>Professional Tax (PT) Settings</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium">Professional Tax (PT)</h3>
-            <Switch
-              checked={ptSettings.enabled}
-              onCheckedChange={(checked) => setPtSettings({...ptSettings, enabled: checked})}
-            />
-          </div>
-          {ptSettings.enabled && (
             <div>
-              <Label>PT Applicable State</Label>
-              <Select onValueChange={(value) => setPtSettings({...ptSettings, state: value})}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select state" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="maharashtra">Maharashtra</SelectItem>
-                  <SelectItem value="karnataka">Karnataka</SelectItem>
-                  <SelectItem value="westbengal">West Bengal</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label>Enable Professional Tax</Label>
+              <p className="text-sm text-gray-600">Deduct professional tax as per state rules</p>
             </div>
-          )}
-        </div>
-
-        {/* TDS Settings */}
-        <div className="border rounded-lg p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-medium">Tax Deducted at Source (TDS)</h3>
             <Switch
-              checked={tdsSettings.enabled}
-              onCheckedChange={(checked) => setTdsSettings({...tdsSettings, enabled: checked})}
+              checked={formData.enablePT}
+              onCheckedChange={(checked) => handleInputChange("enablePT", checked)}
             />
           </div>
-          {tdsSettings.enabled && (
-            <div className="space-y-4">
+
+          {formData.enablePT && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label>TAN Number</Label>
+                <Label htmlFor="ptState">State</Label>
+                <Select value={formData.ptState} onValueChange={(value) => handleInputChange("ptState", value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="maharashtra">Maharashtra</SelectItem>
+                    <SelectItem value="karnataka">Karnataka</SelectItem>
+                    <SelectItem value="gujarat">Gujarat</SelectItem>
+                    <SelectItem value="tamil-nadu">Tamil Nadu</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="ptRegistrationNumber">PT Registration Number</Label>
                 <Input
-                  value={tdsSettings.tanNumber}
-                  onChange={(e) => setTdsSettings({...tdsSettings, tanNumber: e.target.value})}
+                  value={formData.ptRegistrationNumber}
+                  onChange={(e) => handleInputChange("ptRegistrationNumber", e.target.value)}
+                  placeholder="Enter PT registration number"
+                />
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Income Tax Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <AlertCircle className="w-5 h-5 text-orange-600" />
+            <span>Income Tax (TDS) Settings</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <Label>Enable TDS</Label>
+              <p className="text-sm text-gray-600">Automatically calculate and deduct income tax</p>
+            </div>
+            <Switch
+              checked={formData.enableTDS}
+              onCheckedChange={(checked) => handleInputChange("enableTDS", checked)}
+            />
+          </div>
+
+          {formData.enableTDS && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="tanNumber">TAN Number</Label>
+                <Input
+                  value={formData.tanNumber}
+                  onChange={(e) => handleInputChange("tanNumber", e.target.value)}
                   placeholder="Enter TAN number"
                 />
               </div>
-              <div className="flex items-center justify-between">
-                <Label>Enable Auto-TDS Deduction</Label>
-                <Switch
-                  checked={tdsSettings.autoDeduction}
-                  onCheckedChange={(checked) => setTdsSettings({...tdsSettings, autoDeduction: checked})}
+
+              <div>
+                <Label htmlFor="taxCalculationMethod">Tax Calculation Method</Label>
+                <Select value={formData.taxCalculationMethod} onValueChange={(value) => handleInputChange("taxCalculationMethod", value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="old-regime">Old Tax Regime</SelectItem>
+                    <SelectItem value="new-regime">New Tax Regime</SelectItem>
+                    <SelectItem value="employee-choice">Employee Choice</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="standardDeduction">Standard Deduction</Label>
+                <Input
+                  value={formData.standardDeduction}
+                  onChange={(e) => handleInputChange("standardDeduction", e.target.value)}
+                  placeholder="50000"
                 />
               </div>
             </div>
           )}
-        </div>
+        </CardContent>
+      </Card>
 
-        <div className="flex justify-end">
-          <Button onClick={handleSave}>Save Compliance Settings</Button>
-        </div>
-      </CardContent>
-    </Card>
+      {/* Gratuity Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center space-x-2">
+            <Shield className="w-5 h-5 text-indigo-600" />
+            <span>Gratuity Settings</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <Label>Enable Gratuity</Label>
+              <p className="text-sm text-gray-600">Calculate gratuity for eligible employees</p>
+            </div>
+            <Switch
+              checked={formData.enableGratuity}
+              onCheckedChange={(checked) => handleInputChange("enableGratuity", checked)}
+            />
+          </div>
+
+          {formData.enableGratuity && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="gratuityEligibilityYears">Eligibility (Years)</Label>
+                <Input
+                  value={formData.gratuityEligibilityYears}
+                  onChange={(e) => handleInputChange("gratuityEligibilityYears", e.target.value)}
+                  placeholder="5"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="gratuityCalculationMethod">Calculation Method</Label>
+                <Select value={formData.gratuityCalculationMethod} onValueChange={(value) => handleInputChange("gratuityCalculationMethod", value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="15-days">15 Days Salary</SelectItem>
+                    <SelectItem value="26-days">26 Days Salary</SelectItem>
+                    <SelectItem value="30-days">30 Days Salary</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="maxGratuityAmount">Maximum Gratuity Amount</Label>
+                <Input
+                  value={formData.maxGratuityAmount}
+                  onChange={(e) => handleInputChange("maxGratuityAmount", e.target.value)}
+                  placeholder="2000000"
+                />
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Save Button */}
+      <div className="flex justify-end">
+        <Button onClick={handleSave} className="px-8">
+          Save Compliance Settings
+        </Button>
+      </div>
+    </div>
   );
 };
 
