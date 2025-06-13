@@ -18,6 +18,7 @@ import {
   DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface FirstSideNavigationPanelProps {
   activeModule: string;
@@ -64,8 +65,33 @@ const FirstSideNavigationPanel = ({
   onToggleCollapse,
   installedApps = []
 }: FirstSideNavigationPanelProps) => {
+  const navigate = useNavigate();
   const installedAppModules = getInstalledAppModules(installedApps);
   const allApplicationModules = [...applicationModules, ...installedAppModules];
+
+  const handleModuleClick = (moduleId: string) => {
+    onModuleSelect(moduleId);
+    
+    // Handle navigation for specific modules
+    switch (moduleId) {
+      case "ai-writer":
+        navigate("/ai-writer");
+        break;
+      case "hrms":
+        navigate("/hrms");
+        break;
+      case "payroll":
+        navigate("/payroll");
+        break;
+      case "home":
+        navigate("/");
+        break;
+      default:
+        // For other modules, you might want to navigate to their respective routes
+        console.log(`Navigating to ${moduleId}`);
+        break;
+    }
+  };
 
   return (
     <div className={cn(
@@ -107,7 +133,7 @@ const FirstSideNavigationPanel = ({
             return (
               <li key={module.id}>
                 <button
-                  onClick={() => onModuleSelect(module.id)}
+                  onClick={() => handleModuleClick(module.id)}
                   className={cn(
                     "w-full flex items-center rounded-lg text-sm font-medium transition-all duration-200",
                     isCollapsed ? "p-2 justify-center" : "px-3 py-2.5",
@@ -140,7 +166,7 @@ const FirstSideNavigationPanel = ({
             return (
               <li key={module.id}>
                 <button
-                  onClick={() => onModuleSelect(module.id)}
+                  onClick={() => handleModuleClick(module.id)}
                   className={cn(
                     "w-full flex items-center rounded-lg text-sm font-medium transition-all duration-200",
                     isCollapsed ? "p-2 justify-center" : "px-3 py-2.5",
