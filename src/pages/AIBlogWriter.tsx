@@ -31,7 +31,9 @@ import {
   Video,
   Target,
   Hash,
-  Menu
+  Menu,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -43,6 +45,11 @@ interface ChatMessage {
   isThinking?: boolean;
   researchPhase?: string;
   sources?: string[];
+  insights?: {
+    thinking: string;
+    researching: string[];
+    sources: string[];
+  };
 }
 
 interface BrandVoice {
@@ -66,6 +73,7 @@ const AIBlogWriter = () => {
   const [newKeyword, setNewKeyword] = useState("");
   const [isFirstTime, setIsFirstTime] = useState(true);
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
+  const [expandedInsights, setExpandedInsights] = useState<{[key: string]: boolean}>({});
   const chatEndRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
 
@@ -83,6 +91,13 @@ const AIBlogWriter = () => {
   useEffect(() => {
     scrollToBottom();
   }, [chatMessages]);
+
+  const toggleInsights = (messageId: string) => {
+    setExpandedInsights(prev => ({
+      ...prev,
+      [messageId]: !prev[messageId]
+    }));
+  };
 
   const handleSendPrompt = async (promptText?: string) => {
     const actualPrompt = promptText || prompt;
@@ -136,7 +151,7 @@ const AIBlogWriter = () => {
       ));
     }, 2000);
 
-    // Generate actual content
+    // Generate actual content with insights
     setTimeout(() => {
       setChatMessages(prev => prev.filter(msg => msg.id !== thinkingMessage.id));
       
@@ -144,7 +159,12 @@ const AIBlogWriter = () => {
         id: (Date.now() + 2).toString(),
         type: "ai",
         content: generateSampleBlogContent(actualPrompt),
-        timestamp: new Date()
+        timestamp: new Date(),
+        insights: {
+          thinking: "Analyzed user request for blog content and identified key themes",
+          researching: ["SEO best practices", "Content structure optimization", "Target audience engagement"],
+          sources: ["Industry Reports 2024", "SEO Research Database", "Content Marketing Trends"]
+        }
       };
       setChatMessages(prev => [...prev, aiMessage]);
       setIsGenerating(false);
@@ -274,47 +294,99 @@ This concluding section wraps up the main points and provides a clear call-to-ac
             )}
 
             {chatMessages.map((message) => (
-              <div key={message.id} className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[80%] ${
-                  message.type === "user" 
-                    ? "bg-primary text-white" 
-                    : message.type === "thinking"
-                    ? "bg-blue-50 text-blue-900 border border-blue-200"
-                    : "bg-gray-100 text-gray-900"
-                } rounded-lg p-4`}>
-                  {message.type === "thinking" ? (
-                    <div>
-                      <div className="flex items-center space-x-2 mb-2">
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span className="text-sm font-medium">{message.researchPhase}</span>
-                      </div>
-                      <p className="text-sm">{message.content}</p>
-                      {message.sources && (
-                        <div className="mt-2 flex flex-wrap gap-1">
-                          {message.sources.map((source, idx) => (
-                            <Badge key={idx} variant="secondary" className="text-xs">
-                              {source}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : message.type === "ai" ? (
-                    <div>
-                      <pre className="whitespace-pre-wrap font-sans text-sm">{message.content}</pre>
+              <div key={message.id} className="space-y-2">
+                {/* AI Insights Section - Above AI Message */}
+                {message.type === "ai" && message.insights && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-blue-900">AI Process Insights</span>
                       <Button
-                        onClick={() => handleAddToEditor(message.content)}
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
-                        className="mt-3 bg-white text-gray-900 hover:bg-gray-50"
+                        onClick={() => toggleInsights(message.id)}
+                        className="p-0 h-auto text-blue-700 hover:text-blue-900"
                       >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add to Editor
+                        {expandedInsights[message.id] ? (
+                          <ChevronUp className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
                       </Button>
                     </div>
-                  ) : (
-                    <p className="text-sm">{message.content}</p>
-                  )}
+                    
+                    {expandedInsights[message.id] && (
+                      <div className="space-y-2 text-sm text-blue-800">
+                        <div>
+                          <strong>Thinking:</strong> {message.insights.thinking}
+                        </div>
+                        <div>
+                          <strong>Research Areas:</strong>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {message.insights.researching.map((item, idx) => (
+                              <Badge key={idx} variant="secondary" className="text-xs">
+                                {item}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <strong>Sources Consulted:</strong>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {message.insights.sources.map((source, idx) => (
+                              <Badge key={idx} variant="secondary" className="text-xs">
+                                {source}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Message Content */}
+                <div className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}>
+                  <div className={`max-w-[80%] ${
+                    message.type === "user" 
+                      ? "bg-primary text-white" 
+                      : message.type === "thinking"
+                      ? "bg-blue-50 text-blue-900 border border-blue-200"
+                      : "bg-gray-100 text-gray-900"
+                  } rounded-lg p-4`}>
+                    {message.type === "thinking" ? (
+                      <div>
+                        <div className="flex items-center space-x-2 mb-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span className="text-sm font-medium">{message.researchPhase}</span>
+                        </div>
+                        <p className="text-sm">{message.content}</p>
+                        {message.sources && (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            {message.sources.map((source, idx) => (
+                              <Badge key={idx} variant="secondary" className="text-xs">
+                                {source}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ) : message.type === "ai" ? (
+                      <div>
+                        <pre className="whitespace-pre-wrap font-sans text-sm">{message.content}</pre>
+                        <Button
+                          onClick={() => handleAddToEditor(message.content)}
+                          variant="outline"
+                          size="sm"
+                          className="mt-3 bg-white text-gray-900 hover:bg-gray-50"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add to Editor
+                        </Button>
+                      </div>
+                    ) : (
+                      <p className="text-sm">{message.content}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
