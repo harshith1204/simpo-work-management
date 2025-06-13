@@ -103,10 +103,8 @@ const AIBlogWriter = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
   const [expandedInsights, setExpandedInsights] = useState<{[key: string]: boolean}>({});
   const [isRegenerating, setIsRegenerating] = useState(false);
-  const [viewMode, setViewMode] = useState<"split" | "canvas">("split");
   
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const editorRef = useRef<HTMLTextAreaElement>(null);
 
   const suggestedBlogs = [
     "AI in Digital Telecommunications: Complete Guide",
@@ -274,12 +272,6 @@ AI in digital telecommunications represents a critical competitive advantage for
   const handleAddToEditor = (content: string) => {
     const newContent = editorContent ? `${editorContent}\n\n${content}` : content;
     setEditorContent(newContent);
-    setViewMode("canvas");
-    
-    if (editorRef.current) {
-      editorRef.current.focus();
-      editorRef.current.scrollTop = editorRef.current.scrollHeight;
-    }
   };
 
   const handleRegenerateSection = async (sectionText: string, customPrompt?: string) => {
@@ -322,29 +314,13 @@ AI in digital telecommunications represents a critical competitive advantage for
               <p className="text-gray-600 mt-1">Create professional blog content with advanced AI assistance</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant={viewMode === "split" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setViewMode("split")}
-            >
-              Split View
-            </Button>
-            <Button
-              variant={viewMode === "canvas" ? "default" : "outline"}
-              size="sm"
-              onClick={() => setViewMode("canvas")}
-            >
-              Canvas View
-            </Button>
-          </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="flex h-[calc(100vh-120px)]">
         {/* Left Side - Enhanced AI Chat Experience */}
-        <div className={`${viewMode === "canvas" ? "w-1/3" : "w-1/2"} bg-white border-r border-gray-200 flex flex-col`}>
+        <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
           {/* Chat Header */}
           <div className="p-6 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900 mb-2">AI Assistant</h2>
@@ -480,95 +456,13 @@ AI in digital telecommunications represents a critical competitive advantage for
         </div>
 
         {/* Right Side - Canvas Blog Editor */}
-        <div className={`${viewMode === "canvas" ? "w-2/3" : "w-1/2"} bg-white flex flex-col`}>
-          {viewMode === "canvas" ? (
-            <CanvasBlogEditor
-              content={editorContent}
-              onContentChange={setEditorContent}
-              onRegenerateSection={handleRegenerateSection}
-              isRegenerating={isRegenerating}
-            />
-          ) : (
-            <>
-              {/* Chat Header */}
-              <div className="p-6 border-b border-gray-100">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900 mb-2">Blog Editor</h2>
-                    <p className="text-gray-600 text-sm">Edit and format your AI-generated content</p>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button className="bg-primary hover:bg-primary/90" size="sm">
-                      <Upload className="w-4 h-4 mr-2" />
-                      Publish
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Schedule
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Save className="w-4 h-4 mr-2" />
-                      Draft
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Rich Text Toolbar */}
-              <div className="p-4 border-b border-gray-100 bg-gray-50">
-                <div className="flex items-center space-x-1">
-                  <Button variant="ghost" size="sm">
-                    <Bold className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Italic className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Underline className="w-4 h-4" />
-                  </Button>
-                  <div className="w-px h-6 bg-gray-300 mx-2" />
-                  <Button variant="ghost" size="sm">
-                    <AlignLeft className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <AlignCenter className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <AlignRight className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <AlignJustify className="w-4 h-4" />
-                  </Button>
-                  <div className="w-px h-6 bg-gray-300 mx-2" />
-                  <Button variant="ghost" size="sm">
-                    <List className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <ListOrdered className="w-4 h-4" />
-                  </Button>
-                  <div className="w-px h-6 bg-gray-300 mx-2" />
-                  <Button variant="ghost" size="sm">
-                    <Image className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Video className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-
-              {/* Editor Content */}
-              <div className="flex-1 p-6">
-                <Textarea
-                  ref={editorRef}
-                  value={editorContent}
-                  onChange={(e) => setEditorContent(e.target.value)}
-                  placeholder="Your professional blog content will appear here when you add it from the AI chat..."
-                  className="w-full h-full resize-none text-sm border-none shadow-none focus:ring-0"
-                  style={{ minHeight: "400px" }}
-                />
-              </div>
-            </>
-          )}
+        <div className="w-2/3 bg-white flex flex-col">
+          <CanvasBlogEditor
+            content={editorContent}
+            onContentChange={setEditorContent}
+            onRegenerateSection={handleRegenerateSection}
+            isRegenerating={isRegenerating}
+          />
         </div>
       </div>
     </div>

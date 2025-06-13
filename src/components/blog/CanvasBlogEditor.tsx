@@ -93,6 +93,17 @@ const CanvasBlogEditor = ({
     setSelectionMenu(prev => ({ ...prev, show: false }));
   };
 
+  const handlePromptInputClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const handlePromptInputKeyPress = (e: React.KeyboardEvent) => {
+    e.stopPropagation();
+    if (e.key === "Enter") {
+      handleRegenerateWithPrompt();
+    }
+  };
+
   const renderContent = () => {
     const lines = content.split('\n');
     return lines.map((line, index) => {
@@ -230,14 +241,15 @@ const CanvasBlogEditor = ({
             </div>
             
             {showPromptInput && (
-              <div className="mt-2 border-t pt-2">
+              <div className="mt-2 border-t pt-2" onClick={handlePromptInputClick}>
                 <div className="flex space-x-1">
                   <Input
                     value={customPrompt}
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     placeholder="Enter custom instruction..."
                     className="text-xs h-8"
-                    onKeyPress={(e) => e.key === "Enter" && handleRegenerateWithPrompt()}
+                    onClick={handlePromptInputClick}
+                    onKeyPress={handlePromptInputKeyPress}
                   />
                   <Button
                     onClick={handleRegenerateWithPrompt}
