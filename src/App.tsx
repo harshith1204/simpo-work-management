@@ -28,6 +28,10 @@ import DocumentCenter from "./pages/hrms/DocumentCenter";
 import HRMSReports from "./pages/hrms/HRMSReports";
 import RolePermissions from "./pages/hrms/RolePermissions";
 
+// AI Writer Pages
+import AIWriter from "./pages/AIWriter";
+import AIBlogWriter from "./pages/AIBlogWriter";
+
 function App() {
   return (
     <Router>
@@ -59,6 +63,10 @@ function App() {
             <Route path="hrms/documents" element={<DocumentCenter />} />
             <Route path="hrms/reports" element={<HRMSReports />} />
             <Route path="hrms/permissions" element={<RolePermissions />} />
+            
+            {/* AI Writer Routes */}
+            <Route path="ai-writer" element={<AIWriter />} />
+            <Route path="ai-writer/blog" element={<AIBlogWriter />} />
             
             {/* Payroll Routes - handled by Layout component */}
             <Route path="payroll" element={<div />} />
