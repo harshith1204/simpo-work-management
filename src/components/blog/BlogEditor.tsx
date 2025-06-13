@@ -173,21 +173,55 @@ const BlogEditor = ({
   };
 
   const handleFormatText = (command: string) => {
-    document.execCommand(command, false);
-    const newContent = editorRef.current?.innerHTML || "";
-    onContentChange(newContent);
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const selectedText = selection.toString();
+      
+      if (selectedText) {
+        let formattedText = selectedText;
+        
+        switch (command) {
+          case 'bold':
+            formattedText = `**${selectedText}**`;
+            break;
+          case 'italic':
+            formattedText = `*${selectedText}*`;
+            break;
+          case 'underline':
+            formattedText = `<u>${selectedText}</u>`;
+            break;
+          case 'insertUnorderedList':
+            formattedText = `- ${selectedText}`;
+            break;
+          case 'insertOrderedList':
+            formattedText = `1. ${selectedText}`;
+            break;
+        }
+        
+        const newContent = content.replace(selectedText, formattedText);
+        onContentChange(newContent);
+      }
+    }
   };
 
-  const handleContentEdit = (e: React.FocusEvent<HTMLElement>) => {
-    // Get the updated content from the entire editor instead of just the current element
-    const newContent = editorRef.current?.textContent || "";
-    onContentChange(newContent);
+  const handleContentEdit = (e: React.FormEvent<HTMLElement>) => {
+    // Prevent double-click from removing content by not updating on every input
+    e.preventDefault();
   };
 
-  const handleInput = () => {
-    // Real-time content update as user types
-    const newContent = editorRef.current?.textContent || "";
-    onContentChange(newContent);
+  const handleInput = (e: React.FormEvent<HTMLElement>) => {
+    // Only update content when user actually types, not on focus events
+    const target = e.currentTarget;
+    const newText = target.textContent || "";
+    const elementText = target.getAttribute('data-original') || "";
+    
+    // Find and replace the specific element's content
+    if (elementText && content.includes(elementText)) {
+      const newContent = content.replace(elementText, newText);
+      onContentChange(newContent);
+      target.setAttribute('data-original', newText);
+    }
   };
 
   const renderContent = () => {
@@ -196,55 +230,63 @@ const BlogEditor = ({
       const isRegenerating = regeneratingText && line.includes(regeneratingText);
       
       if (line.startsWith('# ')) {
+        const text = line.replace('# ', '');
         return (
           <h1 
             key={index} 
             className={`text-3xl font-bold text-gray-900 mb-4 hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
-            onBlur={handleContentEdit}
+            data-original={text}
             onInput={handleInput}
+            onDoubleClick={handleContentEdit}
           >
-            {line.replace('# ', '')}
+            {text}
           </h1>
         );
       } else if (line.startsWith('## ')) {
+        const text = line.replace('## ', '');
         return (
           <h2 
             key={index} 
             className={`text-2xl font-semibold text-gray-900 mb-3 hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
-            onBlur={handleContentEdit}
+            data-original={text}
             onInput={handleInput}
+            onDoubleClick={handleContentEdit}
           >
-            {line.replace('## ', '')}
+            {text}
           </h2>
         );
       } else if (line.startsWith('### ')) {
+        const text = line.replace('### ', '');
         return (
           <h3 
             key={index} 
             className={`text-xl font-medium text-gray-900 mb-2 hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
-            onBlur={handleContentEdit}
+            data-original={text}
             onInput={handleInput}
+            onDoubleClick={handleContentEdit}
           >
-            {line.replace('### ', '')}
+            {text}
           </h3>
         );
       } else if (line.startsWith('- ')) {
+        const text = line.replace('- ', '');
         return (
           <li 
             key={index} 
             className={`text-gray-700 mb-1 hover:bg-blue-50 p-1 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
-            onBlur={handleContentEdit}
+            data-original={text}
             onInput={handleInput}
+            onDoubleClick={handleContentEdit}
           >
-            {line.replace('- ', '')}
+            {text}
           </li>
         );
       } else if (line.trim()) {
@@ -254,8 +296,9 @@ const BlogEditor = ({
             className={`text-gray-700 mb-4 leading-relaxed hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
-            onBlur={handleContentEdit}
+            data-original={line}
             onInput={handleInput}
+            onDoubleClick={handleContentEdit}
           >
             {line}
           </p>
@@ -291,7 +334,7 @@ const BlogEditor = ({
         </div>
       </div>
 
-      {/* Formatting Toolbar */}
+      {/* Formatting Toolbar - Always visible when text is selected */}
       {showToolbar && (
         <div className="p-2 border-b border-gray-100 bg-gray-50">
           <div className="flex items-center space-x-1">
@@ -300,6 +343,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('bold')}
               className="h-8 w-8 p-0"
+              title="Bold"
             >
               <Bold className="w-4 h-4" />
             </Button>
@@ -308,6 +352,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('italic')}
               className="h-8 w-8 p-0"
+              title="Italic"
             >
               <Italic className="w-4 h-4" />
             </Button>
@@ -316,6 +361,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('underline')}
               className="h-8 w-8 p-0"
+              title="Underline"
             >
               <Underline className="w-4 h-4" />
             </Button>
@@ -325,6 +371,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('insertUnorderedList')}
               className="h-8 w-8 p-0"
+              title="Bullet List"
             >
               <List className="w-4 h-4" />
             </Button>
@@ -333,6 +380,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('insertOrderedList')}
               className="h-8 w-8 p-0"
+              title="Numbered List"
             >
               <ListOrdered className="w-4 h-4" />
             </Button>
@@ -342,6 +390,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('justifyLeft')}
               className="h-8 w-8 p-0"
+              title="Align Left"
             >
               <AlignLeft className="w-4 h-4" />
             </Button>
@@ -350,6 +399,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('justifyCenter')}
               className="h-8 w-8 p-0"
+              title="Align Center"
             >
               <AlignCenter className="w-4 h-4" />
             </Button>
@@ -358,6 +408,7 @@ const BlogEditor = ({
               size="sm"
               onClick={() => handleFormatText('justifyRight')}
               className="h-8 w-8 p-0"
+              title="Align Right"
             >
               <AlignRight className="w-4 h-4" />
             </Button>
@@ -383,7 +434,7 @@ const BlogEditor = ({
           )}
         </div>
 
-        {/* Selection Menu - Now shows on single tap */}
+        {/* Selection Menu - Shows on text selection */}
         {selectionMenu.show && !regeneratingText && (
           <Card 
             className="absolute z-50 p-2 bg-white shadow-lg border"
