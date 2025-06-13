@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,15 @@ import {
   Upload, 
   Calendar,
   X,
-  Loader2
+  Loader2,
+  Bold,
+  Italic,
+  Underline,
+  List,
+  ListOrdered,
+  AlignLeft,
+  AlignCenter,
+  AlignRight
 } from "lucide-react";
 
 interface BlogEditorProps {
@@ -47,6 +56,7 @@ const BlogEditor = ({
   const [customPrompt, setCustomPrompt] = useState("");
   const [showPromptInput, setShowPromptInput] = useState(false);
   const [regeneratingText, setRegeneratingText] = useState("");
+  const [showToolbar, setShowToolbar] = useState(false);
   const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -65,13 +75,26 @@ const BlogEditor = ({
           selectionStart: range.startOffset,
           selectionEnd: range.endOffset
         });
+        setShowToolbar(true);
       } else {
         setSelectionMenu(prev => ({ ...prev, show: false }));
+        setShowToolbar(false);
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (editorRef.current && !editorRef.current.contains(e.target as Node)) {
+        setSelectionMenu(prev => ({ ...prev, show: false }));
+        setShowToolbar(false);
       }
     };
 
     document.addEventListener('selectionchange', handleSelectionChange);
-    return () => document.removeEventListener('selectionchange', handleSelectionChange);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const generateRealTimeContent = (originalText: string, instruction: string) => {
@@ -106,6 +129,7 @@ const BlogEditor = ({
   const handleRegenerate = async () => {
     setRegeneratingText(selectionMenu.selectedText);
     setSelectionMenu(prev => ({ ...prev, show: false }));
+    setShowToolbar(false);
     
     // Simulate real-time regeneration
     setTimeout(() => {
@@ -122,6 +146,7 @@ const BlogEditor = ({
       setCustomPrompt("");
       setShowPromptInput(false);
       setSelectionMenu(prev => ({ ...prev, show: false }));
+      setShowToolbar(false);
       
       // Simulate real-time regeneration with custom prompt
       setTimeout(() => {
@@ -136,6 +161,7 @@ const BlogEditor = ({
   const handleMakeShort = async () => {
     setRegeneratingText(selectionMenu.selectedText);
     setSelectionMenu(prev => ({ ...prev, show: false }));
+    setShowToolbar(false);
     
     // Simulate real-time shortening
     setTimeout(() => {
@@ -146,23 +172,21 @@ const BlogEditor = ({
     }, 1200);
   };
 
-  const handlePromptInputClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
-  const handlePromptInputKeyPress = (e: React.KeyboardEvent) => {
-    e.stopPropagation();
-    if (e.key === "Enter") {
-      handleRegenerateWithPrompt();
-    }
-    if (e.key === "Escape") {
-      setShowPromptInput(false);
-      setCustomPrompt("");
-    }
+  const handleFormatText = (command: string) => {
+    document.execCommand(command, false);
+    const newContent = editorRef.current?.innerHTML || "";
+    onContentChange(newContent);
   };
 
   const handleContentEdit = (e: React.FocusEvent<HTMLElement>) => {
-    const newContent = e.currentTarget.textContent || "";
+    // Get the updated content from the entire editor instead of just the current element
+    const newContent = editorRef.current?.textContent || "";
+    onContentChange(newContent);
+  };
+
+  const handleInput = () => {
+    // Real-time content update as user types
+    const newContent = editorRef.current?.textContent || "";
     onContentChange(newContent);
   };
 
@@ -175,10 +199,11 @@ const BlogEditor = ({
         return (
           <h1 
             key={index} 
-            className={`text-3xl font-bold text-gray-900 mb-4 hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            className={`text-3xl font-bold text-gray-900 mb-4 hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
             onBlur={handleContentEdit}
+            onInput={handleInput}
           >
             {line.replace('# ', '')}
           </h1>
@@ -187,10 +212,11 @@ const BlogEditor = ({
         return (
           <h2 
             key={index} 
-            className={`text-2xl font-semibold text-gray-900 mb-3 hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            className={`text-2xl font-semibold text-gray-900 mb-3 hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
             onBlur={handleContentEdit}
+            onInput={handleInput}
           >
             {line.replace('## ', '')}
           </h2>
@@ -199,10 +225,11 @@ const BlogEditor = ({
         return (
           <h3 
             key={index} 
-            className={`text-xl font-medium text-gray-900 mb-2 hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            className={`text-xl font-medium text-gray-900 mb-2 hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
             onBlur={handleContentEdit}
+            onInput={handleInput}
           >
             {line.replace('### ', '')}
           </h3>
@@ -211,10 +238,11 @@ const BlogEditor = ({
         return (
           <li 
             key={index} 
-            className={`text-gray-700 mb-1 hover:bg-blue-50 p-1 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            className={`text-gray-700 mb-1 hover:bg-blue-50 p-1 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
             onBlur={handleContentEdit}
+            onInput={handleInput}
           >
             {line.replace('- ', '')}
           </li>
@@ -223,10 +251,11 @@ const BlogEditor = ({
         return (
           <p 
             key={index} 
-            className={`text-gray-700 mb-4 leading-relaxed hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            className={`text-gray-700 mb-4 leading-relaxed hover:bg-blue-50 p-2 rounded cursor-text outline-none ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
             contentEditable
             suppressContentEditableWarning
             onBlur={handleContentEdit}
+            onInput={handleInput}
           >
             {line}
           </p>
@@ -262,6 +291,80 @@ const BlogEditor = ({
         </div>
       </div>
 
+      {/* Formatting Toolbar */}
+      {showToolbar && (
+        <div className="p-2 border-b border-gray-100 bg-gray-50">
+          <div className="flex items-center space-x-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('bold')}
+              className="h-8 w-8 p-0"
+            >
+              <Bold className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('italic')}
+              className="h-8 w-8 p-0"
+            >
+              <Italic className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('underline')}
+              className="h-8 w-8 p-0"
+            >
+              <Underline className="w-4 h-4" />
+            </Button>
+            <div className="w-px h-6 bg-gray-300 mx-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('insertUnorderedList')}
+              className="h-8 w-8 p-0"
+            >
+              <List className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('insertOrderedList')}
+              className="h-8 w-8 p-0"
+            >
+              <ListOrdered className="w-4 h-4" />
+            </Button>
+            <div className="w-px h-6 bg-gray-300 mx-1" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('justifyLeft')}
+              className="h-8 w-8 p-0"
+            >
+              <AlignLeft className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('justifyCenter')}
+              className="h-8 w-8 p-0"
+            >
+              <AlignCenter className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => handleFormatText('justifyRight')}
+              className="h-8 w-8 p-0"
+            >
+              <AlignRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Editor Content */}
       <div className="flex-1 relative overflow-auto">
         <div 
@@ -280,7 +383,7 @@ const BlogEditor = ({
           )}
         </div>
 
-        {/* Selection Menu */}
+        {/* Selection Menu - Now shows on single tap */}
         {selectionMenu.show && !regeneratingText && (
           <Card 
             className="absolute z-50 p-2 bg-white shadow-lg border"
@@ -329,15 +432,23 @@ const BlogEditor = ({
             </div>
             
             {showPromptInput && (
-              <div className="mt-2 border-t pt-2" onClick={handlePromptInputClick}>
+              <div className="mt-2 border-t pt-2">
                 <div className="flex space-x-1">
                   <Input
                     value={customPrompt}
                     onChange={(e) => setCustomPrompt(e.target.value)}
                     placeholder="Enter custom instruction..."
                     className="text-xs h-8"
-                    onClick={handlePromptInputClick}
-                    onKeyDown={handlePromptInputKeyPress}
+                    onKeyDown={(e) => {
+                      e.stopPropagation();
+                      if (e.key === "Enter") {
+                        handleRegenerateWithPrompt();
+                      }
+                      if (e.key === "Escape") {
+                        setShowPromptInput(false);
+                        setCustomPrompt("");
+                      }
+                    }}
                     autoFocus
                   />
                   <Button
