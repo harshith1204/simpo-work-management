@@ -15,9 +15,23 @@ import {
   Loader2,
   Settings,
   ChevronDown,
-  ChevronUp
+  MessageSquare,
+  Target,
+  Hash
 } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import AdsPreview from "@/components/ads/AdsPreview";
 
 interface ChatMessage {
@@ -39,16 +53,31 @@ const AIAdsWriter = () => {
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [toneOfVoice, setToneOfVoice] = useState("");
-  const [keywords, setKeywords] = useState("");
-  const [campaignGoal, setCampaignGoal] = useState("");
+  
+  // Tone of Voice settings
+  const [voiceStyle, setVoiceStyle] = useState("");
+  const [targetAudience, setTargetAudience] = useState("");
+  const [brandPersonality, setBrandPersonality] = useState("");
+  const [isVoiceDialogOpen, setIsVoiceDialogOpen] = useState(false);
+  
+  // Keywords settings
+  const [primaryKeywords, setPrimaryKeywords] = useState("");
+  const [secondaryKeywords, setSecondaryKeywords] = useState("");
+  const [keywordDensity, setKeywordDensity] = useState("");
+  const [isKeywordsDialogOpen, setIsKeywordsDialogOpen] = useState(false);
+  
+  // Campaign Goal settings
+  const [goalType, setGoalType] = useState("");
+  const [targetMetrics, setTargetMetrics] = useState("");
+  const [callToAction, setCallToAction] = useState("");
+  const [isCampaignDialogOpen, setIsCampaignDialogOpen] = useState(false);
+  
   const [adsContent, setAdsContent] = useState({
     headline: "",
     description: "",
     cta: "",
     adsSource: "Facebook"
   });
-  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
 
   const sampleAds = [
     "Create a compelling Facebook ad for my fitness app targeting busy professionals",
@@ -75,7 +104,7 @@ const AIAdsWriter = () => {
     const thinkingMessage: ChatMessage = {
       id: chatMessages.length + 2,
       type: "thinking",
-      content: "Analyzing your request and gathering insights...",
+      content: "Analyzing your request and understanding your requirements...",
       timestamp: new Date().toLocaleTimeString(),
       status: "thinking"
     };
@@ -85,7 +114,7 @@ const AIAdsWriter = () => {
     setTimeout(() => {
       setChatMessages(prev => prev.map(msg => 
         msg.id === thinkingMessage.id 
-          ? { ...msg, content: "Researching best practices for your industry...", status: "researching" }
+          ? { ...msg, content: "Researching industry best practices and competitor analysis...", status: "researching" }
           : msg
       ));
     }, 1000);
@@ -94,10 +123,10 @@ const AIAdsWriter = () => {
     setTimeout(() => {
       setChatMessages(prev => prev.map(msg => 
         msg.id === thinkingMessage.id 
-          ? { ...msg, content: "Generating compelling ad copy...", status: "generating" }
+          ? { ...msg, content: "Generating compelling ad copy tailored to your audience...", status: "generating" }
           : msg
       ));
-    }, 2000);
+    }, 2500);
 
     // Complete generation
     setTimeout(() => {
@@ -113,13 +142,13 @@ const AIAdsWriter = () => {
         headline: "Transform Your Business Today!",
         description: "Discover the power of our innovative solution that helps thousands of businesses grow faster and more efficiently than ever before.",
         cta: "Get Started Now",
-        adsSource: "Facebook"
+        adsSource: adsContent.adsSource
       };
 
       setChatMessages(prev => [...prev.filter(msg => msg.id !== thinkingMessage.id), aiResponse]);
       setAdsContent(sampleAdsContent);
       setIsGenerating(false);
-    }, 3500);
+    }, 4000);
   };
 
   const handleSampleAdClick = (sample: string) => {
@@ -150,6 +179,18 @@ const AIAdsWriter = () => {
       </div>
     </div>
   );
+
+  const handleVoiceSave = () => {
+    setIsVoiceDialogOpen(false);
+  };
+
+  const handleKeywordsSave = () => {
+    setIsKeywordsDialogOpen(false);
+  };
+
+  const handleCampaignSave = () => {
+    setIsCampaignDialogOpen(false);
+  };
 
   return (
     <div className="h-screen bg-background flex flex-col font-sans">
@@ -194,11 +235,186 @@ const AIAdsWriter = () => {
                 )}
               </div>
             ))}
+          </div>
 
-            {/* Sample Ads */}
-            {chatMessages.length === 1 && (
-              <div className="space-y-3">
-                <p className="text-sm text-muted-foreground">Or try one of these examples:</p>
+          {/* Preference Settings */}
+          <div className="p-4 border-t border-border bg-muted/30">
+            <div className="grid grid-cols-3 gap-2">
+              {/* Tone of Voice Dialog */}
+              <Dialog open={isVoiceDialogOpen} onOpenChange={setIsVoiceDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <MessageSquare className="w-3 h-3" />
+                    <span className="text-xs">Tone of Voice</span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Tone of Voice Settings</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="voiceStyle" className="text-sm font-medium">
+                        Voice Style
+                      </Label>
+                      <Input
+                        id="voiceStyle"
+                        value={voiceStyle}
+                        onChange={(e) => setVoiceStyle(e.target.value)}
+                        placeholder="Professional, Casual, Friendly..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="targetAudience" className="text-sm font-medium">
+                        Target Audience
+                      </Label>
+                      <Input
+                        id="targetAudience"
+                        value={targetAudience}
+                        onChange={(e) => setTargetAudience(e.target.value)}
+                        placeholder="Business professionals, Students..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="brandPersonality" className="text-sm font-medium">
+                        Brand Personality
+                      </Label>
+                      <Input
+                        id="brandPersonality"
+                        value={brandPersonality}
+                        onChange={(e) => setBrandPersonality(e.target.value)}
+                        placeholder="Innovative, Trustworthy, Bold..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <Button onClick={handleVoiceSave} className="w-full">
+                      Save Settings
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* Keywords Dialog */}
+              <Dialog open={isKeywordsDialogOpen} onOpenChange={setIsKeywordsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <Hash className="w-3 h-3" />
+                    <span className="text-xs">Keywords</span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Keywords Settings</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="primaryKeywords" className="text-sm font-medium">
+                        Primary Keywords
+                      </Label>
+                      <Input
+                        id="primaryKeywords"
+                        value={primaryKeywords}
+                        onChange={(e) => setPrimaryKeywords(e.target.value)}
+                        placeholder="Main keywords for your ad..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="secondaryKeywords" className="text-sm font-medium">
+                        Secondary Keywords
+                      </Label>
+                      <Input
+                        id="secondaryKeywords"
+                        value={secondaryKeywords}
+                        onChange={(e) => setSecondaryKeywords(e.target.value)}
+                        placeholder="Supporting keywords..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="keywordDensity" className="text-sm font-medium">
+                        Keyword Focus
+                      </Label>
+                      <Input
+                        id="keywordDensity"
+                        value={keywordDensity}
+                        onChange={(e) => setKeywordDensity(e.target.value)}
+                        placeholder="High, Medium, Low..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <Button onClick={handleKeywordsSave} className="w-full">
+                      Save Settings
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              {/* Campaign Goal Dialog */}
+              <Dialog open={isCampaignDialogOpen} onOpenChange={setIsCampaignDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="flex items-center space-x-1">
+                    <Target className="w-3 h-3" />
+                    <span className="text-xs">Campaign Goal</span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Campaign Goal Settings</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="goalType" className="text-sm font-medium">
+                        Goal Type
+                      </Label>
+                      <Input
+                        id="goalType"
+                        value={goalType}
+                        onChange={(e) => setGoalType(e.target.value)}
+                        placeholder="Brand Awareness, Lead Generation..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="targetMetrics" className="text-sm font-medium">
+                        Target Metrics
+                      </Label>
+                      <Input
+                        id="targetMetrics"
+                        value={targetMetrics}
+                        onChange={(e) => setTargetMetrics(e.target.value)}
+                        placeholder="Click-through rate, Conversions..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="callToAction" className="text-sm font-medium">
+                        Call to Action Style
+                      </Label>
+                      <Input
+                        id="callToAction"
+                        value={callToAction}
+                        onChange={(e) => setCallToAction(e.target.value)}
+                        placeholder="Urgent, Informative, Persuasive..."
+                        className="mt-1"
+                      />
+                    </div>
+                    <Button onClick={handleCampaignSave} className="w-full">
+                      Save Settings
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+
+          {/* Sample Ads */}
+          {chatMessages.length === 1 && (
+            <div className="p-4 border-t border-border bg-background">
+              <p className="text-sm text-muted-foreground mb-3">Or try one of these examples:</p>
+              <div className="space-y-2">
                 {sampleAds.map((sample, index) => (
                   <button
                     key={index}
@@ -209,67 +425,8 @@ const AIAdsWriter = () => {
                   </button>
                 ))}
               </div>
-            )}
-          </div>
-
-          {/* Ad Preferences Card */}
-          <div className="p-4 border-t border-border bg-muted/30">
-            <Collapsible open={isPreferencesOpen} onOpenChange={setIsPreferencesOpen}>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" className="w-full justify-between p-2">
-                  <div className="flex items-center space-x-2">
-                    <Settings className="w-4 h-4" />
-                    <span className="text-sm font-medium">Ad Preferences</span>
-                  </div>
-                  {isPreferencesOpen ? (
-                    <ChevronUp className="w-4 h-4" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-3 pt-3">
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <Label htmlFor="tone" className="text-xs font-medium text-muted-foreground">
-                      Tone of Voice
-                    </Label>
-                    <Input
-                      id="tone"
-                      value={toneOfVoice}
-                      onChange={(e) => setToneOfVoice(e.target.value)}
-                      placeholder="Professional, Casual..."
-                      className="text-xs h-8"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="keywords" className="text-xs font-medium text-muted-foreground">
-                      Keywords
-                    </Label>
-                    <Input
-                      id="keywords"
-                      value={keywords}
-                      onChange={(e) => setKeywords(e.target.value)}
-                      placeholder="Key terms..."
-                      className="text-xs h-8"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="goal" className="text-xs font-medium text-muted-foreground">
-                      Campaign Goal
-                    </Label>
-                    <Input
-                      id="goal"
-                      value={campaignGoal}
-                      onChange={(e) => setCampaignGoal(e.target.value)}
-                      placeholder="Brand awareness..."
-                      className="text-xs h-8"
-                    />
-                  </div>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          </div>
+            </div>
+          )}
 
           {/* Chat Input */}
           <div className="p-4 border-t border-border bg-card">
@@ -331,18 +488,34 @@ const AIAdsWriter = () => {
               <Label className="text-sm font-medium text-muted-foreground mb-1">
                 Ads Source/Posting
               </Label>
-              <select
-                value={adsContent.adsSource}
-                onChange={(e) => setAdsContent(prev => ({ ...prev, adsSource: e.target.value }))}
-                className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                <option value="Facebook">Facebook</option>
-                <option value="Instagram">Instagram</option>
-                <option value="Google">Google Ads</option>
-                <option value="LinkedIn">LinkedIn</option>
-                <option value="Twitter">Twitter</option>
-                <option value="YouTube">YouTube</option>
-              </select>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-full justify-between">
+                    {adsContent.adsSource}
+                    <ChevronDown className="h-4 w-4 opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-full">
+                  <DropdownMenuItem onClick={() => setAdsContent(prev => ({ ...prev, adsSource: "Facebook" }))}>
+                    Facebook
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setAdsContent(prev => ({ ...prev, adsSource: "Instagram" }))}>
+                    Instagram
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setAdsContent(prev => ({ ...prev, adsSource: "Google" }))}>
+                    Google Ads
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setAdsContent(prev => ({ ...prev, adsSource: "LinkedIn" }))}>
+                    LinkedIn
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setAdsContent(prev => ({ ...prev, adsSource: "Twitter" }))}>
+                    Twitter
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setAdsContent(prev => ({ ...prev, adsSource: "YouTube" }))}>
+                    YouTube
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 

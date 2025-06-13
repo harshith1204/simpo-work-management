@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,8 +11,17 @@ import {
   Play,
   User,
   Globe,
-  Calendar
+  Calendar,
+  RotateCcw,
+  Edit,
+  Wand2
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface AdsContent {
   headline: string;
@@ -36,6 +44,31 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
       ...content,
       [field]: value
     });
+  };
+
+  const handleRegenerate = (field: keyof AdsContent) => {
+    const sampleContent = {
+      headline: [
+        "Transform Your Business Today!",
+        "Unlock Your Potential Now",
+        "Revolutionary Solution Awaits"
+      ],
+      description: [
+        "Discover innovative solutions that drive results for your business.",
+        "Join thousands of satisfied customers who achieved success.",
+        "Experience the difference with our cutting-edge technology."
+      ],
+      cta: [
+        "Get Started Now",
+        "Learn More Today",
+        "Start Your Journey",
+        "Try It Free"
+      ]
+    };
+    
+    const options = sampleContent[field];
+    const randomContent = options[Math.floor(Math.random() * options.length)];
+    handleEdit(field, randomContent);
   };
 
   const renderEditableField = (
@@ -87,13 +120,37 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
     }
 
     return (
-      <div
-        onClick={() => setEditingField(field)}
-        className={`cursor-text hover:bg-muted/50 hover:bg-opacity-50 p-1 rounded font-sans ${className} ${
-          isGenerating ? 'animate-pulse bg-muted/30' : ''
-        }`}
-      >
-        {value || placeholder}
+      <div className="group relative">
+        <div
+          onClick={() => setEditingField(field)}
+          className={`cursor-text hover:bg-muted/50 hover:bg-opacity-50 p-1 rounded font-sans ${className} ${
+            isGenerating ? 'animate-pulse bg-muted/30' : ''
+          }`}
+        >
+          {value || placeholder}
+        </div>
+        
+        {value && !isGenerating && (
+          <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                  <Wand2 className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => handleRegenerate(field)}>
+                  <RotateCcw className="w-3 h-3 mr-2" />
+                  Regenerate
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setEditingField(field)}>
+                  <Edit className="w-3 h-3 mr-2" />
+                  Edit manually
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        )}
       </div>
     );
   };
