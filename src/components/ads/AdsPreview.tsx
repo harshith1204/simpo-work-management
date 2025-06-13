@@ -17,7 +17,6 @@ interface AdsContent {
   description: string;
   cta: string;
   usp: string;
-  productService: string;
   adsSource: string;
 }
 
@@ -60,7 +59,7 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
               }
             }}
             placeholder={placeholder}
-            className={`w-full bg-transparent border-none outline-none resize-none ${className}`}
+            className={`w-full bg-transparent border-none outline-none resize-none font-sans ${className}`}
             autoFocus
             rows={3}
           />
@@ -79,7 +78,7 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
             }
           }}
           placeholder={placeholder}
-          className={`w-full bg-transparent border-none outline-none ${className}`}
+          className={`w-full bg-transparent border-none outline-none font-sans ${className}`}
           autoFocus
         />
       );
@@ -88,8 +87,8 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
     return (
       <div
         onClick={() => setEditingField(field)}
-        className={`cursor-text hover:bg-blue-50 hover:bg-opacity-50 p-1 rounded ${className} ${
-          isGenerating ? 'animate-pulse bg-blue-100' : ''
+        className={`cursor-text hover:bg-muted/50 hover:bg-opacity-50 p-1 rounded font-sans ${className} ${
+          isGenerating ? 'animate-pulse bg-muted/30' : ''
         }`}
       >
         {value || placeholder}
@@ -98,12 +97,12 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
   };
 
   const renderFacebookAd = () => (
-    <Card className="max-w-md mx-auto bg-white shadow-lg">
+    <Card className="max-w-md mx-auto bg-white shadow-lg border">
       {/* Ad Header */}
-      <div className="p-3 border-b border-gray-100">
+      <div className="p-3 border-b border-border">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white font-bold text-sm">YB</span>
+          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-sm">YB</span>
           </div>
           <div className="flex-1">
             <div className="font-semibold text-sm text-gray-900">Your Business</div>
@@ -143,13 +142,13 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
       </div>
 
       {/* Ad Image Placeholder */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-40 flex items-center justify-center">
-        <Play className="w-12 h-12 text-white opacity-80" />
+      <div className="bg-gradient-to-r from-primary/80 to-primary h-40 flex items-center justify-center">
+        <Play className="w-12 h-12 text-primary-foreground opacity-80" />
       </div>
 
       {/* Call to Action */}
       <div className="p-3">
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+        <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
           {renderEditableField(
             'cta',
             content.cta,
@@ -161,18 +160,18 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
       </div>
 
       {/* Engagement Section */}
-      <div className="p-3 border-t border-gray-100">
+      <div className="p-3 border-t border-border">
         <div className="flex items-center justify-between text-gray-600">
           <div className="flex items-center space-x-4">
-            <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
+            <button className="flex items-center space-x-1 text-sm hover:text-primary">
               <ThumbsUp className="w-4 h-4" />
               <span>Like</span>
             </button>
-            <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
+            <button className="flex items-center space-x-1 text-sm hover:text-primary">
               <MessageCircle className="w-4 h-4" />
               <span>Comment</span>
             </button>
-            <button className="flex items-center space-x-1 text-sm hover:text-blue-600">
+            <button className="flex items-center space-x-1 text-sm hover:text-primary">
               <Share2 className="w-4 h-4" />
               <span>Share</span>
             </button>
@@ -183,18 +182,18 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
   );
 
   const renderGoogleAd = () => (
-    <Card className="max-w-md mx-auto bg-white border border-gray-200">
+    <Card className="max-w-md mx-auto bg-white border border-border">
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
           <div className="text-xs text-green-700 font-medium">Ad</div>
-          <div className="text-xs text-gray-500">www.yourbusiness.com</div>
+          <div className="text-xs text-muted-foreground">www.yourbusiness.com</div>
         </div>
         
         {renderEditableField(
           'headline',
           content.headline,
           'Enter your ad headline...',
-          'text-blue-600 text-lg font-medium hover:underline cursor-pointer mb-1',
+          'text-primary text-lg font-medium hover:underline cursor-pointer mb-1',
           false
         )}
         
@@ -207,7 +206,7 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
         )}
 
         {content.usp && (
-          <div className="mt-2 text-xs text-gray-600">
+          <div className="mt-2 text-xs text-muted-foreground">
             ✓ {content.usp}
           </div>
         )}
@@ -216,16 +215,16 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
   );
 
   const renderInstagramAd = () => (
-    <Card className="max-w-md mx-auto bg-white shadow-lg">
+    <Card className="max-w-md mx-auto bg-white shadow-lg border">
       {/* Instagram Header */}
-      <div className="p-3 border-b border-gray-100">
+      <div className="p-3 border-b border-border">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
             <span className="text-white font-bold text-xs">YB</span>
           </div>
           <div className="flex-1">
             <div className="font-semibold text-sm text-gray-900">yourbusiness</div>
-            <div className="text-xs text-gray-500">Sponsored</div>
+            <div className="text-xs text-muted-foreground">Sponsored</div>
           </div>
           <MoreHorizontal className="w-5 h-5 text-gray-400" />
         </div>
@@ -262,7 +261,7 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
           )}
         </div>
 
-        <Button className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white">
+        <Button className="w-full mt-3 bg-primary hover:bg-primary/90 text-primary-foreground">
           {renderEditableField(
             'cta',
             content.cta,
@@ -298,9 +297,9 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
       {renderPreview()}
 
       {!content.headline && !content.description && (
-        <div className="text-center text-gray-400 py-8">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <MessageCircle className="w-8 h-8 text-gray-400" />
+        <div className="text-center text-muted-foreground py-8">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <MessageCircle className="w-8 h-8 text-muted-foreground" />
           </div>
           <p className="font-medium">No ad content yet</p>
           <p className="text-sm mt-1">Start chatting with AI to generate your first ad</p>
