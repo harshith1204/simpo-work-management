@@ -31,6 +31,7 @@ import RolePermissions from "./pages/hrms/RolePermissions";
 // AI Writer Pages
 import AIWriter from "./pages/AIWriter";
 import AIBlogWriter from "./pages/AIBlogWriter";
+import AIAdsWriter from "./pages/AIAdsWriter";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
             {/* AI Writer Routes */}
             <Route path="ai-writer" element={<AIWriter />} />
             <Route path="ai-writer/blog" element={<AIBlogWriter />} />
+            <Route path="ai-writer/ads" element={<AIAdsWriter />} />
             
             {/* Payroll Routes - handled by Layout component */}
             <Route path="payroll" element={<div />} />

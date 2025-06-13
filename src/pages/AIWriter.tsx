@@ -102,7 +102,7 @@ const AIWriter = () => {
           </Card>
 
           {/* AI Ads Writer Card */}
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
+          <Card className="hover:shadow-lg transition-shadow cursor-pointer group" onClick={() => navigate('/ai-writer/ads')}>
             <CardHeader className="text-center pb-4">
               <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-4 group-hover:bg-orange-200 transition-colors">
                 <Megaphone className="w-8 h-8 text-orange-600" />
