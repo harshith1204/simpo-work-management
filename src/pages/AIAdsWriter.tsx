@@ -17,11 +17,18 @@ import {
 } from "lucide-react";
 import AdsPreview from "@/components/ads/AdsPreview";
 
+interface ChatMessage {
+  id: number;
+  type: "ai" | "user";
+  content: string;
+  timestamp: string;
+}
+
 const AIAdsWriter = () => {
-  const [chatMessages, setChatMessages] = useState([
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     {
       id: 1,
-      type: "ai" as const,
+      type: "ai",
       content: "Hi! I'm your AI Ads Writer. Tell me about your product/service and I'll help you create compelling advertisements.",
       timestamp: new Date().toLocaleTimeString()
     }
@@ -40,9 +47,9 @@ const AIAdsWriter = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
-    const userMessage = {
+    const userMessage: ChatMessage = {
       id: chatMessages.length + 1,
-      type: "user" as const,
+      type: "user",
       content: inputMessage,
       timestamp: new Date().toLocaleTimeString()
     };
@@ -53,9 +60,9 @@ const AIAdsWriter = () => {
 
     // Simulate AI response and content generation
     setTimeout(() => {
-      const aiResponse = {
+      const aiResponse: ChatMessage = {
         id: chatMessages.length + 2,
-        type: "ai" as const,
+        type: "ai",
         content: "I've generated an ad based on your input. You can see the preview on the right and edit any section directly.",
         timestamp: new Date().toLocaleTimeString()
       };
