@@ -15,7 +15,7 @@ import {
   Loader2
 } from "lucide-react";
 
-interface CanvasBlogEditorProps {
+interface BlogEditorProps {
   content: string;
   onContentChange: (content: string) => void;
   onRegenerateSection: (sectionText: string, prompt?: string) => void;
@@ -31,12 +31,12 @@ interface SelectionMenu {
   selectionEnd: number;
 }
 
-const CanvasBlogEditor = ({ 
+const BlogEditor = ({ 
   content, 
   onContentChange, 
   onRegenerateSection,
   isRegenerating = false 
-}: CanvasBlogEditorProps) => {
+}: BlogEditorProps) => {
   const [selectionMenu, setSelectionMenu] = useState<SelectionMenu>({
     show: false,
     x: 0,
@@ -47,6 +47,7 @@ const CanvasBlogEditor = ({
   });
   const [customPrompt, setCustomPrompt] = useState("");
   const [showPromptInput, setShowPromptInput] = useState(false);
+  const [regeneratingText, setRegeneratingText] = useState("");
   const editorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,23 +75,76 @@ const CanvasBlogEditor = ({
     return () => document.removeEventListener('selectionchange', handleSelectionChange);
   }, []);
 
-  const handleRegenerate = () => {
-    onRegenerateSection(selectionMenu.selectedText);
-    setSelectionMenu(prev => ({ ...prev, show: false }));
-  };
+  const generateRealTimeContent = (originalText: string, instruction: string) => {
+    // Simulate real-time content generation with realistic variations
+    const variations = {
+      default: [
+        `Enhanced version: ${originalText}`,
+        `Improved content: ${originalText.replace(/\./g, ' with better clarity.')}`,
+        `Refined text: ${originalText} This provides better engagement and readability.`
+      ],
+      shorter: [
+        originalText.split(' ').slice(0, Math.ceil(originalText.split(' ').length * 0.6)).join(' ') + '.',
+        originalText.split('.')[0] + '.',
+        originalText.length > 50 ? originalText.substring(0, 50) + '...' : originalText
+      ],
+      custom: [
+        `${instruction}: ${originalText}`,
+        `Based on "${instruction}" - ${originalText}`,
+        `${originalText} (Modified according to: ${instruction})`
+      ]
+    };
 
-  const handleRegenerateWithPrompt = () => {
-    if (customPrompt.trim()) {
-      onRegenerateSection(selectionMenu.selectedText, customPrompt);
-      setCustomPrompt("");
-      setShowPromptInput(false);
-      setSelectionMenu(prev => ({ ...prev, show: false }));
+    if (instruction.toLowerCase().includes('short')) {
+      return variations.shorter[Math.floor(Math.random() * variations.shorter.length)];
+    } else if (instruction !== 'Regenerate this section') {
+      return variations.custom[Math.floor(Math.random() * variations.custom.length)];
+    } else {
+      return variations.default[Math.floor(Math.random() * variations.default.length)];
     }
   };
 
-  const handleMakeShort = () => {
-    onRegenerateSection(selectionMenu.selectedText, "Make this shorter and more concise");
+  const handleRegenerate = async () => {
+    setRegeneratingText(selectionMenu.selectedText);
     setSelectionMenu(prev => ({ ...prev, show: false }));
+    
+    // Simulate real-time regeneration
+    setTimeout(() => {
+      const newText = generateRealTimeContent(selectionMenu.selectedText, 'Regenerate this section');
+      const newContent = content.replace(selectionMenu.selectedText, newText);
+      onContentChange(newContent);
+      setRegeneratingText("");
+    }, 1500);
+  };
+
+  const handleRegenerateWithPrompt = async () => {
+    if (customPrompt.trim()) {
+      setRegeneratingText(selectionMenu.selectedText);
+      setCustomPrompt("");
+      setShowPromptInput(false);
+      setSelectionMenu(prev => ({ ...prev, show: false }));
+      
+      // Simulate real-time regeneration with custom prompt
+      setTimeout(() => {
+        const newText = generateRealTimeContent(selectionMenu.selectedText, customPrompt);
+        const newContent = content.replace(selectionMenu.selectedText, newText);
+        onContentChange(newContent);
+        setRegeneratingText("");
+      }, 2000);
+    }
+  };
+
+  const handleMakeShort = async () => {
+    setRegeneratingText(selectionMenu.selectedText);
+    setSelectionMenu(prev => ({ ...prev, show: false }));
+    
+    // Simulate real-time shortening
+    setTimeout(() => {
+      const newText = generateRealTimeContent(selectionMenu.selectedText, 'Make this shorter and more concise');
+      const newContent = content.replace(selectionMenu.selectedText, newText);
+      onContentChange(newContent);
+      setRegeneratingText("");
+    }, 1200);
   };
 
   const handlePromptInputClick = (e: React.MouseEvent) => {
@@ -102,38 +156,79 @@ const CanvasBlogEditor = ({
     if (e.key === "Enter") {
       handleRegenerateWithPrompt();
     }
+    if (e.key === "Escape") {
+      setShowPromptInput(false);
+      setCustomPrompt("");
+    }
+  };
+
+  const handleContentEdit = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = e.currentTarget.textContent || "";
+    onContentChange(newContent);
   };
 
   const renderContent = () => {
     const lines = content.split('\n');
     return lines.map((line, index) => {
+      const isRegenerating = regeneratingText && line.includes(regeneratingText);
+      
       if (line.startsWith('# ')) {
         return (
-          <h1 key={index} className="text-3xl font-bold text-gray-900 mb-4 hover:bg-blue-50 p-2 rounded cursor-text">
+          <h1 
+            key={index} 
+            className={`text-3xl font-bold text-gray-900 mb-4 hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={handleContentEdit}
+          >
             {line.replace('# ', '')}
           </h1>
         );
       } else if (line.startsWith('## ')) {
         return (
-          <h2 key={index} className="text-2xl font-semibold text-gray-900 mb-3 hover:bg-blue-50 p-2 rounded cursor-text">
+          <h2 
+            key={index} 
+            className={`text-2xl font-semibold text-gray-900 mb-3 hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={handleContentEdit}
+          >
             {line.replace('## ', '')}
           </h2>
         );
       } else if (line.startsWith('### ')) {
         return (
-          <h3 key={index} className="text-xl font-medium text-gray-900 mb-2 hover:bg-blue-50 p-2 rounded cursor-text">
+          <h3 
+            key={index} 
+            className={`text-xl font-medium text-gray-900 mb-2 hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={handleContentEdit}
+          >
             {line.replace('### ', '')}
           </h3>
         );
       } else if (line.startsWith('- ')) {
         return (
-          <li key={index} className="text-gray-700 mb-1 hover:bg-blue-50 p-1 rounded cursor-text">
+          <li 
+            key={index} 
+            className={`text-gray-700 mb-1 hover:bg-blue-50 p-1 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={handleContentEdit}
+          >
             {line.replace('- ', '')}
           </li>
         );
       } else if (line.trim()) {
         return (
-          <p key={index} className="text-gray-700 mb-4 leading-relaxed hover:bg-blue-50 p-2 rounded cursor-text">
+          <p 
+            key={index} 
+            className={`text-gray-700 mb-4 leading-relaxed hover:bg-blue-50 p-2 rounded cursor-text ${isRegenerating ? 'bg-blue-100 animate-pulse' : ''}`}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={handleContentEdit}
+          >
             {line}
           </p>
         );
@@ -148,7 +243,7 @@ const CanvasBlogEditor = ({
       <div className="p-4 border-b border-gray-100 bg-white">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Canvas Editor</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Blog Editor</h2>
             <p className="text-gray-600 text-sm">Select text to edit or regenerate sections</p>
           </div>
           <div className="flex space-x-2">
@@ -187,7 +282,7 @@ const CanvasBlogEditor = ({
         </div>
 
         {/* Selection Menu */}
-        {selectionMenu.show && (
+        {selectionMenu.show && !regeneratingText && (
           <Card 
             className="absolute z-50 p-2 bg-white shadow-lg border"
             style={{ 
@@ -201,14 +296,9 @@ const CanvasBlogEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleRegenerate}
-                disabled={isRegenerating}
                 className="text-xs h-8"
               >
-                {isRegenerating ? (
-                  <Loader2 className="w-3 h-3 animate-spin mr-1" />
-                ) : (
-                  <RotateCcw className="w-3 h-3 mr-1" />
-                )}
+                <RotateCcw className="w-3 h-3 mr-1" />
                 Regenerate
               </Button>
               <Button
@@ -224,7 +314,6 @@ const CanvasBlogEditor = ({
                 variant="ghost"
                 size="sm"
                 onClick={handleMakeShort}
-                disabled={isRegenerating}
                 className="text-xs h-8"
               >
                 <Minimize2 className="w-3 h-3 mr-1" />
@@ -249,12 +338,13 @@ const CanvasBlogEditor = ({
                     placeholder="Enter custom instruction..."
                     className="text-xs h-8"
                     onClick={handlePromptInputClick}
-                    onKeyPress={handlePromptInputKeyPress}
+                    onKeyDown={handlePromptInputKeyPress}
+                    autoFocus
                   />
                   <Button
                     onClick={handleRegenerateWithPrompt}
                     size="sm"
-                    disabled={!customPrompt.trim() || isRegenerating}
+                    disabled={!customPrompt.trim()}
                     className="h-8 px-2 text-xs"
                   >
                     Apply
@@ -266,13 +356,13 @@ const CanvasBlogEditor = ({
         )}
 
         {/* Regenerating Overlay */}
-        {isRegenerating && (
+        {regeneratingText && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-40">
             <div className="bg-white p-4 rounded-lg shadow-lg border flex items-center space-x-3">
               <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
               <div>
                 <p className="font-medium text-gray-900">Regenerating content...</p>
-                <p className="text-sm text-gray-600">Please wait while AI improves your selection</p>
+                <p className="text-sm text-gray-600">AI is improving your selected text</p>
               </div>
             </div>
           </div>
@@ -282,4 +372,4 @@ const CanvasBlogEditor = ({
   );
 };
 
-export default CanvasBlogEditor;
+export default BlogEditor;

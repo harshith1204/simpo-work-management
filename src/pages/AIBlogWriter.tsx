@@ -39,7 +39,7 @@ import SEOPreferencesDropdown from "@/components/blog/SEOPreferencesDropdown";
 import BrandVoiceDropdown from "@/components/blog/BrandVoiceDropdown";
 import ContentObjectiveDropdown from "@/components/blog/ContentObjectiveDropdown";
 import LiveAgentStatus from "@/components/blog/LiveAgentStatus";
-import CanvasBlogEditor from "@/components/blog/CanvasBlogEditor";
+import BlogEditor from "@/components/blog/BlogEditor";
 
 interface ChatMessage {
   id: string;
@@ -275,18 +275,8 @@ AI in digital telecommunications represents a critical competitive advantage for
   };
 
   const handleRegenerateSection = async (sectionText: string, customPrompt?: string) => {
-    setIsRegenerating(true);
-    
-    // Simulate regeneration process
-    setTimeout(() => {
-      const prompt = customPrompt || "Regenerate this section";
-      const regeneratedText = `[REGENERATED] ${sectionText} - ${prompt}`;
-      
-      // Replace the selected text with regenerated content
-      const newContent = editorContent.replace(sectionText, regeneratedText);
-      setEditorContent(newContent);
-      setIsRegenerating(false);
-    }, 2000);
+    // The BlogEditor now handles regeneration internally
+    console.log("Regeneration handled by BlogEditor component");
   };
 
   const handleSuggestedBlog = (suggestion: string) => {
@@ -317,9 +307,9 @@ AI in digital telecommunications represents a critical competitive advantage for
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content - Canvas View Only */}
       <div className="flex h-[calc(100vh-120px)]">
-        {/* Left Side - Enhanced AI Chat Experience */}
+        {/* Left Side - AI Chat */}
         <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
           {/* Chat Header */}
           <div className="p-6 border-b border-gray-100">
@@ -455,13 +445,12 @@ AI in digital telecommunications represents a critical competitive advantage for
           )}
         </div>
 
-        {/* Right Side - Canvas Blog Editor */}
+        {/* Right Side - Blog Editor */}
         <div className="w-2/3 bg-white flex flex-col">
-          <CanvasBlogEditor
+          <BlogEditor
             content={editorContent}
             onContentChange={setEditorContent}
             onRegenerateSection={handleRegenerateSection}
-            isRegenerating={isRegenerating}
           />
         </div>
       </div>
