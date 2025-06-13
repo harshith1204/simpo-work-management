@@ -28,8 +28,26 @@ const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Check if we're on AI writer routes
+  const isAIWriterRoute = location.pathname.startsWith("/ai-writer");
+
   useEffect(() => {
     const path = location.pathname;
+    
+    // Handle AI Writer routes - collapse first sidebar and hide second sidebar
+    if (path.startsWith("/ai-writer")) {
+      setIsFirstSidebarCollapsed(true);
+      setShowAppsScreen(false);
+      setShowPayrollScreen(false);
+      setShowPayrollConfiguration(false);
+      setActiveModule("ai-writer");
+      return;
+    }
+    
+    // Reset first sidebar collapse for non-AI writer routes
+    if (!path.startsWith("/ai-writer")) {
+      setIsFirstSidebarCollapsed(false);
+    }
     
     // Check if we're on payroll settings route
     if (path === "/payroll/settings") {
@@ -318,6 +336,36 @@ const Layout = () => {
               />
             </>
           )}
+        </div>
+        <AppIntroPopup
+          isOpen={showIntroPopup}
+          onClose={() => setShowIntroPopup(false)}
+          appId={introAppId}
+          onSetup={handleSetupApp}
+        />
+      </div>
+    );
+  }
+
+  // AI Writer Layout - No second navigation panel, collapsed first panel
+  if (isAIWriterRoute) {
+    return (
+      <div className="min-h-screen bg-[#F9F9FB] flex flex-col w-full font-dm-sans">
+        <TopNavigationBar onAppsClick={handleAppsClick} />
+        <div className="flex flex-1">
+          <FirstSideNavigationPanel 
+            activeModule={activeModule}
+            onModuleSelect={handleModuleSelect}
+            isCollapsed={isFirstSidebarCollapsed}
+            onToggleCollapse={() => setIsFirstSidebarCollapsed(!isFirstSidebarCollapsed)}
+            installedApps={installedApps}
+          />
+          {/* No SecondSideNavigationPanel for AI Writer routes */}
+          <div className="flex-1 flex flex-col min-w-0">
+            <main className="flex-1 overflow-auto">
+              <Outlet />
+            </main>
+          </div>
         </div>
         <AppIntroPopup
           isOpen={showIntroPopup}
