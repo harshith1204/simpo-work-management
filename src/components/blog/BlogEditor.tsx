@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -162,7 +161,7 @@ const BlogEditor = ({
     }
   };
 
-  const handleContentEdit = (e: React.FormEvent<HTMLDivElement>) => {
+  const handleContentEdit = (e: React.FocusEvent<HTMLElement>) => {
     const newContent = e.currentTarget.textContent || "";
     onContentChange(newContent);
   };
