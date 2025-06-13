@@ -9,14 +9,16 @@ import {
   Share2, 
   MoreHorizontal,
   ThumbsUp,
-  Play
+  Play,
+  User,
+  Globe,
+  Calendar
 } from "lucide-react";
 
 interface AdsContent {
   headline: string;
   description: string;
   cta: string;
-  usp: string;
   adsSource: string;
 }
 
@@ -131,14 +133,6 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
           'text-gray-700 text-sm leading-relaxed',
           true
         )}
-
-        {content.usp && (
-          <div className="mt-2">
-            <Badge variant="secondary" className="text-xs">
-              {content.usp}
-            </Badge>
-          </div>
-        )}
       </div>
 
       {/* Ad Image Placeholder */}
@@ -204,12 +198,6 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
           'text-gray-700 text-sm leading-relaxed',
           true
         )}
-
-        {content.usp && (
-          <div className="mt-2 text-xs text-muted-foreground">
-            ✓ {content.usp}
-          </div>
-        )}
       </div>
     </Card>
   );
@@ -274,12 +262,169 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
     </Card>
   );
 
+  const renderLinkedInAd = () => (
+    <Card className="max-w-md mx-auto bg-white shadow-lg border">
+      {/* LinkedIn Header */}
+      <div className="p-3 border-b border-border">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+            <span className="text-white font-bold text-sm">YB</span>
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold text-sm text-gray-900">Your Business</div>
+            <div className="text-xs text-gray-500">Promoted</div>
+          </div>
+          <MoreHorizontal className="w-5 h-5 text-gray-400" />
+        </div>
+      </div>
+
+      {/* LinkedIn Content */}
+      <div className="p-3">
+        {renderEditableField(
+          'headline',
+          content.headline,
+          'Enter your ad headline...',
+          'font-semibold text-gray-900 mb-2 text-sm',
+          false
+        )}
+        
+        {renderEditableField(
+          'description',
+          content.description,
+          'Enter your ad description...',
+          'text-gray-700 text-sm leading-relaxed',
+          true
+        )}
+      </div>
+
+      {/* LinkedIn Image */}
+      <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-40 flex items-center justify-center">
+        <Play className="w-12 h-12 text-white opacity-80" />
+      </div>
+
+      {/* LinkedIn CTA */}
+      <div className="p-3">
+        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+          {renderEditableField(
+            'cta',
+            content.cta,
+            'Enter call to action...',
+            'font-medium text-center',
+            false
+          )}
+        </Button>
+      </div>
+    </Card>
+  );
+
+  const renderTwitterAd = () => (
+    <Card className="max-w-md mx-auto bg-white shadow-lg border">
+      {/* Twitter Header */}
+      <div className="p-3 border-b border-border">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center">
+            <span className="text-white font-bold text-sm">YB</span>
+          </div>
+          <div className="flex-1">
+            <div className="font-semibold text-sm text-gray-900">Your Business</div>
+            <div className="text-xs text-gray-500">@yourbusiness • Promoted</div>
+          </div>
+          <MoreHorizontal className="w-5 h-5 text-gray-400" />
+        </div>
+      </div>
+
+      {/* Twitter Content */}
+      <div className="p-3">
+        {renderEditableField(
+          'headline',
+          content.headline,
+          'Enter your ad headline...',
+          'font-semibold text-gray-900 mb-2 text-sm',
+          false
+        )}
+        
+        {renderEditableField(
+          'description',
+          content.description,
+          'Enter your ad description...',
+          'text-gray-700 text-sm leading-relaxed',
+          true
+        )}
+      </div>
+
+      {/* Twitter Media */}
+      <div className="bg-gradient-to-r from-blue-400 to-blue-500 h-40 flex items-center justify-center">
+        <Play className="w-12 h-12 text-white opacity-80" />
+      </div>
+
+      {/* Twitter CTA */}
+      <div className="p-3">
+        <Button className="w-full bg-black hover:bg-gray-800 text-white">
+          {renderEditableField(
+            'cta',
+            content.cta,
+            'Enter call to action...',
+            'font-medium text-center',
+            false
+          )}
+        </Button>
+      </div>
+    </Card>
+  );
+
+  const renderYouTubeAd = () => (
+    <Card className="max-w-md mx-auto bg-white shadow-lg border">
+      {/* YouTube Video Player */}
+      <div className="bg-gradient-to-r from-red-500 to-red-600 h-48 flex items-center justify-center relative">
+        <Play className="w-16 h-16 text-white opacity-80" />
+        <div className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded">
+          Ad • 0:15
+        </div>
+      </div>
+
+      {/* YouTube Ad Content */}
+      <div className="p-3">
+        {renderEditableField(
+          'headline',
+          content.headline,
+          'Enter your ad headline...',
+          'font-semibold text-gray-900 mb-2 text-sm',
+          false
+        )}
+        
+        {renderEditableField(
+          'description',
+          content.description,
+          'Enter your ad description...',
+          'text-gray-700 text-sm leading-relaxed',
+          true
+        )}
+
+        <Button className="w-full mt-3 bg-red-600 hover:bg-red-700 text-white">
+          {renderEditableField(
+            'cta',
+            content.cta,
+            'Enter call to action...',
+            'font-medium text-center',
+            false
+          )}
+        </Button>
+      </div>
+    </Card>
+  );
+
   const renderPreview = () => {
     switch (content.adsSource) {
       case 'Google':
         return renderGoogleAd();
       case 'Instagram':
         return renderInstagramAd();
+      case 'LinkedIn':
+        return renderLinkedInAd();
+      case 'Twitter':
+        return renderTwitterAd();
+      case 'YouTube':
+        return renderYouTubeAd();
       case 'Facebook':
       default:
         return renderFacebookAd();
@@ -295,16 +440,6 @@ const AdsPreview = ({ content, onContentChange, isGenerating = false }: AdsPrevi
       </div>
       
       {renderPreview()}
-
-      {!content.headline && !content.description && (
-        <div className="text-center text-muted-foreground py-8">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-            <MessageCircle className="w-8 h-8 text-muted-foreground" />
-          </div>
-          <p className="font-medium">No ad content yet</p>
-          <p className="text-sm mt-1">Start chatting with AI to generate your first ad</p>
-        </div>
-      )}
     </div>
   );
 };

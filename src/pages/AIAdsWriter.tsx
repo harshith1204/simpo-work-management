@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { 
@@ -13,8 +12,12 @@ import {
   Download, 
   Share2, 
   RotateCcw,
-  Loader2
+  Loader2,
+  Settings,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import AdsPreview from "@/components/ads/AdsPreview";
 
 interface ChatMessage {
@@ -30,7 +33,7 @@ const AIAdsWriter = () => {
     {
       id: 1,
       type: "ai",
-      content: "Hi! I'm your AI Ads Writer. Tell me about your product/service and I'll help you create compelling advertisements.",
+      content: "Hi! I'm your AI Ads Writer. Tell me about your product/service, target audience, and unique selling propositions (USPs) to create compelling advertisements that convert. I can help you create ads for Facebook, Instagram, Google, LinkedIn, Twitter, and YouTube.",
       timestamp: new Date().toLocaleTimeString()
     }
   ]);
@@ -43,9 +46,16 @@ const AIAdsWriter = () => {
     headline: "",
     description: "",
     cta: "",
-    usp: "",
     adsSource: "Facebook"
   });
+  const [isPreferencesOpen, setIsPreferencesOpen] = useState(false);
+
+  const sampleAds = [
+    "Create a compelling Facebook ad for my fitness app targeting busy professionals",
+    "Generate Instagram ads for my handmade jewelry business",
+    "Write Google Ads copy for my local restaurant delivery service",
+    "Create LinkedIn ads for my B2B software solution"
+  ];
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -94,7 +104,7 @@ const AIAdsWriter = () => {
       const aiResponse: ChatMessage = {
         id: chatMessages.length + 3,
         type: "ai",
-        content: "I've generated an ad based on your input. You can see the preview on the right and edit any section directly.",
+        content: "I've generated an ad based on your input. You can see the preview on the right and edit any section directly. Click on any text to modify it, or use the regenerate button for new variations.",
         timestamp: new Date().toLocaleTimeString()
       };
 
@@ -103,7 +113,6 @@ const AIAdsWriter = () => {
         headline: "Transform Your Business Today!",
         description: "Discover the power of our innovative solution that helps thousands of businesses grow faster and more efficiently than ever before.",
         cta: "Get Started Now",
-        usp: "50% faster results, 100% satisfaction guaranteed",
         adsSource: "Facebook"
       };
 
@@ -111,6 +120,10 @@ const AIAdsWriter = () => {
       setAdsContent(sampleAdsContent);
       setIsGenerating(false);
     }, 3500);
+  };
+
+  const handleSampleAdClick = (sample: string) => {
+    setInputMessage(sample);
   };
 
   const handleRegenerateAd = () => {
@@ -181,48 +194,81 @@ const AIAdsWriter = () => {
                 )}
               </div>
             ))}
+
+            {/* Sample Ads */}
+            {chatMessages.length === 1 && (
+              <div className="space-y-3">
+                <p className="text-sm text-muted-foreground">Or try one of these examples:</p>
+                {sampleAds.map((sample, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleSampleAdClick(sample)}
+                    className="w-full text-left p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors text-sm"
+                  >
+                    {sample}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Campaign Settings */}
+          {/* Ad Preferences Card */}
           <div className="p-4 border-t border-border bg-muted/30">
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <Label htmlFor="tone" className="text-xs font-medium text-muted-foreground">
-                  Tone of Voice
-                </Label>
-                <Input
-                  id="tone"
-                  value={toneOfVoice}
-                  onChange={(e) => setToneOfVoice(e.target.value)}
-                  placeholder="Professional, Casual..."
-                  className="text-xs h-8"
-                />
-              </div>
-              <div>
-                <Label htmlFor="keywords" className="text-xs font-medium text-muted-foreground">
-                  Keywords
-                </Label>
-                <Input
-                  id="keywords"
-                  value={keywords}
-                  onChange={(e) => setKeywords(e.target.value)}
-                  placeholder="Key terms..."
-                  className="text-xs h-8"
-                />
-              </div>
-              <div>
-                <Label htmlFor="goal" className="text-xs font-medium text-muted-foreground">
-                  Campaign Goal
-                </Label>
-                <Input
-                  id="goal"
-                  value={campaignGoal}
-                  onChange={(e) => setCampaignGoal(e.target.value)}
-                  placeholder="Brand awareness..."
-                  className="text-xs h-8"
-                />
-              </div>
-            </div>
+            <Collapsible open={isPreferencesOpen} onOpenChange={setIsPreferencesOpen}>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" className="w-full justify-between p-2">
+                  <div className="flex items-center space-x-2">
+                    <Settings className="w-4 h-4" />
+                    <span className="text-sm font-medium">Ad Preferences</span>
+                  </div>
+                  {isPreferencesOpen ? (
+                    <ChevronUp className="w-4 h-4" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4" />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-3 pt-3">
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <Label htmlFor="tone" className="text-xs font-medium text-muted-foreground">
+                      Tone of Voice
+                    </Label>
+                    <Input
+                      id="tone"
+                      value={toneOfVoice}
+                      onChange={(e) => setToneOfVoice(e.target.value)}
+                      placeholder="Professional, Casual..."
+                      className="text-xs h-8"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="keywords" className="text-xs font-medium text-muted-foreground">
+                      Keywords
+                    </Label>
+                    <Input
+                      id="keywords"
+                      value={keywords}
+                      onChange={(e) => setKeywords(e.target.value)}
+                      placeholder="Key terms..."
+                      className="text-xs h-8"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="goal" className="text-xs font-medium text-muted-foreground">
+                      Campaign Goal
+                    </Label>
+                    <Input
+                      id="goal"
+                      value={campaignGoal}
+                      onChange={(e) => setCampaignGoal(e.target.value)}
+                      placeholder="Brand awareness..."
+                      className="text-xs h-8"
+                    />
+                  </div>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
 
           {/* Chat Input */}
@@ -281,35 +327,22 @@ const AIAdsWriter = () => {
 
           {/* Content Form */}
           <div className="p-4 border-b border-border bg-muted/30">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label className="text-sm font-medium text-muted-foreground mb-1">
-                  USP
-                </Label>
-                <Input
-                  value={adsContent.usp}
-                  onChange={(e) => setAdsContent(prev => ({ ...prev, usp: e.target.value }))}
-                  placeholder="Unique selling proposition"
-                  className="text-sm"
-                />
-              </div>
-              <div>
-                <Label className="text-sm font-medium text-muted-foreground mb-1">
-                  Ads Source/Posting
-                </Label>
-                <select
-                  value={adsContent.adsSource}
-                  onChange={(e) => setAdsContent(prev => ({ ...prev, adsSource: e.target.value }))}
-                  className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  <option value="Facebook">Facebook</option>
-                  <option value="Instagram">Instagram</option>
-                  <option value="Google">Google Ads</option>
-                  <option value="LinkedIn">LinkedIn</option>
-                  <option value="Twitter">Twitter</option>
-                  <option value="YouTube">YouTube</option>
-                </select>
-              </div>
+            <div>
+              <Label className="text-sm font-medium text-muted-foreground mb-1">
+                Ads Source/Posting
+              </Label>
+              <select
+                value={adsContent.adsSource}
+                onChange={(e) => setAdsContent(prev => ({ ...prev, adsSource: e.target.value }))}
+                className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                <option value="Facebook">Facebook</option>
+                <option value="Instagram">Instagram</option>
+                <option value="Google">Google Ads</option>
+                <option value="LinkedIn">LinkedIn</option>
+                <option value="Twitter">Twitter</option>
+                <option value="YouTube">YouTube</option>
+              </select>
             </div>
           </div>
 
