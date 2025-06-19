@@ -31,6 +31,10 @@ import RolePermissions from "./pages/hrms/RolePermissions";
 // Attendance Pages
 import AttendanceDashboard from "./pages/attendance/AttendanceDashboard";
 import MyAttendance from "./pages/attendance/MyAttendance";
+import TeamAttendance from "./pages/attendance/TeamAttendance";
+import RequestsManagement from "./pages/attendance/RequestsManagement";
+import ShiftManagement from "./pages/attendance/ShiftManagement";
+import AttendanceSettings from "./pages/attendance/AttendanceSettings";
 
 // AI Writer Pages
 import AIWriter from "./pages/AIWriter";
@@ -72,10 +76,10 @@ function App() {
             {/* Attendance Management Routes */}
             <Route path="attendance" element={<AttendanceDashboard />} />
             <Route path="attendance/my-attendance" element={<MyAttendance />} />
-            <Route path="attendance/team" element={<div>Team Attendance - Coming Soon</div>} />
-            <Route path="attendance/requests" element={<div>Requests Management - Coming Soon</div>} />
-            <Route path="attendance/shifts" element={<div>Shift Management - Coming Soon</div>} />
-            <Route path="attendance/settings" element={<div>Attendance Settings - Coming Soon</div>} />
+            <Route path="attendance/team" element={<TeamAttendance />} />
+            <Route path="attendance/requests" element={<RequestsManagement />} />
+            <Route path="attendance/shifts" element={<ShiftManagement />} />
+            <Route path="attendance/settings" element={<AttendanceSettings />} />
             
             {/* AI Writer Routes */}
             <Route path="ai-writer" element={<AIWriter />} />
