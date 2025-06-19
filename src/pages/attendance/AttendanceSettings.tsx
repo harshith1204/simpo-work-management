@@ -159,8 +159,8 @@ const AttendanceSettings = () => {
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-900">Overtime Calculation</label>
               <select className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option>Daily (>8 hours)</option>
-                <option>Weekly (>40 hours)</option>
+                <option>Daily ({">"}8 hours)</option>
+                <option>Weekly ({">"}40 hours)</option>
                 <option>Both Daily & Weekly</option>
               </select>
             </div>
