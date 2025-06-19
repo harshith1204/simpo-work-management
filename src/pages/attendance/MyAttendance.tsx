@@ -1,10 +1,19 @@
-
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Play, Square, Calendar, FileText, MapPin, Camera, Wifi, Timer } from "lucide-react";
+import RequestRegularisationModal from "@/components/attendance/RequestRegularisationModal";
+import AttendanceCalendar from "@/components/attendance/AttendanceCalendar";
+import EditPunchModal from "@/components/attendance/EditPunchModal";
 
 const MyAttendance = () => {
+  const [showRegularisationModal, setShowRegularisationModal] = useState(false);
+  const [showCalendarModal, setShowCalendarModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedPunchData, setSelectedPunchData] = useState<any>(null);
+  const [selectedDate, setSelectedDate] = useState("");
+
   const currentStatus = {
     isCheckedIn: true,
     checkInTime: "09:15 AM",
@@ -78,6 +87,16 @@ const MyAttendance = () => {
     },
   ];
 
+  const handleEditPunch = (punch: any) => {
+    setSelectedPunchData(punch);
+    setShowEditModal(true);
+  };
+
+  const handleDateSelect = (date: string) => {
+    setSelectedDate(date);
+    setShowRegularisationModal(true);
+  };
+
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -87,11 +106,11 @@ const MyAttendance = () => {
           <p className="text-gray-600 mt-1">Track your daily attendance and working hours</p>
         </div>
         <div className="flex items-center space-x-3">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => setShowRegularisationModal(true)}>
             <FileText className="w-4 h-4 mr-2" />
             Request Regularisation
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => setShowCalendarModal(true)}>
             <Calendar className="w-4 h-4 mr-2" />
             View Calendar
           </Button>
@@ -255,11 +274,15 @@ const MyAttendance = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center border">
+            <div 
+              className="h-64 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg flex items-center justify-center border cursor-pointer hover:bg-gray-100 transition-colors"
+              onClick={() => setShowCalendarModal(true)}
+            >
               <div className="text-center text-gray-500">
                 <Calendar className="w-12 h-12 mx-auto mb-3" />
                 <p className="font-medium">Monthly Calendar</p>
                 <p className="text-sm">Color-coded attendance view</p>
+                <p className="text-xs mt-2 text-blue-600">Click to view details</p>
               </div>
             </div>
             <div className="mt-4 space-y-2">
@@ -347,7 +370,7 @@ const MyAttendance = () => {
                     >
                       {punch.status}
                     </Badge>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="ghost" size="sm" onClick={() => handleEditPunch(punch)}>
                       Edit
                     </Button>
                   </div>
@@ -357,6 +380,23 @@ const MyAttendance = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Modals */}
+      <RequestRegularisationModal 
+        isOpen={showRegularisationModal} 
+        onClose={() => setShowRegularisationModal(false)}
+        selectedDate={selectedDate}
+      />
+      <AttendanceCalendar 
+        isOpen={showCalendarModal} 
+        onClose={() => setShowCalendarModal(false)}
+        onDateSelect={handleDateSelect}
+      />
+      <EditPunchModal 
+        isOpen={showEditModal} 
+        onClose={() => setShowEditModal(false)}
+        punchData={selectedPunchData}
+      />
     </div>
   );
 };

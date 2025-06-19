@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,10 +22,19 @@ import {
   Eye,
   MapPin,
   Wifi,
-  Camera
+  Camera,
+  Bell,
+  UserCheck,
+  UserX,
+  Send
 } from "lucide-react";
+import TeamMemberActionModal from "@/components/attendance/TeamMemberActionModal";
 
 const TeamAttendance = () => {
+  const [showActionModal, setShowActionModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [selectedMembers, setSelectedMembers] = useState<number[]>([]);
+
   const teamData = [
     {
       id: 1,
@@ -105,6 +115,24 @@ const TeamAttendance = () => {
     { name: "HR", present: 4, total: 5, late: 0, absent: 1 },
     { name: "Finance", present: 3, total: 4, late: 1, absent: 0 },
   ];
+
+  const handleMemberAction = (employee: any) => {
+    setSelectedEmployee(employee);
+    setShowActionModal(true);
+  };
+
+  const handleSelectMember = (id: number) => {
+    setSelectedMembers(prev => 
+      prev.includes(id) 
+        ? prev.filter(memberId => memberId !== id)
+        : [...prev, id]
+    );
+  };
+
+  const handleBulkAction = (action: string) => {
+    console.log(`Performing bulk action: ${action} for members:`, selectedMembers);
+    setSelectedMembers([]);
+  };
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -203,6 +231,38 @@ const TeamAttendance = () => {
         </CardContent>
       </Card>
 
+      {/* Bulk Actions */}
+      {selectedMembers.length > 0 && (
+        <Card className="border-0 shadow-sm bg-blue-50 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-blue-900">
+                  {selectedMembers.length} member(s) selected
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction('notify')}>
+                  <Bell className="w-4 h-4 mr-2" />
+                  Send Reminder
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction('mark-present')}>
+                  <UserCheck className="w-4 h-4 mr-2" />
+                  Mark Present
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction('mark-absent')}>
+                  <UserX className="w-4 h-4 mr-2" />
+                  Mark Absent
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setSelectedMembers([])}>
+                  Clear Selection
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Team Attendance Table */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
@@ -215,6 +275,20 @@ const TeamAttendance = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">
+                  <input 
+                    type="checkbox" 
+                    checked={selectedMembers.length === teamData.length}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedMembers(teamData.map(emp => emp.id));
+                      } else {
+                        setSelectedMembers([]);
+                      }
+                    }}
+                    className="rounded border-gray-300"
+                  />
+                </TableHead>
                 <TableHead>Employee</TableHead>
                 <TableHead>Check In</TableHead>
                 <TableHead>Check Out</TableHead>
@@ -228,6 +302,14 @@ const TeamAttendance = () => {
             <TableBody>
               {teamData.map((employee) => (
                 <TableRow key={employee.id} className="hover:bg-gray-50">
+                  <TableCell>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedMembers.includes(employee.id)}
+                      onChange={() => handleSelectMember(employee.id)}
+                      className="rounded border-gray-300"
+                    />
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -282,11 +364,11 @@ const TeamAttendance = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-2">
-                      <Button variant="ghost" size="sm">
-                        <Eye className="w-4 h-4" />
+                      <Button variant="ghost" size="sm" onClick={() => handleMemberAction(employee)}>
+                        <MoreHorizontal className="w-4 h-4" />
                       </Button>
                       <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="w-4 h-4" />
+                        <Eye className="w-4 h-4" />
                       </Button>
                     </div>
                   </TableCell>
@@ -303,14 +385,14 @@ const TeamAttendance = () => {
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-4">
-            <Button>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Button onClick={() => handleBulkAction('mark-attendance')}>
               <Clock className="w-4 h-4 mr-2" />
               Mark Attendance
             </Button>
-            <Button variant="outline">
-              <Users className="w-4 h-4 mr-2" />
-              Bulk Notify
+            <Button variant="outline" onClick={() => handleBulkAction('bulk-notify')}>
+              <Send className="w-4 h-4 mr-2" />
+              Send Reminders
             </Button>
             <Button variant="outline">
               <Download className="w-4 h-4 mr-2" />
@@ -323,6 +405,13 @@ const TeamAttendance = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Team Member Action Modal */}
+      <TeamMemberActionModal 
+        isOpen={showActionModal} 
+        onClose={() => setShowActionModal(false)}
+        employee={selectedEmployee}
+      />
     </div>
   );
 };

@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -20,10 +21,17 @@ import {
   Filter,
   Plus,
   Eye,
-  MessageCircle
+  MessageCircle,
+  Download,
+  UserCheck,
+  UserX,
+  Send
 } from "lucide-react";
 
 const RequestsManagement = () => {
+  const [selectedRequests, setSelectedRequests] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState("all");
+
   const requests = [
     {
       id: 1,
@@ -36,7 +44,8 @@ const RequestsManagement = () => {
       status: "Pending",
       submittedOn: "Dec 20, 2024 10:30 AM",
       approver: "Rajesh Kumar",
-      avatar: "PS"
+      avatar: "PS",
+      priority: "Normal"
     },
     {
       id: 2,
@@ -49,7 +58,8 @@ const RequestsManagement = () => {
       status: "Approved",
       submittedOn: "Dec 19, 2024 09:15 AM",
       approver: "Neha Patel",
-      avatar: "VS"
+      avatar: "VS",
+      priority: "High"
     },
     {
       id: 3,
@@ -62,7 +72,8 @@ const RequestsManagement = () => {
       status: "Rejected",
       submittedOn: "Dec 19, 2024 11:45 AM",
       approver: "Rajesh Kumar",
-      avatar: "AD"
+      avatar: "AD",
+      priority: "Normal"
     },
     {
       id: 4,
@@ -75,7 +86,8 @@ const RequestsManagement = () => {
       status: "Pending",
       submittedOn: "Dec 20, 2024 08:30 AM",
       approver: "Neha Patel",
-      avatar: "RS"
+      avatar: "RS",
+      priority: "Low"
     },
     {
       id: 5,
@@ -88,7 +100,8 @@ const RequestsManagement = () => {
       status: "Approved",
       submittedOn: "Dec 18, 2024 09:00 AM",
       approver: "Neha Patel",
-      avatar: "KG"
+      avatar: "KG",
+      priority: "Normal"
     },
   ];
 
@@ -98,6 +111,27 @@ const RequestsManagement = () => {
     { title: "Approved", value: "12", icon: CheckCircle, color: "text-green-600", bgColor: "bg-green-50" },
     { title: "Rejected", value: "3", icon: XCircle, color: "text-red-600", bgColor: "bg-red-50" },
   ];
+
+  const handleSelectRequest = (id: number) => {
+    setSelectedRequests(prev => 
+      prev.includes(id) 
+        ? prev.filter(requestId => requestId !== id)
+        : [...prev, id]
+    );
+  };
+
+  const handleBulkAction = (action: string) => {
+    console.log(`Performing bulk action: ${action} for requests:`, selectedRequests);
+    setSelectedRequests([]);
+  };
+
+  const filteredRequests = requests.filter(request => {
+    if (activeTab === "all") return true;
+    if (activeTab === "pending") return request.status === "Pending";
+    if (activeTab === "approved") return request.status === "Approved";
+    if (activeTab === "rejected") return request.status === "Rejected";
+    return true;
+  });
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -111,6 +145,10 @@ const RequestsManagement = () => {
           <Button variant="outline">
             <Filter className="w-4 h-4 mr-2" />
             Filter
+          </Button>
+          <Button variant="outline">
+            <Download className="w-4 h-4 mr-2" />
+            Export
           </Button>
           <Button>
             <Plus className="w-4 h-4 mr-2" />
@@ -141,6 +179,32 @@ const RequestsManagement = () => {
         })}
       </div>
 
+      {/* Tabs */}
+      <Card className="border-0 shadow-sm">
+        <CardContent className="p-0">
+          <div className="flex border-b">
+            {[
+              { id: "all", label: "All Requests", count: requests.length },
+              { id: "pending", label: "Pending", count: requests.filter(r => r.status === "Pending").length },
+              { id: "approved", label: "Approved", count: requests.filter(r => r.status === "Approved").length },
+              { id: "rejected", label: "Rejected", count: requests.filter(r => r.status === "Rejected").length },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-6 py-4 text-sm font-medium border-b-2 transition-colors ${
+                  activeTab === tab.id
+                    ? "border-blue-500 text-blue-600 bg-blue-50"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                {tab.label} ({tab.count})
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Filters */}
       <Card className="border-0 shadow-sm">
         <CardContent className="p-4">
@@ -159,12 +223,6 @@ const RequestsManagement = () => {
               <option>Permission</option>
             </select>
             <select className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-              <option>All Status</option>
-              <option>Pending</option>
-              <option>Approved</option>
-              <option>Rejected</option>
-            </select>
-            <select className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
               <option>All Departments</option>
               <option>Engineering</option>
               <option>Sales</option>
@@ -172,34 +230,95 @@ const RequestsManagement = () => {
               <option>Marketing</option>
               <option>HR</option>
             </select>
+            <select className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option>All Priority</option>
+              <option>High</option>
+              <option>Normal</option>
+              <option>Low</option>
+            </select>
           </div>
         </CardContent>
       </Card>
+
+      {/* Bulk Actions */}
+      {selectedRequests.length > 0 && (
+        <Card className="border-0 shadow-sm bg-blue-50 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-blue-900">
+                  {selectedRequests.length} request(s) selected
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction('approve')}>
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Bulk Approve
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction('reject')}>
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Bulk Reject
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction('comment')}>
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Add Comments
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => setSelectedRequests([])}>
+                  Clear Selection
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Requests Table */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <span>All Requests</span>
-            <Badge variant="outline">{requests.length} requests</Badge>
+            <span>Requests</span>
+            <Badge variant="outline">{filteredRequests.length} requests</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">
+                  <input 
+                    type="checkbox" 
+                    checked={selectedRequests.length === filteredRequests.length}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedRequests(filteredRequests.map(req => req.id));
+                      } else {
+                        setSelectedRequests([]);
+                      }
+                    }}
+                    className="rounded border-gray-300"
+                  />
+                </TableHead>
                 <TableHead>Employee</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Date & Time</TableHead>
                 <TableHead>Reason</TableHead>
+                <TableHead>Priority</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Submitted</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {requests.map((request) => (
+              {filteredRequests.map((request) => (
                 <TableRow key={request.id} className="hover:bg-gray-50">
+                  <TableCell>
+                    <input 
+                      type="checkbox" 
+                      checked={selectedRequests.includes(request.id)}
+                      onChange={() => handleSelectRequest(request.id)}
+                      className="rounded border-gray-300"
+                    />
+                  </TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -235,6 +354,18 @@ const RequestsManagement = () => {
                         {request.reason}
                       </p>
                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant="outline"
+                      className={
+                        request.priority === "High" ? "border-red-200 text-red-700 bg-red-50" :
+                        request.priority === "Normal" ? "border-yellow-200 text-yellow-700 bg-yellow-50" :
+                        "border-gray-200 text-gray-700 bg-gray-50"
+                      }
+                    >
+                      {request.priority}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     <Badge 
@@ -280,24 +411,28 @@ const RequestsManagement = () => {
         </CardContent>
       </Card>
 
-      {/* Bulk Actions */}
+      {/* Quick Actions */}
       <Card className="border-0 shadow-sm">
         <CardHeader>
-          <CardTitle>Bulk Actions</CardTitle>
+          <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-4">
-            <Button variant="outline">
-              <CheckCircle className="w-4 h-4 mr-2" />
-              Approve Selected
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Button onClick={() => handleBulkAction('approve-all-pending')}>
+              <UserCheck className="w-4 h-4 mr-2" />
+              Approve All Pending
+            </Button>
+            <Button variant="outline" onClick={() => handleBulkAction('send-reminders')}>
+              <Send className="w-4 h-4 mr-2" />
+              Send Reminders
             </Button>
             <Button variant="outline">
-              <XCircle className="w-4 h-4 mr-2" />
-              Reject Selected
+              <Download className="w-4 h-4 mr-2" />
+              Export Report
             </Button>
             <Button variant="outline">
-              <MessageCircle className="w-4 h-4 mr-2" />
-              Add Comments
+              <AlertCircle className="w-4 h-4 mr-2" />
+              View Policies
             </Button>
           </div>
         </CardContent>
