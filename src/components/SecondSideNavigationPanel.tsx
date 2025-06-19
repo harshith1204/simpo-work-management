@@ -34,6 +34,15 @@ const hrmsModules = [
   { id: "permissions", name: "Permissions", route: "/hrms/permissions" },
 ];
 
+const attendanceModules = [
+  { id: "attendance-dashboard", name: "Dashboard", route: "/attendance" },
+  { id: "my-attendance", name: "My Attendance", route: "/attendance/my-attendance" },
+  { id: "team-attendance", name: "Team Attendance", route: "/attendance/team" },
+  { id: "requests", name: "Requests", route: "/attendance/requests" },
+  { id: "shift-management", name: "Shift Management", route: "/attendance/shifts" },
+  { id: "attendance-settings", name: "Settings", route: "/attendance/settings" },
+];
+
 const crmModules = [
   { id: "leads", name: "Leads", route: "/crm/leads" },
   { id: "contacts", name: "Contacts", route: "/crm/contacts" },
@@ -58,6 +67,8 @@ const getModulesForActiveModule = (activeModule: string) => {
       return workManagementModules;
     case "hrms":
       return hrmsModules;
+    case "attendance":
+      return attendanceModules;
     case "crm":
       return crmModules;
     case "payroll":

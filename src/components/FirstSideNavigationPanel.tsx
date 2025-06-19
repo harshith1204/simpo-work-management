@@ -15,7 +15,8 @@ import {
   Headphones,
   ChevronLeft,
   ChevronRight,
-  DollarSign
+  DollarSign,
+  Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +38,7 @@ const applicationModules = [
   { id: "analytics", name: "Analytics", icon: BarChart3 },
   { id: "work-management", name: "Work Management", icon: Briefcase },
   { id: "hrms", name: "HRMS", icon: UserCog },
+  { id: "attendance", name: "Attendance Management", icon: Clock },
 ];
 
 const aiAgentModules = [
@@ -79,6 +81,9 @@ const FirstSideNavigationPanel = ({
         break;
       case "hrms":
         navigate("/hrms");
+        break;
+      case "attendance":
+        navigate("/attendance");
         break;
       case "payroll":
         navigate("/payroll");
