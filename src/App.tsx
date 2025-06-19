@@ -28,6 +28,10 @@ import DocumentCenter from "./pages/hrms/DocumentCenter";
 import HRMSReports from "./pages/hrms/HRMSReports";
 import RolePermissions from "./pages/hrms/RolePermissions";
 
+// Attendance Pages
+import AttendanceDashboard from "./pages/attendance/AttendanceDashboard";
+import MyAttendance from "./pages/attendance/MyAttendance";
+
 // AI Writer Pages
 import AIWriter from "./pages/AIWriter";
 import AIBlogWriter from "./pages/AIBlogWriter";
@@ -64,6 +68,14 @@ function App() {
             <Route path="hrms/documents" element={<DocumentCenter />} />
             <Route path="hrms/reports" element={<HRMSReports />} />
             <Route path="hrms/permissions" element={<RolePermissions />} />
+            
+            {/* Attendance Management Routes */}
+            <Route path="attendance" element={<AttendanceDashboard />} />
+            <Route path="attendance/my-attendance" element={<MyAttendance />} />
+            <Route path="attendance/team" element={<div>Team Attendance - Coming Soon</div>} />
+            <Route path="attendance/requests" element={<div>Requests Management - Coming Soon</div>} />
+            <Route path="attendance/shifts" element={<div>Shift Management - Coming Soon</div>} />
+            <Route path="attendance/settings" element={<div>Attendance Settings - Coming Soon</div>} />
             
             {/* AI Writer Routes */}
             <Route path="ai-writer" element={<AIWriter />} />

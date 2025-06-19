@@ -90,7 +90,23 @@ const Layout = () => {
     setShowPayrollConfiguration(false);
     
     // Update active module and submodule based on current path
-    if (path.startsWith("/hrms")) {
+    if (path.startsWith("/attendance")) {
+      setActiveModule("attendance");
+      setShowAppsScreen(false);
+      if (path === "/attendance") {
+        setActiveSubmodule("attendance-dashboard");
+      } else if (path.startsWith("/attendance/my-attendance")) {
+        setActiveSubmodule("my-attendance");
+      } else if (path.startsWith("/attendance/team")) {
+        setActiveSubmodule("team-attendance");
+      } else if (path.startsWith("/attendance/requests")) {
+        setActiveSubmodule("requests");
+      } else if (path.startsWith("/attendance/shifts")) {
+        setActiveSubmodule("shift-management");
+      } else if (path.startsWith("/attendance/settings")) {
+        setActiveSubmodule("attendance-settings");
+      }
+    } else if (path.startsWith("/hrms")) {
       setActiveModule("hrms");
       if (path === "/hrms") {
         setActiveSubmodule("hrms-home");
@@ -115,7 +131,6 @@ const Layout = () => {
       }
     } else if (path.startsWith("/crm")) {
       setActiveModule("crm");
-      // Set appropriate CRM submodule based on path
       if (path.startsWith("/crm/leads")) {
         setActiveSubmodule("leads");
       } else if (path.startsWith("/crm/contacts")) {
@@ -135,7 +150,6 @@ const Layout = () => {
       }
     } else {
       setActiveModule("work-management");
-      // Update active submodule based on current path
       if (path === "/" || path.startsWith("/work")) {
         setActiveSubmodule("your-work");
       } else if (path.startsWith("/inbox")) {
@@ -184,6 +198,8 @@ const Layout = () => {
     // Reset submodule when changing main module
     if (module === "hrms") {
       setActiveSubmodule("hrms-home");
+    } else if (module === "attendance") {
+      setActiveSubmodule("attendance-dashboard");
     } else if (module === "crm") {
       setActiveSubmodule("leads");
     } else if (module === "work-management") {
