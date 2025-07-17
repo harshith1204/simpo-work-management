@@ -41,6 +41,9 @@ import AIWriter from "./pages/AIWriter";
 import AIBlogWriter from "./pages/AIBlogWriter";
 import AIAdsWriter from "./pages/AIAdsWriter";
 
+// Product Catalogue
+import ProductCatalogue from "./pages/ProductCatalogue";
+
 function App() {
   return (
     <Router>
@@ -85,6 +88,9 @@ function App() {
             <Route path="ai-writer" element={<AIWriter />} />
             <Route path="ai-writer/blog" element={<AIBlogWriter />} />
             <Route path="ai-writer/ads" element={<AIAdsWriter />} />
+            
+            {/* Product Catalogue Route */}
+            <Route path="product-catalogue" element={<ProductCatalogue />} />
             
             {/* Payroll Routes - handled by Layout component */}
             <Route path="payroll" element={<div />} />
